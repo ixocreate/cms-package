@@ -24,7 +24,8 @@ final class Version20180514145818 extends AbstractMigration
         $table->addColumn('createdAt', DateTimeType::class);
 
         $table->setPrimaryKey(["id"]);
-        $table->addUniqueIndex(["sitemapId", "locale"]);
+        $table->addIndex(['pageId', 'approvedAt']);
+        $table->addIndex(['pageId', 'createdAt']);
 
     }
 

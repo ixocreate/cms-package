@@ -38,6 +38,6 @@ final class PageTypeBootstrapItem implements BootstrapItemInterface
      */
     public function getFileName(): string
     {
-        return 'page_type.php';
+        return 'page-type.php';
     }
 }

@@ -67,7 +67,7 @@ class SortAction implements MiddlewareInterface
             /** @var PageTypeInterface $pageType */
             $pageType = $this->pageTypeSubManager->get($parent->pageType());
 
-            if (!empty($pageType->allowedChildren() && !\in_array($sitemap->pageType(), $pageType->allowedChildren())) {
+            if (!empty($pageType->allowedChildren() && !\in_array($sitemap->pageType(), $pageType->allowedChildren()))) {
                 return new ApiErrorResponse(501);
             }
 

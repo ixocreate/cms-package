@@ -4,7 +4,7 @@ namespace KiwiSuite\Cms\Handler;
 use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Entity\PageVersion;
 use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Message\CreateSitemap;
+use KiwiSuite\Cms\Message\CreatePage;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\PageVersionRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
@@ -12,7 +12,7 @@ use KiwiSuite\CommandBus\Handler\HandlerInterface;
 use KiwiSuite\CommandBus\Message\MessageInterface;
 use Ramsey\Uuid\Uuid;
 
-final class CreateSitemapHandler implements HandlerInterface
+final class CreatePageHandler implements HandlerInterface
 {
 
     /**
@@ -45,23 +45,24 @@ final class CreateSitemapHandler implements HandlerInterface
 
     public function __invoke(MessageInterface $message): MessageInterface
     {
-        /** @var CreateSitemap $message */
+        /** @var CreatePage $message */
         $sitemap = new Sitemap([
             'id' => $message->uuid(),
             'pageType' => $message->pageType(),
         ]);
 
-        if (empty($message->parentId())) {
+        if (empty($message->parentSitemapId())) {
             $sitemap = $this->sitemapRepository->createRoot($sitemap);
         } else {
             /** @var Sitemap $parent */
-            $parent = $this->sitemapRepository->find($message->parentId());
+            $parent = $this->sitemapRepository->find($message->parentSitemapId());
             $sitemap = $this->sitemapRepository->insertAsLastChild($sitemap, $parent);
         }
 
         $page = new Page([
             'id' => Uuid::uuid4()->toString(),
             'sitemapId' => $sitemap->id(),
+            'locale' => $message->locale(),
             'name' => $message->name(),
             'status' => 'offline',
             'updatedAt' => $message->createdAt(),
@@ -81,5 +82,7 @@ final class CreateSitemapHandler implements HandlerInterface
 
         ]);
         $this->pageVersionRepository->save($pageVersion);
+
+        return $message;
     }
 }

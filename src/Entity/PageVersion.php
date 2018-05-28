@@ -17,11 +17,12 @@ use KiwiSuite\CommonTypes\Entity\DateTimeType;
 use KiwiSuite\Database\Tree\NodeInterface;
 use KiwiSuite\Entity\Entity\Definition;
 use KiwiSuite\Entity\Entity\DefinitionCollection;
+use KiwiSuite\Entity\Entity\EntityInterface;
 use KiwiSuite\Entity\Entity\EntityTrait;
 use KiwiSuite\CommonTypes\Entity\UuidType;
 use KiwiSuite\Entity\Type\TypeInterface;
 
-final class PageVersion implements NodeInterface
+final class PageVersion implements EntityInterface
 {
     use EntityTrait;
 
@@ -69,35 +70,9 @@ final class PageVersion implements NodeInterface
             new Definition('pageId', UuidType::class, false, true),
             new Definition('content', TypeInterface::TYPE_ARRAY, true, true),
             new Definition('createdBy', UuidType::class, false, true),
-            new Definition('approvedAt', TypeInterface::TYPE_STRING, true, true),
+            new Definition('approvedAt', DateTimeType::class, true, true),
             new Definition('createdAt', DateTimeType::class, false, true),
         ]);
-    }
-
-    public function right(): ?int
-    {
-        return $this->nestedRight();
-    }
-
-    public function left(): ?int
-    {
-        return $this->nestedLeft();
-    }
-
-
-    public function leftParameterName(): string
-    {
-        return 'nestedLeft';
-    }
-
-    public function rightParameterName(): string
-    {
-        return 'nestedRight';
-    }
-
-    public function parentIdParameterName(): string
-    {
-        return 'parentId';
     }
 }
 

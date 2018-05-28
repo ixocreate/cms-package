@@ -42,36 +42,41 @@ class SortAction implements MiddlewareInterface
 
         /** @var Sitemap $sitemap */
         $sitemap = $this->sitemapRepository->find($data['id']);
+        if (empty($sitemap)) {
+            return new ApiErrorResponse(500);
+        }
 
-
-        if ($data['prevSibling'] === null) {
-
-            if ($data['parent'] === null) {
-
-                // move to first position
-
-            } else {
-                /** @var Sitemap $parent */
-                $parent = $this->sitemapRepository->find($data['parent']);
+        if ($data['prevSibling'] !== null) {
+            /** @var Sitemap $sibling */
+            $sibling = $this->sitemapRepository->find($data['prevSibling']);
+            if (empty($sibling)) {
+                return new ApiErrorResponse(500);
             }
 
-            /** @var Sitemap $sibling */
-            $sibling = $this->sitemapRepository->find($data['id']);
-        } else {
-            /** @var Sitemap $sibling */
-            $sibling = $this->sitemapRepository->find($data['id']);
-
-            /** @var Sitemap $parent */
-            $parent = $this->sitemapRepository->find($sibling->parentId());
-
-            /** @var PageTypeInterface $pageType */
-            $pageType = $this->pageTypeSubManager->get($parent->pageType());
-
-            if (!empty($pageType->allowedChildren() && !\in_array($sitemap->pageType(), $pageType->allowedChildren()))) {
-                return new ApiErrorResponse(501);
-            }
+            //TODO pageType Check
 
             $this->sitemapRepository->moveAsNextSibling($sitemap, $sibling);
+        } elseif ($data['parent'] !== null) {
+            /** @var Sitemap $parent */
+            $parent = $this->sitemapRepository->find($data['parent']);
+            if (empty($parent)) {
+                return new ApiErrorResponse(500);
+            }
+
+            //TODO pageType Check
+
+            $this->sitemapRepository->moveAsFirstChild($sitemap, $parent);
+        } else {
+            //TODO should us a "moveToFirstRoot"
+            $sibling = $this->sitemapRepository->findBy(['nestedLeft' => 1]);
+            if (empty($sibling)) {
+                return new ApiErrorResponse(500);
+            }
+
+            //TODO pageType Check
+
+            $sibling = $sibling[0];
+            $this->sitemapRepository->moveAsPreviousSibling($sitemap, $sibling);
         }
 
         return new ApiSuccessResponse();

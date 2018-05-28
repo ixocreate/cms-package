@@ -17,8 +17,8 @@ final class Version20180514112247 extends AbstractMigration
         $table = $schema->createTable('cms_sitemap');
         $table->addColumn('id', UuidType::class);
         $table->addColumn('parentId', UuidType::class)->setNotnull(false);
-        $table->addColumn('left', Type::INTEGER)->setNotnull(false);
-        $table->addColumn('right', Type::INTEGER)->setNotnull(false);
+        $table->addColumn('nestedLeft', Type::INTEGER)->setNotnull(false);
+        $table->addColumn('nestedRight', Type::INTEGER)->setNotnull(false);
         $table->addColumn('pageType', Type::STRING)->setLength(255);
         $table->addColumn('handle', Type::STRING)->setLength(255)->setNotnull(false);
 

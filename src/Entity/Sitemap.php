@@ -98,5 +98,10 @@ final class Sitemap implements NodeInterface
     {
         return 'parentId';
     }
+
+    public function idName(): string
+    {
+        return 'id';
+    }
 }
 

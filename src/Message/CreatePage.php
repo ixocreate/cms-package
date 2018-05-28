@@ -1,13 +1,15 @@
 <?php
 namespace KiwiSuite\Cms\Message;
 
-use KiwiSuite\Cms\Handler\CreateSitemapHandler;
+use KiwiSuite\Admin\Entity\User;
+use KiwiSuite\Cms\Handler\CreatePageHandler;
 use KiwiSuite\Cms\Repository\SitemapRepository;
 use KiwiSuite\CommandBus\Message\MessageInterface;
 use KiwiSuite\CommandBus\Message\MessageTrait;
 use KiwiSuite\CommandBus\Message\Validation\Result;
+use KiwiSuite\CommonTypes\Entity\UuidType;
 
-final class CreateSitemap implements MessageInterface
+final class CreatePage implements MessageInterface
 {
     use MessageTrait;
 
@@ -24,7 +26,7 @@ final class CreateSitemap implements MessageInterface
     /**
      * @var string
      */
-    private $parentId;
+    private $parentSitemapId;
 
     /**
      * @var string
@@ -56,7 +58,7 @@ final class CreateSitemap implements MessageInterface
     public function handlers(): array
     {
         return [
-            CreateSitemapHandler::class,
+            CreatePageHandler::class,
         ];
     }
 
@@ -73,9 +75,9 @@ final class CreateSitemap implements MessageInterface
         return $this->locale;
     }
 
-    public function parentId(): ?string
+    public function parentSitemapId(): ?string
     {
-        return $this->parentId;
+        return $this->parentSitemapId;
     }
 
     public function pageType(): string
@@ -83,9 +85,9 @@ final class CreateSitemap implements MessageInterface
         return $this->pageType;
     }
 
-    public function createdBy(): string
+    public function createdBy(): UuidType
     {
-        return $this->createdBy;
+        return $this->metadata()[User::class];
     }
 
     /**
@@ -101,7 +103,7 @@ final class CreateSitemap implements MessageInterface
         }
 
         if (!empty($this->data['parentId'])) {
-            $sitemap = $this->sitemapRepository->find($this->data['parentId']);
+            $sitemap = $this->sitemapRepository->find($this->data['parentSitemapId']);
             if (empty($sitemap)) {
                 $result->addError("invalid_sitemap");
             }
@@ -112,7 +114,7 @@ final class CreateSitemap implements MessageInterface
 
         $this->name = $this->data['name'];
         $this->locale = $this->data['locale'];
-        $this->parentId = $this->data['parentId'];
+        $this->parentSitemapId = $this->data['parentSitemapId'];
         $this->pageType = $this->data['pageType'];
         $this->createdBy = $this->data['createdBy'];
     }

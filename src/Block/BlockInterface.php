@@ -5,7 +5,7 @@ namespace KiwiSuite\Cms\Block;
 
 interface BlockInterface
 {
-    public function name(): string;
+    public static function name(): string;
 
     public function label(): string;
 

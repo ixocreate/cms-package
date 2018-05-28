@@ -1,6 +1,8 @@
 <?php
 namespace KiwiSuite\Cms;
 
+use KiwiSuite\Cms\BootstrapItem\BlockBootstrapItem;
+use KiwiSuite\Cms\BootstrapItem\PageTypeBootstrapItem;
 use KiwiSuite\Contract\Application\ConfiguratorRegistryInterface;
 use KiwiSuite\Contract\Application\PackageInterface;
 use KiwiSuite\Contract\Application\ServiceRegistryInterface;
@@ -28,7 +30,10 @@ final class Package implements PackageInterface
      */
     public function getBootstrapItems(): ?array
     {
-        return null;
+        return [
+            PageTypeBootstrapItem::class,
+            BlockBootstrapItem::class,
+        ];
     }
 
     /**

@@ -3,7 +3,7 @@ namespace KiwiSuite\Cms\PageType;
 
 interface PageTypeInterface
 {
-    public function name(): string;
+    public static function name(): string;
 
     public function label(): string;
 

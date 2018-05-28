@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\PageType;
+namespace KiwiSuite\Cms\Block;
 
 use KiwiSuite\Contract\Application\SerializableServiceInterface;
 

@@ -71,7 +71,7 @@ final class BlockConfigurator implements ConfiguratorInterface
             if (!\is_subclass_of($id, BlockInterface::class, true)) {
                 throw new \InvalidArgumentException(\sprintf("'%s' doesn't implement '%s'", $id, BlockInterface::class));
             }
-            $name = \forward_static_call([$id, 'getName']);
+            $name = \forward_static_call([$id, 'name']);
             $mapping[$name] = $id;
         }
 

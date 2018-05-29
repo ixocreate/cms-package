@@ -27,6 +27,7 @@ use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
 use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
+use KiwiSuite\Cms\Action\Page\PageTypeSchemaAction;
 use KiwiSuite\Cms\Action\Page\SortAction;
 use KiwiSuite\CommandBus\Message\MessageInterface;
 use Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware;
@@ -49,5 +50,6 @@ $pipe->segment('/api', function(PipeConfigurator $pipe) {
 
         $group->post('/page/sort', SortAction::class, "admin.api.page.sort");
         $group->get('/page/create-schema', CreateSchemaAction::class, "admin.api.page.createSchema");
+        $group->get('/page/page-type-schema/{id}', PageTypeSchemaAction::class, "admin.api.page.pageTypeSchema");
     });
 });

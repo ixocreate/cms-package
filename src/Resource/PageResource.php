@@ -35,4 +35,12 @@ final class PageResource implements ResourceInterface
     {
         return "fa";
     }
+
+    public function schema(): array
+    {
+        return [
+            'name'       => 'Page',
+            'namePlural' => 'Pages',
+        ];
+    }
 }

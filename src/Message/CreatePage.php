@@ -29,11 +29,6 @@ final class CreatePage implements MessageInterface
     private $parentSitemapId;
 
     /**
-     * @var string
-     */
-    private $createdBy;
-
-    /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
@@ -116,6 +111,5 @@ final class CreatePage implements MessageInterface
         $this->locale = $this->data['locale'];
         $this->parentSitemapId = $this->data['parentSitemapId'];
         $this->pageType = $this->data['pageType'];
-        $this->createdBy = $this->data['createdBy'];
     }
 }

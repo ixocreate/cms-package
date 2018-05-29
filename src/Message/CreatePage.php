@@ -102,7 +102,7 @@ final class CreatePage implements MessageInterface
             $result->addError("invalid_locale");
         }
 
-        if (!empty($this->data['parentId'])) {
+        if (!empty($this->data['parentSitemapId'])) {
             $sitemap = $this->sitemapRepository->find($this->data['parentSitemapId']);
             if (empty($sitemap)) {
                 $result->addError("invalid_sitemap");

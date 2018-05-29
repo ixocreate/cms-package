@@ -101,6 +101,8 @@ final class CreatePage implements MessageInterface
             $sitemap = $this->sitemapRepository->find($this->data['parentSitemapId']);
             if (empty($sitemap)) {
                 $result->addError("invalid_sitemap");
+            } else {
+                $this->parentSitemapId = $this->data['parentSitemapId'];
             }
         }
 
@@ -109,7 +111,6 @@ final class CreatePage implements MessageInterface
 
         $this->name = $this->data['name'];
         $this->locale = $this->data['locale'];
-        $this->parentSitemapId = $this->data['parentSitemapId'];
         $this->pageType = $this->data['pageType'];
     }
 }

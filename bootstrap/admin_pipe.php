@@ -51,7 +51,7 @@ $pipe->segment('/api', function(PipeConfigurator $pipe) {
         $group->before(AuthorizationGuardMiddleware::class);
 
         $group->post('/page/sort', SortAction::class, "admin.api.page.sort");
-        $group->get('/page/version/{id}', PageVersionIndexAction::class, "admin.api.page.version.index");
+        $group->get('/page/version/{id}', PageVersionIndexAction::class, "admin.api.page.version.detail");
         $group->post('/page/version/{id}', HandlerAction::class, "admin.api.page.createVersion", function (RouteConfigurator $routeConfigurator) {
             $routeConfigurator->addOption(MessageInterface::class, CreatePageVersion::class);
         });

@@ -52,7 +52,7 @@ $pipe->segment('/api', function(PipeConfigurator $pipe) {
 
         $group->post('/page/sort', SortAction::class, "admin.api.page.sort");
         $group->get('/page/version/{id}', PageVersionIndexAction::class, "admin.api.page.version.index");
-        $group->post('/page/version', HandlerAction::class, "admin.api.page.createVersion", function (RouteConfigurator $routeConfigurator) {
+        $group->post('/page/version/{id}', HandlerAction::class, "admin.api.page.createVersion", function (RouteConfigurator $routeConfigurator) {
             $routeConfigurator->addOption(MessageInterface::class, CreatePageVersion::class);
         });
         $group->get('/page/create-schema', CreateSchemaAction::class, "admin.api.page.createSchema");

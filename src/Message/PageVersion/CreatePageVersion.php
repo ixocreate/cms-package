@@ -72,11 +72,11 @@ final class CreatePageVersion implements MessageInterface
      */
     protected function doValidate(Result $result): void
     {
-        if (empty($this->data['pageId'])){
+        if (empty($this->metadata()['id'])){
             $result->addError("invalid_page");
             return;
         }
-        $page = $this->pageRepository->find($this->data['pageId']);
+        $page = $this->pageRepository->find($this->metadata()['id']);
         if (empty($page)) {
             $result->addError("invalid_page");
             return;
@@ -87,7 +87,7 @@ final class CreatePageVersion implements MessageInterface
             $content = $this->data()['content'];
         }
 
-        $this->pageId = $this->data['pageId'];
+        $this->pageId = $this->metadata()['id'];
         $this->content = $content;
     }
 }

@@ -101,11 +101,11 @@ final class CreatePageHandler implements HandlerInterface
     {
         $body = [
             'content' => [],
-            'pageId' => $pageId,
         ];
 
         $metadata = [
             User::class => $createdAt,
+            'id' => $pageId,
         ];
 
         $message = $this->createPageVersion->inject($body, $metadata);

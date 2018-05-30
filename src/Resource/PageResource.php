@@ -1,4 +1,5 @@
 <?php
+
 namespace KiwiSuite\Cms\Resource;
 
 use KiwiSuite\Admin\Resource\ResourceInterface;
@@ -43,57 +44,91 @@ final class PageResource implements ResourceInterface
             'namePlural' => 'Pages',
             'form'       => [
                 [
-                    'key'             => 'name',
-                    'type'            => 'input',
-                    'templateOptions' => [
-                        'label'       => 'Name',
-                        'placeholder' => 'Name',
-                        'required'    => true,
+                    'wrappers'        => [
+                        'section',
                     ],
-                ],
-                [
-                    'key'             => 'publishedFrom',
-                    'type'            => 'datetime',
                     'templateOptions' => [
-                        'label'       => 'Published Until',
-                        'placeholder' => 'Published Until',
-                        'config'      => [
-                            'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
-                        ],
+                        'label' => 'General',
+                        'icon'  => 'fa fa-cog',
                     ],
-                ],
-                [
-                    'key'             => 'publishedUntil',
-                    'type'            => 'datetime',
-                    'templateOptions' => [
-                        'label'       => 'Published Until',
-                        'placeholder' => 'Published Until',
-                        'config'      => [
-                            'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
-                        ],
-                    ],
-                ],
-                [
-                    'key'             => 'status',
-                    'type'            => 'select',
-                    'defaultValue'    => 'active',
-                    'templateOptions' => [
-                        'label'       => 'Status',
-                        'placeholder' => 'Status',
-                        'required'    => true,
-                        'options'     => [
-                            [
-                                'label' => 'Online',
-                                'value' => 'online',
-                            ],
-                            [
-                                'label' => 'Offline',
-                                'value' => 'offline',
+                    'fieldGroup'      => [
+                        [
+                            'key'             => 'name',
+                            'type'            => 'input',
+                            'templateOptions' => [
+                                'label'       => 'Name',
+                                'placeholder' => 'Name',
+                                'required'    => true,
                             ],
                         ],
                     ],
                 ],
-            ]
+                [
+                    'wrappers'        => [
+                        'section',
+                    ],
+                    'templateOptions' => [
+                        'label' => 'Scheduling',
+                        'icon'  => 'fa fw-fw fa-calendar',
+                    ],
+                    'fieldGroup'      => [
+                        [
+                            'key'             => 'publishedFrom',
+                            'type'            => 'datetime',
+                            'templateOptions' => [
+                                'label'       => 'Published Until',
+                                'placeholder' => 'Published Until',
+                                'config'      => [
+                                    'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
+                                ],
+                            ],
+                        ],
+                        [
+                            'key'             => 'publishedUntil',
+                            'type'            => 'datetime',
+                            'templateOptions' => [
+                                'label'       => 'Published Until',
+                                'placeholder' => 'Published Until',
+                                'config'      => [
+                                    'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'wrappers'        => [
+                        'section',
+                    ],
+                    'templateOptions' => [
+                        'label' => 'Status',
+                        'icon'  => 'fa fw-fw fa-power-off',
+                    ],
+                    'fieldGroup'      => [
+                        [
+                            'key'             => 'status',
+                            'type'            => 'select',
+                            'defaultValue'    => 'active',
+                            'templateOptions' => [
+                                'label'       => 'Status',
+                                'placeholder' => 'Status',
+                                'required'    => true,
+                                'clear'       => false,
+                                'options'     => [
+                                    [
+                                        'label' => 'Online',
+                                        'value' => 'online',
+                                    ],
+                                    [
+                                        'label' => 'Offline',
+                                        'value' => 'offline',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 }

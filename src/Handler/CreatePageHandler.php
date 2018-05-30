@@ -1,13 +1,16 @@
 <?php
 namespace KiwiSuite\Cms\Handler;
 
+use KiwiSuite\Admin\Entity\User;
 use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Entity\PageVersion;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\Message\CreatePage;
+use KiwiSuite\Cms\Message\PageVersion\CreatePageVersion;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\PageVersionRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
+use KiwiSuite\CommandBus\CommandBus;
 use KiwiSuite\CommandBus\Handler\HandlerInterface;
 use KiwiSuite\CommandBus\Message\MessageInterface;
 use Ramsey\Uuid\Uuid;
@@ -29,18 +32,35 @@ final class CreatePageHandler implements HandlerInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+    /**
+     * @var CreatePageVersion
+     */
+    private $createPageVersion;
+    /**
+     * @var CommandBus
+     */
+    private $commandBus;
 
     /**
      * CreateSitemapHandler constructor.
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
      * @param PageVersionRepository $pageVersionRepository
+     * @param CommandBus $commandBus
+     * @param CreatePageVersion $createPageVersion
      */
-    public function __construct(SitemapRepository $sitemapRepository, PageRepository $pageRepository, PageVersionRepository $pageVersionRepository)
-    {
+    public function __construct(
+        SitemapRepository $sitemapRepository,
+        PageRepository $pageRepository,
+        PageVersionRepository $pageVersionRepository,
+        CommandBus $commandBus,
+        CreatePageVersion $createPageVersion
+    ) {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageRepository = $pageRepository;
         $this->pageVersionRepository = $pageVersionRepository;
+        $this->createPageVersion = $createPageVersion;
+        $this->commandBus = $commandBus;
     }
 
     public function __invoke(MessageInterface $message): MessageInterface
@@ -60,7 +80,7 @@ final class CreatePageHandler implements HandlerInterface
         }
 
         $page = new Page([
-            'id' => Uuid::uuid4()->toString(),
+            'id' => $message->uuid(),
             'sitemapId' => $sitemap->id(),
             'locale' => $message->locale(),
             'name' => $message->name(),
@@ -72,17 +92,24 @@ final class CreatePageHandler implements HandlerInterface
         /** @var Page $page */
         $page = $this->pageRepository->save($page);
 
-        $pageVersion = new PageVersion([
-            'id' => Uuid::uuid4()->toString(),
-            'pageId' => $page->id(),
-            'content' => [],
-            'createdBy' => $message->createdBy(),
-            'approvedAt' => $message->createdAt(),
-            'createdAt' => $message->createdAt(),
-
-        ]);
-        $this->pageVersionRepository->save($pageVersion);
+        $this->savePageVersion((string) $page->id(), (string) $message->createdBy());
 
         return $message;
+    }
+
+    private function savePageVersion(string $pageId, string $createdAt): void
+    {
+        $body = [
+            'content' => [],
+            'pageId' => $pageId,
+        ];
+
+        $metadata = [
+            User::class => $createdAt,
+        ];
+
+        $message = $this->createPageVersion->inject($body, $metadata);
+        $message->validate();
+        $this->commandBus->handle($message);
     }
 }

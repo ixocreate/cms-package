@@ -41,6 +41,59 @@ final class PageResource implements ResourceInterface
         return [
             'name'       => 'Page',
             'namePlural' => 'Pages',
+            'form'       => [
+                [
+                    'key'             => 'name',
+                    'type'            => 'input',
+                    'templateOptions' => [
+                        'label'       => 'Name',
+                        'placeholder' => 'Name',
+                        'required'    => true,
+                    ],
+                ],
+                [
+                    'key'             => 'publishedFrom',
+                    'type'            => 'datetime',
+                    'templateOptions' => [
+                        'label'       => 'Published Until',
+                        'placeholder' => 'Published Until',
+                        'config'      => [
+                            'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
+                        ],
+                    ],
+                ],
+                [
+                    'key'             => 'publishedUntil',
+                    'type'            => 'datetime',
+                    'templateOptions' => [
+                        'label'       => 'Published Until',
+                        'placeholder' => 'Published Until',
+                        'config'      => [
+                            'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
+                        ],
+                    ],
+                ],
+                [
+                    'key'             => 'status',
+                    'type'            => 'select',
+                    'defaultValue'    => 'active',
+                    'templateOptions' => [
+                        'label'       => 'Status',
+                        'placeholder' => 'Status',
+                        'required'    => true,
+                        'options'     => [
+                            [
+                                'label' => 'Online',
+                                'value' => 'online',
+                            ],
+                            [
+                                'label' => 'Offline',
+                                'value' => 'offline',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
         ];
     }
 }

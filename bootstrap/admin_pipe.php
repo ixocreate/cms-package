@@ -28,6 +28,7 @@ use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
 use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
 use KiwiSuite\Cms\Action\Page\PageTypeSchemaAction;
+use KiwiSuite\Cms\Action\Page\PageVersionIndexAction;
 use KiwiSuite\Cms\Action\Page\SortAction;
 use KiwiSuite\Cms\Message\PageVersion\CreatePageVersion;
 use KiwiSuite\CommandBus\Message\MessageInterface;
@@ -50,6 +51,7 @@ $pipe->segment('/api', function(PipeConfigurator $pipe) {
         $group->before(AuthorizationGuardMiddleware::class);
 
         $group->post('/page/sort', SortAction::class, "admin.api.page.sort");
+        $group->get('/page/version/{id}', PageVersionIndexAction::class, "admin.api.page.version.index");
         $group->post('/page/version', HandlerAction::class, "admin.api.page.createVersion", function (RouteConfigurator $routeConfigurator) {
             $routeConfigurator->addOption(MessageInterface::class, CreatePageVersion::class);
         });

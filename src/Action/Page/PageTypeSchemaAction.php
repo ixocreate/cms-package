@@ -29,20 +29,20 @@ class PageTypeSchemaAction implements MiddlewareInterface
             //         ],
             //     ],
             // ],
-            [
-                'key'             => 'name',
-                'type'            => 'input',
-                'templateOptions' => [
-                    'label'       => 'Name',
-                    'placeholder' => 'Name',
-                    'required'    => true,
-                ],
-            ],
+            // [
+            //     'key'             => 'name',
+            //     'type'            => 'input',
+            //     'templateOptions' => [
+            //         'label'       => 'Name',
+            //         'placeholder' => 'Name',
+            //         'required'    => true,
+            //     ],
+            // ],
             [
                 'key'             => 'content',
                 'type'            => 'dynamic', // dynamic repeatable blocks in an array
                 'templateOptions' => [
-                    'label' => 'Content',
+                    // 'label' => 'Content',
                     // 'btnText' => 'Add',
                 ],
                 'fieldArray'      => [],

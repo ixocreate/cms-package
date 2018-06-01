@@ -41,6 +41,7 @@ class IndexAction implements MiddlewareInterface
         $navigation = $this->config->navigation();
         $navigation = array_map(function ($value){
             $value['active'] = false;
+            return $value;
         }, $navigation);
 
         $result = $this->navigationRepository->findBy(['pageId' => $request->getAttribute("id")]);

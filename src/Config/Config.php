@@ -21,6 +21,21 @@ final class Config implements SerializableServiceInterface
         $this->navigation = $configurator->getNavigation();
     }
 
+    /**
+     * @return string
+     */
+    public function localizationUrlSchema(): string
+    {
+        return $this->localizationUrlSchema;
+    }
+
+    /**
+     * @return array
+     */
+    public function navigation(): array
+    {
+        return $this->navigation;
+    }
 
     /**
      * @return string

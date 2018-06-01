@@ -9,7 +9,7 @@ final class Configurator implements ConfiguratorInterface
     /**
      * @var string
      */
-    private $localizationUrlSchema = "";
+    private $localizationUrlSchema = '/${LANG}';
 
     private $navigation = [];
 

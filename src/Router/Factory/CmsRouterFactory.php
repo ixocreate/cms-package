@@ -3,6 +3,7 @@ namespace KiwiSuite\Cms\Router\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\Cms\Action\Frontend\RenderAction;
+use KiwiSuite\Cms\PageType\PageTypeInterface;
 use KiwiSuite\Cms\PageType\PageTypeMapping;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\PageRepository;
@@ -58,6 +59,12 @@ final class CmsRouterFactory implements FactoryInterface
         return $router;
     }
 
+    /**
+     * @param array $tree
+     * @param $routes
+     * @param string $locale
+     * @param string $path
+     */
     private function parseTree(array $tree, &$routes, string $locale, string $path = ""): void
     {
         $middleware = [
@@ -69,14 +76,26 @@ final class CmsRouterFactory implements FactoryInterface
                 continue;
             }
 
-            $itemMiddleware = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$item['sitemap']->pageType()])->middleware();
+            /** @var PageTypeInterface $pageType */
+            $pageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$item['sitemap']->pageType()]);
+
+            $itemMiddleware = $pageType->middleware();
             if (empty($itemMiddleware)) {
                 $itemMiddleware = $middleware;
             } else {
                 $itemMiddleware = array_merge($middleware, array_values($itemMiddleware));
             }
 
-            $currentPath = $path . "/" . $item['pages'][$locale]->slug();
+            $routing = '/' . ltrim($pageType->routing(), '/');
+            $currentPath = $path . $routing;
+
+            if (empty($item['pages'][$locale]->slug()) && strpos($pageType->routing(), '${SLUG}') !== false) {
+                continue;
+            }
+
+            if (!empty($item['pages'][$locale]->slug())) {
+                $currentPath = str_replace('${SLUG}', $item['pages'][$locale]->slug(), $currentPath);
+            }
 
             $routes[] = [
                 'path' => $currentPath,

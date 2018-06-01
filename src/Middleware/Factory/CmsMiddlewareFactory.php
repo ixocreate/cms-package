@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KiwiSuite\Cms\Middleware\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
+use KiwiSuite\Cms\Config\Config;
 use KiwiSuite\Cms\Middleware\CmsMiddleware;
 use KiwiSuite\Cms\Router\CmsRouter;
 use KiwiSuite\Contract\ServiceManager\FactoryInterface;
@@ -31,13 +32,15 @@ final class CmsMiddlewareFactory implements FactoryInterface
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
+        /** @var Config $cmsConfig */
+        $cmsConfig = $container->get(Config::class);
         $cmsMiddleware = new CmsMiddleware();
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
         foreach ($container->get(LocaleManager::class)->all() as $localeItem) {
-            $cmsMiddleware->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($container, $localeItem, $middlewareFactory) {
+            $cmsMiddleware->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request, RequestHandlerInterface $handler) use ($container, $localeItem, $middlewareFactory, $cmsConfig) {
                 //TODO path
-                $path = '/de';
+                $path = str_replace('${LANG}', \Locale::getPrimaryLanguage($localeItem['locale']), $cmsConfig->localizationUrlSchema());
 
                 $uri = new Uri($path);
                 if (!empty($uri->getScheme()) && $uri->getScheme() !== $request->getUri()->getScheme()) {

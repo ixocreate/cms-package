@@ -56,7 +56,7 @@ final class Page implements EntityInterface
         return $this->name;
     }
 
-    public function slug(): string
+    public function slug(): ?string
     {
         return $this->slug;
     }

@@ -7,6 +7,8 @@ interface PageTypeInterface
 
     public function label(): string;
 
+    public function routing(): string;
+
     public function handle(): ?string;
 
     public function isRoot(): ?bool;

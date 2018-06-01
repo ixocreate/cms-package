@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace KiwiSuite\Cms\Action\Frontend;
 
+use KiwiSuite\Cms\PageType\PageTypeInterface;
 use KiwiSuite\Template\TemplateResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,8 +19,8 @@ final class RenderAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        var_dump("test");
-        die();
-        return new TemplateResponse('layout::layout');
+        /** @var PageTypeInterface $pageType */
+        $pageType = $request->getAttribute(PageTypeInterface::class);
+        return new TemplateResponse($pageType->layout());
     }
 }

@@ -3,6 +3,13 @@
 namespace KiwiSuite\Cms\Action\Page;
 
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
+use KiwiSuite\Cms\Entity\Page;
+use KiwiSuite\Cms\Entity\Sitemap;
+use KiwiSuite\Cms\PageType\PageTypeInterface;
+use KiwiSuite\Cms\PageType\PageTypeMapping;
+use KiwiSuite\Cms\PageType\PageTypeSubManager;
+use KiwiSuite\Cms\Repository\PageRepository;
+use KiwiSuite\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -10,8 +17,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class PageTypeSchemaAction implements MiddlewareInterface
 {
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+    /**
+     * @var SitemapRepository
+     */
+    private $sitemapRepository;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
+    /**
+     * @var PageTypeMapping
+     */
+    private $pageTypeMapping;
+
+    /**
+     * PageTypeSchemaAction constructor.
+     * @param PageRepository $pageRepository
+     * @param SitemapRepository $sitemapRepository
+     * @param PageTypeSubManager $pageTypeSubManager
+     * @param PageTypeMapping $pageTypeMapping
+     */
+    public function __construct(
+        PageRepository $pageRepository,
+        SitemapRepository $sitemapRepository,
+        PageTypeSubManager $pageTypeSubManager,
+        PageTypeMapping $pageTypeMapping
+    ) {
+        $this->pageRepository = $pageRepository;
+        $this->sitemapRepository = $sitemapRepository;
+        $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->pageTypeMapping = $pageTypeMapping;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        /** @var Page $page */
+        $page = $this->pageRepository->find($request->getAttribute("id"));
+        /** @var Sitemap $sitemap */
+        $sitemap = $this->sitemapRepository->find($page->sitemapId());
+        /** @var PageTypeInterface $pageType */
+        $pageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$sitemap->pageType()]);
+
+        return new ApiSuccessResponse($pageType->elements());
+
         return new ApiSuccessResponse([
             // [
             //     'key'             => 'pageType',

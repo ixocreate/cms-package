@@ -3,6 +3,9 @@ namespace KiwiSuite\Cms\Router\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\Cms\Action\Frontend\RenderAction;
+use KiwiSuite\Cms\Middleware\LoadPageMiddleware;
+use KiwiSuite\Cms\Middleware\LoadPageTypeMiddleware;
+use KiwiSuite\Cms\Middleware\LoadSitemapMiddleware;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
 use KiwiSuite\Cms\PageType\PageTypeMapping;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
@@ -55,7 +58,7 @@ final class CmsRouterFactory implements FactoryInterface
         foreach ($routes as $item) {
             $routeObj = new Route($item['path'], $item['middleware'], Route::HTTP_METHOD_ANY, "page." . $item['id']);
             $routeObj->setOptions([
-                'id' => $item['id'],
+                'pageId' => $item['id'],
             ]);
             $router->addRoute($routeObj);
         }
@@ -71,7 +74,9 @@ final class CmsRouterFactory implements FactoryInterface
     private function parseTree(array $tree, &$routes, string $locale, string $path = ""): void
     {
         $middleware = [
-            RenderAction::class
+            LoadPageMiddleware::class,
+            LoadSitemapMiddleware::class,
+            LoadPageTypeMiddleware::class,
         ];
 
         foreach ($tree as $item) {

@@ -9,5 +9,5 @@ interface BlockInterface
 
     public function label(): string;
 
-    public function elements(): array;
+    public function elements();
 }

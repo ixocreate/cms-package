@@ -2,6 +2,7 @@
 namespace KiwiSuite\Cms;
 
 use KiwiSuite\Cms\BootstrapItem\BlockBootstrapItem;
+use KiwiSuite\Cms\BootstrapItem\CmsBootstrapItem;
 use KiwiSuite\Cms\BootstrapItem\PageTypeBootstrapItem;
 use KiwiSuite\Contract\Application\ConfiguratorRegistryInterface;
 use KiwiSuite\Contract\Application\PackageInterface;
@@ -33,6 +34,7 @@ final class Package implements PackageInterface
         return [
             PageTypeBootstrapItem::class,
             BlockBootstrapItem::class,
+            CmsBootstrapItem::class,
         ];
     }
 

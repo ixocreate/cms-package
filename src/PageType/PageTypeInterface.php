@@ -15,8 +15,6 @@ interface PageTypeInterface
 
     public function allowedChildren(): ?array;
 
-    public function allowedParents(): ?array;
-
     public function middleware(): ?array;
 
     public function layout(): string;

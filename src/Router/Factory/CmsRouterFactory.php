@@ -54,6 +54,9 @@ final class CmsRouterFactory implements FactoryInterface
         $router = new CmsRouter();
         foreach ($routes as $item) {
             $routeObj = new Route($item['path'], $item['middleware'], Route::HTTP_METHOD_ANY, "page." . $item['id']);
+            $routeObj->setOptions([
+                'id' => $item['id'],
+            ]);
             $router->addRoute($routeObj);
         }
         return $router;
@@ -85,6 +88,8 @@ final class CmsRouterFactory implements FactoryInterface
             } else {
                 $itemMiddleware = array_merge($middleware, array_values($itemMiddleware));
             }
+
+            $itemMiddleware[] = RenderAction::class;
 
             $routing = '/' . ltrim($pageType->routing(), '/');
             $currentPath = $path . $routing;

@@ -54,15 +54,6 @@ class PageTypeSchemaAction implements MiddlewareInterface
                         ],
                         'fieldGroup'      => [
                             [
-                                'key'             => 'name',
-                                'type'            => 'input',
-                                'templateOptions' => [
-                                    'label'       => 'Name',
-                                    'placeholder' => 'Name',
-                                    'required'    => true,
-                                ],
-                            ],
-                            [
                                 'type'            => 'repeat',
                                 'key'             => 'images',
                                 'templateOptions' => [
@@ -79,45 +70,6 @@ class PageTypeSchemaAction implements MiddlewareInterface
                                                 'placeholder' => 'Title',
                                                 'required'    => true,
                                             ],
-                                        ],
-                                        [
-                                            'key'             => 'image',
-                                            'type'            => 'media',
-                                            'templateOptions' => [
-                                                'label'       => 'Image',
-                                                'placeholder' => 'Name',
-                                            ],
-                                        ],
-                                        [
-                                            'key'             => 'description',
-                                            'type'            => 'wysiwyg',
-                                            'templateOptions' => [
-                                                'label'   => 'Description',
-                                                'height'  => 150,
-                                                /**
-                                                 * quill config
-                                                 */
-                                                'modules' => [
-                                                    'toolbar' => [
-                                                        ['bold', 'italic', 'underline', 'strike'],
-                                                        // toggled buttons
-                                                        [
-                                                            ['list' => 'ordered'],
-                                                            ['list' => 'bullet'],
-                                                        ],
-                                                        [['script' => 'sub'], ['script' => 'super']],
-                                                        // superscript/subscript
-                                                        [['indent' => '-1'], ['indent' => '+1']],
-                                                        // outdent/indent
-                                                        [['header' => [1, 2, 3, 4, 5, 6, false]]],
-                                                        [['align' => []]],
-                                                        ['clean'],
-                                                        // remove formatting button
-                                                        ['link'],
-                                                    ],
-                                                ],
-                                            ],
-
                                         ],
                                     ],
                                 ],

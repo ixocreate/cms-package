@@ -55,7 +55,7 @@ $pipe->segment('/api', function(PipeConfigurator $pipe) {
         $group->post('/page/version/{id}', HandlerAction::class, "admin.api.page.createVersion", function (RouteConfigurator $routeConfigurator) {
             $routeConfigurator->addOption(MessageInterface::class, CreatePageVersion::class);
         });
-        $group->get('/page/create-schema', CreateSchemaAction::class, "admin.api.page.createSchema");
+        $group->get('/page/create-schema[/{parentSitemapId}]', CreateSchemaAction::class, "admin.api.page.createSchema");
         $group->get('/page/page-type-schema/{id}', PageTypeSchemaAction::class, "admin.api.page.pageTypeSchema");
     });
 });

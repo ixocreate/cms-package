@@ -6,6 +6,7 @@ use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Entity\PageVersion;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\Message\CreatePage;
+use KiwiSuite\Cms\Message\CreateSlug;
 use KiwiSuite\Cms\Message\PageVersion\CreatePageVersion;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\PageVersionRepository;
@@ -40,6 +41,10 @@ final class CreatePageHandler implements HandlerInterface
      * @var CommandBus
      */
     private $commandBus;
+    /**
+     * @var CreateSlug
+     */
+    private $createSlug;
 
     /**
      * CreateSitemapHandler constructor.
@@ -48,19 +53,22 @@ final class CreatePageHandler implements HandlerInterface
      * @param PageVersionRepository $pageVersionRepository
      * @param CommandBus $commandBus
      * @param CreatePageVersion $createPageVersion
+     * @param CreateSlug $createSlug
      */
     public function __construct(
         SitemapRepository $sitemapRepository,
         PageRepository $pageRepository,
         PageVersionRepository $pageVersionRepository,
         CommandBus $commandBus,
-        CreatePageVersion $createPageVersion
+        CreatePageVersion $createPageVersion,
+        CreateSlug $createSlug
     ) {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageRepository = $pageRepository;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->createPageVersion = $createPageVersion;
         $this->commandBus = $commandBus;
+        $this->createSlug = $createSlug;
     }
 
     public function __invoke(MessageInterface $message): MessageInterface
@@ -92,6 +100,7 @@ final class CreatePageHandler implements HandlerInterface
         /** @var Page $page */
         $page = $this->pageRepository->save($page);
 
+        $this->saveSlug((string) $page->id());
         $this->savePageVersion((string) $page->id(), (string) $message->createdBy());
 
         return $message;
@@ -109,6 +118,17 @@ final class CreatePageHandler implements HandlerInterface
         ];
 
         $message = $this->createPageVersion->inject($body, $metadata);
+        $message->validate();
+        $this->commandBus->handle($message);
+    }
+
+    private function saveSlug(string $pageId): void
+    {
+        $body = [
+            'pageId' => $pageId,
+        ];
+
+        $message = $this->createSlug->inject($body, []);
         $message->validate();
         $this->commandBus->handle($message);
     }

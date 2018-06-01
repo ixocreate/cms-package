@@ -113,7 +113,6 @@ final class PageResource implements ResourceInterface
                                 'label'       => 'Status',
                                 'placeholder' => 'Status',
                                 'required'    => true,
-                                'clear'       => false,
                                 'options'     => [
                                     [
                                         'label' => 'Online',

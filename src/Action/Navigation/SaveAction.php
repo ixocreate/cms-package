@@ -52,10 +52,13 @@ class SaveAction implements MiddlewareInterface
          * ]
          */
 
+
         $parsedBody = $request->getParsedBody();
 
         $navigation = array_map(function ($value) use($parsedBody){
             $value['active'] = (in_array($value['name'], $parsedBody));
+
+            return $value;
         }, $this->config->navigation());
 
 
@@ -66,7 +69,7 @@ class SaveAction implements MiddlewareInterface
             $navigationEntity = new Navigation([
                 'id' => Uuid::uuid4()->toString(),
                 'pageId' => $request->getAttribute("id"),
-                'navigation' => $nav['active'],
+                'navigation' => $nav['name'],
             ]);
 
             $this->navigationRepository->save($navigationEntity);

@@ -26,6 +26,7 @@ use KiwiSuite\Admin\Middleware\CookieInitializerMiddleware;
 use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
+use KiwiSuite\Cms\Action\Navigation\SaveAction;
 use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
 use KiwiSuite\Cms\Action\Page\PageTypeSchemaAction;
 use KiwiSuite\Cms\Action\Page\PageVersionIndexAction;
@@ -55,6 +56,11 @@ $pipe->segment('/api', function(PipeConfigurator $pipe) {
         $group->post('/page/version/{id}', HandlerAction::class, "admin.api.page.createVersion", function (RouteConfigurator $routeConfigurator) {
             $routeConfigurator->addOption(MessageInterface::class, CreatePageVersion::class);
         });
+
+        $group->get('/page/navigation/{id}', \KiwiSuite\Cms\Action\Navigation\IndexAction::class, "admin.api.page.navigation.index");
+        $group->post('/page/navigation/{id}', SaveAction::class, "admin.api.page.navigation.save");
+
+
         $group->get('/page/create-schema[/{parentSitemapId}]', CreateSchemaAction::class, "admin.api.page.createSchema");
         $group->get('/page/page-type-schema/{id}', PageTypeSchemaAction::class, "admin.api.page.pageTypeSchema");
     });

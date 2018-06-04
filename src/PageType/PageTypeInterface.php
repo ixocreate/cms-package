@@ -1,6 +1,8 @@
 <?php
 namespace KiwiSuite\Cms\PageType;
 
+use KiwiSuite\Admin\Schema\Form\Elements\Form;
+
 interface PageTypeInterface
 {
     public static function name(): string;
@@ -19,5 +21,5 @@ interface PageTypeInterface
 
     public function layout(): string;
 
-    public function elements(): array;
+    public function elements(Form $form): array;
 }

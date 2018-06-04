@@ -3,6 +3,7 @@ namespace KiwiSuite\Cms\Router\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\Cms\Action\Frontend\RenderAction;
+use KiwiSuite\Cms\Middleware\LoadPageContentMiddleware;
 use KiwiSuite\Cms\Middleware\LoadPageMiddleware;
 use KiwiSuite\Cms\Middleware\LoadPageTypeMiddleware;
 use KiwiSuite\Cms\Middleware\LoadSitemapMiddleware;
@@ -77,6 +78,7 @@ final class CmsRouterFactory implements FactoryInterface
             LoadPageMiddleware::class,
             LoadSitemapMiddleware::class,
             LoadPageTypeMiddleware::class,
+            LoadPageContentMiddleware::class,
         ];
 
         foreach ($tree as $item) {

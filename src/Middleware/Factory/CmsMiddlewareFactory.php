@@ -59,6 +59,10 @@ final class CmsMiddlewareFactory implements FactoryInterface
                 $middlewarePipe->pipe(new RouteMiddleware($container->build(CmsRouter::class, ['locale' => $localeItem['locale']])));
                 $middlewarePipe->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
 
+                /*$middlewarePipe->pipe(new CallableMiddlewareDecorator(function (ServerRequestInterface $request1, RequestHandlerInterface $handler1) use ($request, $handler){
+                    return $handler->handle($request);
+                }));*/
+
                 $pathMiddlewareDecorator = new PathMiddlewareDecorator($uri->getPath(), $middlewarePipe);
                 return $pathMiddlewareDecorator->process($request, $handler);
             }));

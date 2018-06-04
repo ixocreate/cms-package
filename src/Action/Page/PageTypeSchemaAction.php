@@ -3,6 +3,7 @@
 namespace KiwiSuite\Cms\Action\Page;
 
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
+use KiwiSuite\Admin\Schema\SchemaInstantiator;
 use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
@@ -33,6 +34,10 @@ class PageTypeSchemaAction implements MiddlewareInterface
      * @var PageTypeMapping
      */
     private $pageTypeMapping;
+    /**
+     * @var SchemaInstantiator
+     */
+    private $schemaInstantiator;
 
     /**
      * PageTypeSchemaAction constructor.
@@ -40,17 +45,20 @@ class PageTypeSchemaAction implements MiddlewareInterface
      * @param SitemapRepository $sitemapRepository
      * @param PageTypeSubManager $pageTypeSubManager
      * @param PageTypeMapping $pageTypeMapping
+     * @param SchemaInstantiator $schemaInstantiator
      */
     public function __construct(
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         PageTypeSubManager $pageTypeSubManager,
-        PageTypeMapping $pageTypeMapping
+        PageTypeMapping $pageTypeMapping,
+        SchemaInstantiator $schemaInstantiator
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->pageTypeMapping = $pageTypeMapping;
+        $this->schemaInstantiator = $schemaInstantiator;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -62,7 +70,7 @@ class PageTypeSchemaAction implements MiddlewareInterface
         /** @var PageTypeInterface $pageType */
         $pageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$sitemap->pageType()]);
 
-        return new ApiSuccessResponse($pageType->elements());
+        return new ApiSuccessResponse($pageType->elements($this->schemaInstantiator->createSchemaBuilder()->getForm()));
 
         return new ApiSuccessResponse([
             // [

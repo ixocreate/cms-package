@@ -4,6 +4,11 @@ namespace KiwiSuite\Cms\Resource;
 
 use KiwiSuite\Admin\Resource\ResourceInterface;
 use KiwiSuite\Admin\Resource\ResourceTrait;
+use KiwiSuite\Admin\Schema\Form\Elements\DateTime;
+use KiwiSuite\Admin\Schema\Form\Elements\ElementGroup;
+use KiwiSuite\Admin\Schema\Form\Elements\Select;
+use KiwiSuite\Admin\Schema\Form\Elements\Text;
+use KiwiSuite\Admin\Schema\SchemaBuilder;
 use KiwiSuite\Cms\Action\Page\IndexAction;
 use KiwiSuite\Cms\Message\CreatePage;
 use KiwiSuite\Cms\Repository\PageRepository;
@@ -37,97 +42,64 @@ final class PageResource implements ResourceInterface
         return "fa";
     }
 
-    public function schema(): array
+    public function schema(SchemaBuilder $schemaBuilder): void
     {
-        return [
-            'name'       => 'Page',
-            'namePlural' => 'Pages',
-            'form'       => [
-                [
-                    'wrappers'        => [
-                        'section',
+        $schemaBuilder->setName("Page");
+        $schemaBuilder->setNamePlural("Pages");
+        $form = $schemaBuilder->getForm();
+        $form->add(function (ElementGroup $elementGroup){
+            $elementGroup->setName("general");
+            $elementGroup->addWrapper("section");
+            $elementGroup->setLabel("General");
+            $elementGroup->addOption("icon", "fa fa-fw fa-cog");
+
+            $elementGroup->add(function (Text $text) {
+                $text->setName("name");
+                $text->setLabel("Name");
+                $text->setRequired(true);
+            });
+        });
+
+        $form->add(function (ElementGroup $elementGroup){
+            $elementGroup->setName("scheduling");
+            $elementGroup->addWrapper("section");
+            $elementGroup->setLabel("Scheduling");
+            $elementGroup->addOption("icon", "fa fa-fw fa-cog");
+
+            $elementGroup->add(function (DateTime $dateTime) {
+                $dateTime->setName("publishedFrom");
+                $dateTime->setLabel("Published From");
+                $dateTime->addOption("placement", "left");
+            });
+
+            $elementGroup->add(function (DateTime $dateTime) {
+                $dateTime->setName("publishedUntil");
+                $dateTime->setLabel("Published Until");
+                $dateTime->addOption("placement", "left");
+            });
+        });
+
+        $form->add(function (ElementGroup $elementGroup){
+            $elementGroup->setName("status");
+            $elementGroup->addWrapper("section");
+            $elementGroup->setLabel("Status");
+            $elementGroup->addOption("icon", "fa fa-fw fa-power-off");
+
+            $elementGroup->add(function (Select $select) {
+                $select->setName("status");
+                $select->setLabel("Status");
+                $select->setSelectOptions([
+                    [
+                        'label' => 'Online',
+                        'value' => 'online',
                     ],
-                    'templateOptions' => [
-                        'label' => 'General',
-                        'icon'  => 'fa fa-cog',
+                    [
+                        'label' => 'Offline',
+                        'value' => 'offline',
                     ],
-                    'fieldGroup'      => [
-                        [
-                            'key'             => 'name',
-                            'type'            => 'input',
-                            'templateOptions' => [
-                                'label'       => 'Name',
-                                'placeholder' => 'Name',
-                                'required'    => true,
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'wrappers'        => [
-                        'section',
-                    ],
-                    'templateOptions' => [
-                        'label' => 'Scheduling',
-                        'icon'  => 'fa fw-fw fa-calendar',
-                    ],
-                    'fieldGroup'      => [
-                        [
-                            'key'             => 'publishedFrom',
-                            'type'            => 'datetime',
-                            'templateOptions' => [
-                                'label'       => 'Published Until',
-                                'placeholder' => 'Published Until',
-                                'config'      => [
-                                    'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
-                                ],
-                            ],
-                        ],
-                        [
-                            'key'             => 'publishedUntil',
-                            'type'            => 'datetime',
-                            'templateOptions' => [
-                                'label'       => 'Published Until',
-                                'placeholder' => 'Published Until',
-                                'config'      => [
-                                    'dateInputFormat' => 'YYYY-MM-DD HH:mm:ss',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'wrappers'        => [
-                        'section',
-                    ],
-                    'templateOptions' => [
-                        'label' => 'Status',
-                        'icon'  => 'fa fw-fw fa-power-off',
-                    ],
-                    'fieldGroup'      => [
-                        [
-                            'key'             => 'status',
-                            'type'            => 'select',
-                            'defaultValue'    => 'active',
-                            'templateOptions' => [
-                                'label'       => 'Status',
-                                'placeholder' => 'Status',
-                                'required'    => true,
-                                'options'     => [
-                                    [
-                                        'label' => 'Online',
-                                        'value' => 'online',
-                                    ],
-                                    [
-                                        'label' => 'Offline',
-                                        'value' => 'offline',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
+                ]);
+                $select->setRequired(true);
+            });
+        });
     }
 }

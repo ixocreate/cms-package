@@ -61,7 +61,7 @@ final class Sitemap implements NodeInterface
         return $this->handle;
     }
 
-    protected function createDefinitions(): DefinitionCollection
+    protected static function createDefinitions(): DefinitionCollection
     {
         return new DefinitionCollection([
             new Definition('id', UuidType::class, false, true),

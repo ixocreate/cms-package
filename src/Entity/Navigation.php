@@ -45,7 +45,7 @@ final class Navigation implements EntityInterface
         return $this->navigation;
     }
 
-    protected function createDefinitions(): DefinitionCollection
+    protected static function createDefinitions(): DefinitionCollection
     {
         return new DefinitionCollection([
             new Definition('id', UuidType::class, false, true),

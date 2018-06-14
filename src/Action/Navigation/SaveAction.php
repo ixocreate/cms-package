@@ -44,7 +44,7 @@ class SaveAction implements MiddlewareInterface
             ->where("nav.pageId = :pageId")
             ->setParameter("pageId", $request->getAttribute("id"));
         $queryBuilder->getQuery()->execute();
-        
+
         $parsedBody = $request->getParsedBody();
 
         $navigation = array_map(function ($value) use($parsedBody){

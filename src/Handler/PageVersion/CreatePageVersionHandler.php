@@ -6,6 +6,7 @@ use KiwiSuite\Cms\Entity\PageVersion;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\Message\CreatePage;
 use KiwiSuite\Cms\Message\PageVersion\CreatePageVersion;
+use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\PageVersionRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
@@ -19,14 +20,29 @@ final class CreatePageVersionHandler implements HandlerInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+    /**
+     * @var SitemapRepository
+     */
+    private $sitemapRepository;
 
     /**
      * CreateSitemapHandler constructor.
      * @param PageVersionRepository $pageVersionRepository
+     * @param PageRepository $pageRepository
+     * @param SitemapRepository $sitemapRepository
      */
-    public function __construct(PageVersionRepository $pageVersionRepository)
-    {
+    public function __construct(
+        PageVersionRepository $pageVersionRepository,
+        PageRepository $pageRepository,
+        SitemapRepository $sitemapRepository
+    ) {
         $this->pageVersionRepository = $pageVersionRepository;
+        $this->pageRepository = $pageRepository;
+        $this->sitemapRepository = $sitemapRepository;
     }
 
     public function __invoke(MessageInterface $message): MessageInterface
@@ -42,10 +58,24 @@ final class CreatePageVersionHandler implements HandlerInterface
 
         $queryBuilder->getQuery()->execute();
 
+        /** @var Page $page */
+        $page = $this->pageRepository->find($message->pageId());
+        /** @var Sitemap $sitemap */
+        $sitemap = $this->sitemapRepository->find($page->sitemapId());
+
+
         $pageVersion = new PageVersion([
             'id' => Uuid::uuid4()->toString(),
             'pageId' => $message->pageId(),
-            'content' => $message->content(),
+            'content' => [
+                '__receiver__' => [
+                    'receiver' => PageTypeSubManager::class,
+                    'options' => [
+                        'pageType' => $sitemap->pageType()
+                    ]
+                ],
+                '__value__' => $message->content(),
+            ],
             'createdBy' => $message->createdBy(),
             'approvedAt' => $message->createdAt(),
             'createdAt' => $message->createdAt(),

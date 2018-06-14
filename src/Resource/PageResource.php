@@ -12,6 +12,12 @@ use KiwiSuite\Admin\Schema\SchemaBuilder;
 use KiwiSuite\Cms\Action\Page\IndexAction;
 use KiwiSuite\Cms\Message\CreatePage;
 use KiwiSuite\Cms\Repository\PageRepository;
+use KiwiSuite\Schema\Builder;
+use KiwiSuite\Schema\Elements\DateTimeElement;
+use KiwiSuite\Schema\Elements\SectionElement;
+use KiwiSuite\Schema\Elements\SelectElement;
+use KiwiSuite\Schema\Elements\TextElement;
+use KiwiSuite\Schema\Schema;
 
 final class PageResource implements ResourceInterface
 {
@@ -42,10 +48,55 @@ final class PageResource implements ResourceInterface
         return "fa";
     }
 
-    public function schema(SchemaBuilder $schemaBuilder): void
+    public function schema(SchemaBuilder $schemaBuilder): SchemaBuilder
     {
-        $schemaBuilder->setName("Page");
-        $schemaBuilder->setNamePlural("Pages");
+        $schemaBuilder = $schemaBuilder->withName("Page");
+        $schemaBuilder = $schemaBuilder->withNamePlural("Pages");
+
+        /** @var Builder $builder */
+        $builder = $schemaBuilder->builder();
+        $schema = new Schema();
+        /** @var SectionElement $segment */
+        $section = $builder->create(SectionElement::class, "general")
+            ->withAddedElement(
+                $builder->create(TextElement::class, "name")
+                    ->withLabel("Name")
+            )
+            ->withLabel("General")
+            ->withIcon("fa-cog");
+        $schema = $schema->withAddedElement($section);
+
+        /** @var SectionElement $segment */
+        $section = $builder->create(SectionElement::class, "scheduling")
+            ->withAddedElement(
+                $builder->create(DateTimeElement::class, "publishedFrom")
+                    ->withLabel("Published From")
+            )
+            ->withAddedElement(
+                $builder->create(DateTimeElement::class, "publishedUntil")
+                    ->withLabel("Published Until")
+            )
+            ->withLabel("Scheduling")
+            ->withIcon("fa-calendar");
+        $schema = $schema->withAddedElement($section);
+
+        /** @var SectionElement $segment */
+        $section = $builder->create(SectionElement::class, "status")
+            ->withAddedElement(
+                $builder->create(SelectElement::class, "status")
+                    ->withLabel("Status")
+                    ->withOptions([
+                        'online' => 'Online',
+                        'offline' => 'Offline',
+                    ])
+            )
+            ->withLabel("Status")
+            ->withIcon("fa-power-off");
+        $schema = $schema->withAddedElement($section);
+
+        return $schemaBuilder->withSchema($schema);
+
+
         $form = $schemaBuilder->getForm();
         $form->add(function (ElementGroup $elementGroup){
             $elementGroup->setName("general");

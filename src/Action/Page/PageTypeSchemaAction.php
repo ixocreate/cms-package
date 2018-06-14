@@ -3,14 +3,13 @@
 namespace KiwiSuite\Cms\Action\Page;
 
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Admin\Schema\SchemaInstantiator;
 use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeMapping;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
+use KiwiSuite\Schema\Builder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,35 +29,29 @@ class PageTypeSchemaAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
-     * @var PageTypeMapping
+     * @var Builder
      */
-    private $pageTypeMapping;
-    /**
-     * @var SchemaInstantiator
-     */
-    private $schemaInstantiator;
+    private $builder;
 
     /**
      * PageTypeSchemaAction constructor.
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
      * @param PageTypeSubManager $pageTypeSubManager
-     * @param PageTypeMapping $pageTypeMapping
-     * @param SchemaInstantiator $schemaInstantiator
+     * @param Builder $builder
      */
     public function __construct(
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         PageTypeSubManager $pageTypeSubManager,
-        PageTypeMapping $pageTypeMapping,
-        SchemaInstantiator $schemaInstantiator
+        Builder $builder
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->pageTypeMapping = $pageTypeMapping;
-        $this->schemaInstantiator = $schemaInstantiator;
+        $this->builder = $builder;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -68,9 +61,9 @@ class PageTypeSchemaAction implements MiddlewareInterface
         /** @var Sitemap $sitemap */
         $sitemap = $this->sitemapRepository->find($page->sitemapId());
         /** @var PageTypeInterface $pageType */
-        $pageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$sitemap->pageType()]);
+        $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-        return new ApiSuccessResponse($pageType->elements($this->schemaInstantiator->createSchemaBuilder()->getForm()));
+        return new ApiSuccessResponse($pageType->schema($this->builder));
 
         return new ApiSuccessResponse([
             // [

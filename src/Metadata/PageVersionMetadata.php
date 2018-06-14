@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace KiwiSuite\Cms\Metadata;
 
-use Doctrine\DBAL\Types\Type;
 use KiwiSuite\CommonTypes\Entity\DateTimeType;
+use KiwiSuite\CommonTypes\Entity\SchemaType;
 use KiwiSuite\Database\ORM\Metadata\AbstractMetadata;
 use Doctrine\ORM\Mapping\Builder\FieldBuilder;
 use KiwiSuite\CommonTypes\Entity\UuidType;
@@ -37,7 +37,7 @@ final class PageVersionMetadata extends AbstractMetadata
         )->build();
 
         $this->setFieldBuilder('content',
-            $builder->createField('content', Type::JSON)
+            $builder->createField('content', SchemaType::class)
         )->build();
 
         $this->setFieldBuilder('createdBy',

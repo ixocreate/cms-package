@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace KiwiSuite\Cms\Entity;
 
 use KiwiSuite\CommonTypes\Entity\DateTimeType;
+use KiwiSuite\CommonTypes\Entity\SchemaType;
 use KiwiSuite\Database\Tree\NodeInterface;
 use KiwiSuite\Entity\Entity\Definition;
 use KiwiSuite\Entity\Entity\DefinitionCollection;
@@ -68,7 +69,7 @@ final class PageVersion implements EntityInterface
         return new DefinitionCollection([
             new Definition('id', UuidType::class, false, true),
             new Definition('pageId', UuidType::class, false, true),
-            new Definition('content', TypeInterface::TYPE_ARRAY, true, true),
+            new Definition('content', SchemaType::class, true, true),
             new Definition('createdBy', UuidType::class, false, true),
             new Definition('approvedAt', DateTimeType::class, true, true),
             new Definition('createdAt', DateTimeType::class, false, true),

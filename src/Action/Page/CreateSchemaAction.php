@@ -5,9 +5,12 @@ namespace KiwiSuite\Cms\Action\Page;
 use KiwiSuite\Admin\Response\ApiErrorResponse;
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeMapping;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\SitemapRepository;
+use KiwiSuite\Schema\Builder;
+use KiwiSuite\Schema\Elements\SelectElement;
+use KiwiSuite\Schema\Elements\TextElement;
+use KiwiSuite\Schema\Schema;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,25 +24,28 @@ class CreateSchemaAction implements MiddlewareInterface
     private $pageTypeSubManager;
 
     /**
-     * @var PageTypeMapping
-     */
-    private $pageTypeMapping;
-    /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+    /**
+     * @var Builder
+     */
+    private $builder;
 
     /**
      * CreateSchemaAction constructor.
      * @param PageTypeSubManager $pageTypeSubManager
-     * @param PageTypeMapping $pageTypeMapping
      * @param SitemapRepository $sitemapRepository
+     * @param Builder $builder
      */
-    public function __construct(PageTypeSubManager $pageTypeSubManager, PageTypeMapping $pageTypeMapping, SitemapRepository $sitemapRepository)
-    {
+    public function __construct(
+        PageTypeSubManager $pageTypeSubManager,
+        SitemapRepository $sitemapRepository,
+        Builder $builder
+    ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->pageTypeMapping = $pageTypeMapping;
         $this->sitemapRepository = $sitemapRepository;
+        $this->builder = $builder;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -52,12 +58,12 @@ class CreateSchemaAction implements MiddlewareInterface
                 return new ApiErrorResponse("invalid_parentSitemapId");
             }
 
-            $parentPageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$sitemap->pageType()]);
+            $parentPageType = $this->pageTypeSubManager->get($sitemap->pageType());
         }
 
         $defaultPageType = null;
         $pageTypes = [];
-        foreach ($this->pageTypeMapping->getMapping() as $name => $pageTypeClass) {
+        foreach ($this->pageTypeSubManager->getServiceManagerConfig()->getNamedServices() as $name => $pageTypeClass) {
             /** @var PageTypeInterface $pageTypeObj */
             $pageTypeObj = $this->pageTypeSubManager->get($pageTypeClass);
 
@@ -70,10 +76,7 @@ class CreateSchemaAction implements MiddlewareInterface
                     $defaultPageType = $name;
                 }
 
-                $pageTypes[] = [
-                    'label' => $pageTypeObj->label(),
-                    'value' => $name,
-                ];
+                $pageTypes[$name] = $pageTypeObj->label();
 
                 continue;
             }
@@ -86,33 +89,17 @@ class CreateSchemaAction implements MiddlewareInterface
                 $defaultPageType = $name;
             }
 
-            $pageTypes[] = [
-                'label' => $pageTypeObj->label(),
-                'value' => $name,
-            ];
+            $pageTypes[$name] =  $pageTypeObj->label();
         }
 
-        return new ApiSuccessResponse([
-            [
-                'key'             => 'pageType',
-                'type'            => 'select',
-                'defaultValue'    => $defaultPageType,
-                'templateOptions' => [
-                    'label'       => 'Page Type',
-                    'placeholder' => 'Page Type',
-                    'required'    => true,
-                    'options'     => $pageTypes,
-                ],
-            ],
-            [
-                'key'             => 'name',
-                'type'            => 'input',
-                'templateOptions' => [
-                    'label'       => 'Name',
-                    'placeholder' => 'Name',
-                    'required'    => true,
-                ],
-            ],
-        ]);
+        $schema = (new Schema())->withAddedElement(
+            $this->builder->create(SelectElement::class, 'pageType')
+                ->withLabel("Page Type")
+                ->withOptions($pageTypes)
+        )->withAddedElement(
+            $this->builder->create(TextElement::class, 'name')
+                ->withLabel("Name")
+        );
+        return new ApiSuccessResponse($schema);
     }
 }

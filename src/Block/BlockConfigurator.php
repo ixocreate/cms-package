@@ -58,32 +58,10 @@ final class BlockConfigurator implements ConfiguratorInterface
     }
 
     /**
-     * @return BlockMapping
-     */
-    public function getBlockMapping()
-    {
-        $config = $this->subManagerConfigurator;
-
-        $factories = $config->getServiceManagerConfig()->getFactories();
-
-        $mapping = [];
-        foreach ($factories as $id => $factory) {
-            if (!\is_subclass_of($id, BlockInterface::class, true)) {
-                throw new \InvalidArgumentException(\sprintf("'%s' doesn't implement '%s'", $id, BlockInterface::class));
-            }
-            $name = \forward_static_call([$id, 'name']);
-            $mapping[$name] = $id;
-        }
-
-        return new BlockMapping($mapping);
-    }
-
-    /**
      * @param ServiceRegistryInterface $serviceRegistry
      */
     public function registerService(ServiceRegistryInterface $serviceRegistry): void
     {
-        $serviceRegistry->add(BlockMapping::class, $this->getBlockMapping());
         $this->subManagerConfigurator->registerService($serviceRegistry);
     }
 }

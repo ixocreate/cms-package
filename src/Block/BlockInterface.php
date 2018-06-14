@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace KiwiSuite\Cms\Block;
 
+use KiwiSuite\Contract\Schema\SchemaInterface;
+use KiwiSuite\Contract\ServiceManager\NamedServiceInterface;
+use KiwiSuite\Schema\Builder;
 
-use KiwiSuite\Admin\Schema\Form\Elements\ElementGroup;
-
-interface BlockInterface
+interface BlockInterface extends NamedServiceInterface
 {
-    public static function name(): string;
-
     public function label(): string;
 
-    public function elements(ElementGroup $elementGroup);
+    public function schema(Builder $builder): SchemaInterface;
 }

@@ -43,16 +43,8 @@ class SaveAction implements MiddlewareInterface
         $queryBuilder->delete(Navigation::class, "nav")
             ->where("nav.pageId = :pageId")
             ->setParameter("pageId", $request->getAttribute("id"));
-
-        /**
-         *
-         * RequestBody
-         * [
-         *      'nav1', 'nav2'
-         * ]
-         */
-
-
+        $queryBuilder->getQuery()->execute();
+        
         $parsedBody = $request->getParsedBody();
 
         $navigation = array_map(function ($value) use($parsedBody){

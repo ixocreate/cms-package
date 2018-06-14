@@ -58,32 +58,10 @@ final class PageTypeConfigurator implements ConfiguratorInterface
     }
 
     /**
-     * @return PageTypeMapping
-     */
-    public function getPageTypeMapping()
-    {
-        $config = $this->subManagerConfigurator;
-
-        $factories = $config->getServiceManagerConfig()->getFactories();
-
-        $mapping = [];
-        foreach ($factories as $id => $factory) {
-            if (!\is_subclass_of($id, PageTypeInterface::class, true)) {
-                throw new \InvalidArgumentException(\sprintf("'%s' doesn't implement '%s'", $id, PageTypeInterface::class));
-            }
-            $name = \forward_static_call([$id, 'name']);
-            $mapping[$name] = $id;
-        }
-
-        return new PageTypeMapping($mapping);
-    }
-
-    /**
      * @param ServiceRegistryInterface $serviceRegistry
      */
     public function registerService(ServiceRegistryInterface $serviceRegistry): void
     {
-        $serviceRegistry->add(PageTypeMapping::class, $this->getPageTypeMapping());
         $this->subManagerConfigurator->registerService($serviceRegistry);
     }
 }

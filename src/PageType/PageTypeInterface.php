@@ -2,11 +2,13 @@
 namespace KiwiSuite\Cms\PageType;
 
 use KiwiSuite\Admin\Schema\Form\Elements\Form;
+use KiwiSuite\Contract\Schema\SchemaInterface;
+use KiwiSuite\Contract\ServiceManager\NamedServiceInterface;
+use KiwiSuite\Schema\Builder;
+use KiwiSuite\Schema\Schema;
 
-interface PageTypeInterface
+interface PageTypeInterface extends NamedServiceInterface
 {
-    public static function name(): string;
-
     public function label(): string;
 
     public function routing(): string;
@@ -21,5 +23,5 @@ interface PageTypeInterface
 
     public function layout(): string;
 
-    public function elements(Form $form): array;
+    public function schema(Builder $builder): SchemaInterface;
 }

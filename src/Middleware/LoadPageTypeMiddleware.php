@@ -3,7 +3,6 @@ namespace KiwiSuite\Cms\Middleware;
 
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeMapping;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -17,20 +16,14 @@ final class LoadPageTypeMiddleware implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
-    /**
-     * @var PageTypeMapping
-     */
-    private $pageTypeMapping;
 
     /**
      * LoadSitemapMiddleware constructor.
      * @param PageTypeSubManager $pageTypeSubManager
-     * @param PageTypeMapping $pageTypeMapping
      */
-    public function __construct(PageTypeSubManager $pageTypeSubManager, PageTypeMapping $pageTypeMapping)
+    public function __construct(PageTypeSubManager $pageTypeSubManager)
     {
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->pageTypeMapping = $pageTypeMapping;
     }
 
     /**
@@ -42,7 +35,7 @@ final class LoadPageTypeMiddleware implements MiddlewareInterface
         /** @var Sitemap $sitemap */
         $sitemap = $request->getAttribute(Sitemap::class);
 
-        $pageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$sitemap->pageType()]);
+        $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
         $request = $request->withAttribute(PageTypeInterface::class, $pageType);
 

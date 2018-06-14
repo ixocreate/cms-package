@@ -32,11 +32,6 @@ final class CmsRouterFactory implements FactoryInterface
     private $middlewareFactory;
 
     /**
-     * @var PageTypeMapping
-     */
-    private $pageTypeMapping;
-
-    /**
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
@@ -46,7 +41,6 @@ final class CmsRouterFactory implements FactoryInterface
     {
         $this->pageTypeSubManager = $container->get(PageTypeSubManager::class);
         $this->middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
-        $this->pageTypeMapping = $container->get(PageTypeMapping::class);
 
         /** @var PageRepository $pageRepository */
         $pageRepository = $container->get(RepositorySubManager::class)->get(PageRepository::class);
@@ -87,7 +81,7 @@ final class CmsRouterFactory implements FactoryInterface
             }
 
             /** @var PageTypeInterface $pageType */
-            $pageType = $this->pageTypeSubManager->get($this->pageTypeMapping->getMapping()[$item['sitemap']->pageType()]);
+            $pageType = $this->pageTypeSubManager->get($item['sitemap']->pageType());
 
             $itemMiddleware = $pageType->middleware();
             if (empty($itemMiddleware)) {

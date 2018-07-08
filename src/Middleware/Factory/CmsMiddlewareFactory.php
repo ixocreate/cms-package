@@ -8,6 +8,9 @@ use KiwiSuite\Cms\Middleware\CmsMiddleware;
 use KiwiSuite\Cms\Router\CmsRouter;
 use KiwiSuite\Contract\ServiceManager\FactoryInterface;
 use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
 use Zend\Expressive\Router\Middleware\DispatchMiddleware;
@@ -27,6 +30,12 @@ final class CmsMiddlewareFactory implements FactoryInterface
         $cmsMiddleware = new CmsMiddleware();
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
+        $cmsMiddleware->pipe($middlewareFactory->callable(function(ServerRequestInterface $request, RequestHandlerInterface $handler) {
+            if (substr($request->getUri()->getPath(), 0, 3) !== '/de') {
+                return new RedirectResponse('/de/');
+            }
+            return $handler->handle($request);
+        }));
         $cmsMiddleware->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
         $cmsMiddleware->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
 

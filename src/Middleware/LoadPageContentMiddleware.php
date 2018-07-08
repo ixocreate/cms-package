@@ -42,7 +42,7 @@ final class LoadPageContentMiddleware implements MiddlewareInterface
         /** @var PageVersion $pageVersion */
         $pageVersion = $pageVersion->current();
 
-        var_dump($pageVersion->content());
+        $request = $request->withAttribute(PageVersion::class, $pageVersion->content());
 
         return $handler->handle($request);
     }

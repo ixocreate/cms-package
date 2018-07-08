@@ -3,6 +3,7 @@ namespace KiwiSuite\Cms\Router\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\Cms\Action\Frontend\RenderAction;
+use KiwiSuite\Cms\Config\Config;
 use KiwiSuite\Cms\Middleware\LoadPageContentMiddleware;
 use KiwiSuite\Cms\Middleware\LoadPageMiddleware;
 use KiwiSuite\Cms\Middleware\LoadPageTypeMiddleware;
@@ -15,6 +16,7 @@ use KiwiSuite\Cms\Router\CmsRouter;
 use KiwiSuite\Contract\ServiceManager\FactoryInterface;
 use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
 use KiwiSuite\Database\Repository\Factory\RepositorySubManager;
+use KiwiSuite\Intl\LocaleManager;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
 use Zend\Expressive\Router\Route;
@@ -39,24 +41,34 @@ final class CmsRouterFactory implements FactoryInterface
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
+        /** @var Config $cmsConfig */
+        $cmsConfig = $container->get(Config::class);
+
         $this->pageTypeSubManager = $container->get(PageTypeSubManager::class);
         $this->middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
         /** @var PageRepository $pageRepository */
         $pageRepository = $container->get(RepositorySubManager::class)->get(PageRepository::class);
-        $routes = [];
-        $tree = $pageRepository->fetchTree();
-        $this->parseTree($tree, $routes, $options['locale']);
-        $routes = array_reverse($routes);
 
+        $tree = $pageRepository->fetchTree();
         $router = new CmsRouter();
-        foreach ($routes as $item) {
-            $routeObj = new Route($item['path'], $item['middleware'], Route::HTTP_METHOD_ANY, "page." . $item['id']);
-            $routeObj->setOptions([
-                'pageId' => $item['id'],
-            ]);
-            $router->addRoute($routeObj);
+
+        foreach ($container->get(LocaleManager::class)->all() as $locale) {
+            $uri = $cmsConfig->localizationUri($locale['locale']);
+            $routes = [];
+            $this->parseTree($tree, $routes, $locale['locale']);
+            $routes = array_reverse($routes);
+
+
+            foreach ($routes as $item) {
+                $routeObj = new Route(rtrim($uri->getPath(), '/') . $item['path'], $item['middleware'], Route::HTTP_METHOD_ANY, "page." . $item['id']);
+                $routeObj->setOptions([
+                    'pageId' => $item['id'],
+                ]);
+                $router->addRoute($routeObj);
+            }
         }
+
         return $router;
     }
 
@@ -93,7 +105,7 @@ final class CmsRouterFactory implements FactoryInterface
             $itemMiddleware[] = RenderAction::class;
 
             $routing = '/' . ltrim($pageType->routing(), '/');
-            $currentPath = $path . $routing;
+            $currentPath = rtrim($path, '/') . $routing;
 
             if (empty($item['pages'][$locale]->slug()) && strpos($pageType->routing(), '${SLUG}') !== false) {
                 continue;

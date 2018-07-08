@@ -3,16 +3,29 @@
 namespace KiwiSuite\Cms\Repository;
 
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\Metadata\PageMetadata;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
+use KiwiSuite\Cms\PageType\PageTypeInterface;
+use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Database\Repository\AbstractRepository;
 
 final class PageRepository extends AbstractRepository
 {
-    
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
+
+    public function __construct(EntityManagerInterface $master, PageTypeSubManager $pageTypeSubManager)
+    {
+        parent::__construct($master);
+        $this->pageTypeSubManager = $pageTypeSubManager;
+    }
+
     /**
      * @return string
      */
@@ -41,6 +54,9 @@ final class PageRepository extends AbstractRepository
             /** @var Sitemap $sitemap */
             $sitemap = $result[$i];
 
+            /** @var PageTypeInterface $pageType */
+            $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
+
             if (!empty($flat[(string)$sitemap->id()])) {
                 $flat[(string)$sitemap->id()]['pages'][$page->locale()] = $page;
                 continue;
@@ -51,6 +67,12 @@ final class PageRepository extends AbstractRepository
                     $page->locale() => $page
                 ],
                 'sitemap' => $sitemap,
+                'pageType' => [
+                    "handle" => $pageType->handle(),
+                    "label" => $pageType->label(),
+                    "allowedChildren" => $pageType->allowedChildren(),
+                    "isRoot" => $pageType->isRoot(),
+                ],
                 'children' => [],
             ];
         }

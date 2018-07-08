@@ -2,30 +2,31 @@
 
 namespace KiwiSuite\Cms\Resource;
 
-use KiwiSuite\Admin\Resource\ResourceInterface;
-use KiwiSuite\Admin\Resource\ResourceTrait;
-use KiwiSuite\Admin\Schema\Form\Elements\DateTime;
-use KiwiSuite\Admin\Schema\Form\Elements\ElementGroup;
-use KiwiSuite\Admin\Schema\Form\Elements\Select;
-use KiwiSuite\Admin\Schema\Form\Elements\Text;
-use KiwiSuite\Admin\Schema\SchemaBuilder;
+use KiwiSuite\Admin\Resource\DefaultAdminTrait;
+use KiwiSuite\Cms\Action\Page\CreateAction;
 use KiwiSuite\Cms\Action\Page\IndexAction;
-use KiwiSuite\Cms\Message\CreatePage;
 use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Schema\Builder;
+use KiwiSuite\Contract\Resource\AdminAwareInterface;
+use KiwiSuite\Contract\Schema\BuilderInterface;
+use KiwiSuite\Contract\Schema\SchemaInterface;
 use KiwiSuite\Schema\Elements\DateTimeElement;
 use KiwiSuite\Schema\Elements\SectionElement;
 use KiwiSuite\Schema\Elements\SelectElement;
 use KiwiSuite\Schema\Elements\TextElement;
 use KiwiSuite\Schema\Schema;
 
-final class PageResource implements ResourceInterface
+final class PageResource implements AdminAwareInterface
 {
-    use ResourceTrait;
+    use DefaultAdminTrait;
 
-    public function createMessage(): string
+    public function label(): string
     {
-        return CreatePage::class;
+        return "Page";
+    }
+
+    public static function serviceName(): string
+    {
+        return "page";
     }
 
     public function indexAction(): ?string
@@ -33,28 +34,26 @@ final class PageResource implements ResourceInterface
         return IndexAction::class;
     }
 
-    public static function name(): string
+    public function createAction(): ?string
     {
-        return "page";
+        return CreateAction::class;
     }
 
-    public function repository(): string
+    /**
+     * @param BuilderInterface $builder
+     * @return SchemaInterface
+     */
+    public function createSchema(BuilderInterface $builder): SchemaInterface
     {
-        return PageRepository::class;
+        return new Schema();
     }
 
-    public function icon(): string
+    /**
+     * @param BuilderInterface $builder
+     * @return SchemaInterface
+     */
+    public function updateSchema(BuilderInterface $builder): SchemaInterface
     {
-        return "fa";
-    }
-
-    public function schema(SchemaBuilder $schemaBuilder): SchemaBuilder
-    {
-        $schemaBuilder = $schemaBuilder->withName("Page");
-        $schemaBuilder = $schemaBuilder->withNamePlural("Pages");
-
-        /** @var Builder $builder */
-        $builder = $schemaBuilder->builder();
         $schema = new Schema();
         /** @var SectionElement $segment */
         $section = $builder->create(SectionElement::class, "general")
@@ -94,63 +93,19 @@ final class PageResource implements ResourceInterface
             ->withIcon("fa-power-off");
         $schema = $schema->withAddedElement($section);
 
-        return $schemaBuilder->withSchema($schema);
+        return $schema;
+    }
 
+    /**
+     * @return array
+     */
+    public function listSchema(): array
+    {
+        return [];
+    }
 
-        $form = $schemaBuilder->getForm();
-        $form->add(function (ElementGroup $elementGroup){
-            $elementGroup->setName("general");
-            $elementGroup->addWrapper("section");
-            $elementGroup->setLabel("General");
-            $elementGroup->addOption("icon", "fa fa-fw fa-cog");
-
-            $elementGroup->add(function (Text $text) {
-                $text->setName("name");
-                $text->setLabel("Name");
-                $text->setRequired(true);
-            });
-        });
-
-        $form->add(function (ElementGroup $elementGroup){
-            $elementGroup->setName("scheduling");
-            $elementGroup->addWrapper("section");
-            $elementGroup->setLabel("Scheduling");
-            $elementGroup->addOption("icon", "fa fa-fw fa-cog");
-
-            $elementGroup->add(function (DateTime $dateTime) {
-                $dateTime->setName("publishedFrom");
-                $dateTime->setLabel("Published From");
-                $dateTime->addOption("placement", "left");
-            });
-
-            $elementGroup->add(function (DateTime $dateTime) {
-                $dateTime->setName("publishedUntil");
-                $dateTime->setLabel("Published Until");
-                $dateTime->addOption("placement", "left");
-            });
-        });
-
-        $form->add(function (ElementGroup $elementGroup){
-            $elementGroup->setName("status");
-            $elementGroup->addWrapper("section");
-            $elementGroup->setLabel("Status");
-            $elementGroup->addOption("icon", "fa fa-fw fa-power-off");
-
-            $elementGroup->add(function (Select $select) {
-                $select->setName("status");
-                $select->setLabel("Status");
-                $select->setSelectOptions([
-                    [
-                        'label' => 'Online',
-                        'value' => 'online',
-                    ],
-                    [
-                        'label' => 'Offline',
-                        'value' => 'offline',
-                    ],
-                ]);
-                $select->setRequired(true);
-            });
-        });
+    public function repository(): string
+    {
+        return PageRepository::class;
     }
 }

@@ -4,12 +4,15 @@ namespace KiwiSuite\Cms\Action\Page;
 
 
 use KiwiSuite\Admin\Response\ApiErrorResponse;
+use KiwiSuite\Admin\Response\ApiListResponse;
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
 use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
+use KiwiSuite\Contract\Resource\AdminAwareInterface;
+use KiwiSuite\Contract\Resource\ResourceInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -29,6 +32,9 @@ class IndexAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new ApiSuccessResponse($this->pageRepository->fetchTree("de_AT"));
+        /** @var AdminAwareInterface $resource */
+        $resource = $request->getAttribute(ResourceInterface::class);
+
+        return new ApiListResponse($resource, $this->pageRepository->fetchTree(), $resource->listSchema(), []);
     }
 }

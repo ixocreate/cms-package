@@ -8,6 +8,8 @@ use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\Message\CreatePage;
 use KiwiSuite\Cms\Message\CreateSlug;
 use KiwiSuite\Cms\Message\PageVersion\CreatePageVersion;
+use KiwiSuite\Cms\PageType\PageTypeInterface;
+use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\PageVersionRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
@@ -45,9 +47,14 @@ final class CreatePageHandler implements HandlerInterface
      * @var CreateSlug
      */
     private $createSlug;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
 
     /**
      * CreateSitemapHandler constructor.
+     * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
      * @param PageVersionRepository $pageVersionRepository
@@ -56,6 +63,7 @@ final class CreatePageHandler implements HandlerInterface
      * @param CreateSlug $createSlug
      */
     public function __construct(
+        PageTypeSubManager $pageTypeSubManager,
         SitemapRepository $sitemapRepository,
         PageRepository $pageRepository,
         PageVersionRepository $pageVersionRepository,
@@ -69,15 +77,28 @@ final class CreatePageHandler implements HandlerInterface
         $this->createPageVersion = $createPageVersion;
         $this->commandBus = $commandBus;
         $this->createSlug = $createSlug;
+        $this->pageTypeSubManager = $pageTypeSubManager;
     }
 
+    /**
+     * @param MessageInterface $message
+     * @return MessageInterface
+     */
     public function __invoke(MessageInterface $message): MessageInterface
     {
         /** @var CreatePage $message */
+        
+        /** @var PageTypeInterface $pageType */
+        $pageType = $this->pageTypeSubManager->get($message->pageType());
+
         $sitemap = new Sitemap([
             'id' => $message->uuid(),
             'pageType' => $message->pageType(),
         ]);
+
+        if (!empty($pageType->handle())) {
+            $sitemap = $sitemap->with("handle", $pageType->handle());
+        }
 
         if (empty($message->parentSitemapId())) {
             $sitemap = $this->sitemapRepository->createRoot($sitemap);

@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Stratigility\Exception\EmptyPipelineException;
 use Zend\Stratigility\MiddlewarePipe;
 use Zend\Stratigility\MiddlewarePipeInterface;
 
@@ -39,7 +40,12 @@ final class CmsMiddleware implements MiddlewarePipeInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->middlewarePipe->process($request, $handler);
+        try {
+            return $this->middlewarePipe->process($request, $handler);
+        } catch (EmptyPipelineException $e) {
+
+        }
+
     }
 
     /**
@@ -55,6 +61,10 @@ final class CmsMiddleware implements MiddlewarePipeInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->middlewarePipe->handle($request);
+        try {
+            return $this->middlewarePipe->handle($request);
+        } catch (EmptyPipelineException $e) {
+
+        }
     }
 }

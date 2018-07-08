@@ -9,6 +9,8 @@ use KiwiSuite\Schema\Builder;
 
 interface BlockInterface extends NamedServiceInterface
 {
+    public function template(): string;
+
     public function label(): string;
 
     public function schema(Builder $builder): SchemaInterface;

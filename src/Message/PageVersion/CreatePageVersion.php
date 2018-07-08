@@ -83,8 +83,8 @@ final class CreatePageVersion implements MessageInterface
         }
 
         $content = [];
-        if (!empty($this->data()['content']) && is_array($this->data()['content'])) {
-            $content = $this->data()['content'];
+        if (!empty($this->data()) && is_array($this->data())) {
+            $content = $this->data();
         }
 
         $this->pageId = $this->metadata()['id'];

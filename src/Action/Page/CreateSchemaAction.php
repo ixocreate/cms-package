@@ -2,11 +2,12 @@
 
 namespace KiwiSuite\Cms\Action\Page;
 
+use KiwiSuite\Admin\Response\ApiDetailResponse;
 use KiwiSuite\Admin\Response\ApiErrorResponse;
-use KiwiSuite\Admin\Response\ApiSuccessResponse;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Repository\SitemapRepository;
+use KiwiSuite\Cms\Resource\PageResource;
 use KiwiSuite\Schema\Builder;
 use KiwiSuite\Schema\Elements\SelectElement;
 use KiwiSuite\Schema\Elements\TextElement;
@@ -31,21 +32,28 @@ class CreateSchemaAction implements MiddlewareInterface
      * @var Builder
      */
     private $builder;
+    /**
+     * @var PageResource
+     */
+    private $pageResource;
 
     /**
      * CreateSchemaAction constructor.
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param Builder $builder
+     * @param PageResource $pageResource
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
         SitemapRepository $sitemapRepository,
-        Builder $builder
+        Builder $builder,
+        PageResource $pageResource
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->builder = $builder;
+        $this->pageResource = $pageResource;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -100,6 +108,6 @@ class CreateSchemaAction implements MiddlewareInterface
             $this->builder->create(TextElement::class, 'name')
                 ->withLabel("Name")
         );
-        return new ApiSuccessResponse($schema);
+        return new ApiDetailResponse($this->pageResource, [], $schema, []);
     }
 }

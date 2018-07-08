@@ -2,6 +2,7 @@
 namespace KiwiSuite\Cms\Config;
 
 use KiwiSuite\Contract\Application\SerializableServiceInterface;
+use Zend\Diactoros\Uri;
 
 final class Config implements SerializableServiceInterface
 {
@@ -27,6 +28,17 @@ final class Config implements SerializableServiceInterface
     public function localizationUrlSchema(): string
     {
         return $this->localizationUrlSchema;
+    }
+
+    /**
+     * @param string $locale
+     * @return Uri
+     */
+    public function localizationUri(string $locale): Uri
+    {
+        $uriString = str_replace('${LANG}', \Locale::getPrimaryLanguage($locale), $this->localizationUrlSchema());
+        $uriString = str_replace('${REGION}', \Locale::getRegion($locale), $uriString);
+        return new Uri($uriString);
     }
 
     /**

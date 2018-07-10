@@ -68,6 +68,7 @@ final class PageRepository extends AbstractRepository
                 ],
                 'sitemap' => $sitemap,
                 'pageType' => [
+                    "name" => $pageType::serviceName(),
                     "handle" => $pageType->handle(),
                     "label" => $pageType->label(),
                     "allowedChildren" => $pageType->allowedChildren(),

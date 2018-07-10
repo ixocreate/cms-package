@@ -93,6 +93,6 @@ class PageVersionDetailAction implements MiddlewareInterface
         /** @var PageTypeInterface $pageType */
         $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-        return new ApiDetailResponse($this->pageVersionResource, $content, $pageType->schema($this->builder), []);
+        return new ApiDetailResponse($this->pageVersionResource, $content, $pageType->receiveSchema($this->builder), []);
     }
 }

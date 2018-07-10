@@ -18,11 +18,11 @@ use KiwiSuite\ServiceManager\SubManager\SubManager;
 
 final class PageTypeSubManager extends SubManager implements SchemaReceiverInterface
 {
-    public function receiveSchema(Builder $builder, array $options): SchemaInterface
+    public function receiveSchema(Builder $builder, array $options = []): SchemaInterface
     {
         /** @var PageTypeInterface $pageType */
         $pageType = $this->get($options['pageType']);
 
-        return $pageType->schema($builder);
+        return $pageType->receiveSchema($builder);
     }
 }

@@ -53,7 +53,7 @@ class DeleteAction implements MiddlewareInterface
 
         if ($this->pageRepository->count(['sitemapId' => $page->sitemapId()]) === 1) {
             $sitemap = $this->sitemapRepository->find($page->sitemapId());
-            $this->sitemapRepository->remove($sitemap);
+            //$this->sitemapRepository->remove($sitemap);
         }
 
         $this->pageRepository->remove($page);

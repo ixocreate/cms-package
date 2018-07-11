@@ -42,11 +42,18 @@ final class RepairNestedSetCommand extends Command implements CommandInterface
         }
         $tree = [];
 
+        $empty = [];
+
         foreach ($flat as &$item) {
             /** @var Sitemap $sitemap */
             $sitemap = $item['sitemap'];
             if ($sitemap->parentId() !== null) {
 
+                if (empty($flat[(string) $sitemap->parentId()])) {
+                    $empty[] = (string) $sitemap->id();
+
+                    continue;
+                }
                 $parent =& $flat[(string) $sitemap->parentId()];
                 $parent['children'][] =& $item;
 
@@ -57,6 +64,8 @@ final class RepairNestedSetCommand extends Command implements CommandInterface
         }
 
         $this->walkRecursive($tree, 0);
+
+        var_dump($empty);
     }
 
     private function walkRecursive(array $items, int $nested)

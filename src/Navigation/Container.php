@@ -41,6 +41,32 @@ final class Container implements \Iterator
         return (count($this->children) > 0);
     }
 
+    public function withFilteredItems(callable $callable): Container
+    {
+        return new Container($this->navigationRepository, $this->recursiveFiltering($this->children, $callable));
+    }
+
+    private function recursiveFiltering(array $items, callable $callable): array
+    {
+        $collector = [];
+
+        foreach ($items as $item) {
+            if ($callable($item) !== true) {
+                continue;
+            }
+
+            $collector[] = new Item(
+                $item->page(),
+                $item->sitemap(),
+                $item->level(),
+                $this->recursiveFiltering($item->children(), $callable),
+                $item->isActive()
+            );
+        }
+
+        return $collector;
+    }
+
     /**
      * @param int $level
      * @return Container

@@ -9,6 +9,7 @@ use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\Cms\Action\Navigation\SaveAction;
 use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
+use KiwiSuite\Cms\Action\Page\FlatIndexAction;
 use KiwiSuite\Cms\Action\Page\SortAction;
 use KiwiSuite\Cms\Action\PageVersion\CreateAction;
 use KiwiSuite\Cms\Action\PageVersion\PageVersionDetailAction;
@@ -25,6 +26,8 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
             $group->post('/page-version/{id}', CreateAction::class, "admin.api.pageVersion.create");
 
             $group->get('/page/create-schema[/{parentSitemapId}]', CreateSchemaAction::class, "admin.api.page.createSchema");
+
+            $group->get('/page/flat/{handle}', FlatIndexAction::class, 'admin.api.flatPages.index');
 
         });
     });

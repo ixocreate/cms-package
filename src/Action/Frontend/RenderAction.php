@@ -22,14 +22,11 @@ final class RenderAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-
-        /** @var PageTypeInterface $pageType */
-        $pageType = $request->getAttribute(PageTypeInterface::class);
-        return new TemplateResponse($pageType->layout(), [], [
-            'page' => $request->getAttribute(Page::class),
-            'pageContent' => $request->getAttribute(PageVersion::class),
-            'pageType' => $request->getAttribute(PageTypeInterface::class),
-            'sitemap' => $request->getAttribute(Sitemap::class),
+        return new TemplateResponse($request->getPageType()->layout(), $request->getTemplateAttributes(), [
+            'page' => $request->getPage(),
+            'pageContent' => $request->getPageVersion()->content(),
+            'pageType' => $request->getPageType(),
+            'sitemap' => $request->getSitemap(),
         ]);
     }
 }

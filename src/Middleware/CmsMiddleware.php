@@ -11,6 +11,7 @@
 declare(strict_types=1);
 namespace KiwiSuite\Cms\Middleware;
 
+use KiwiSuite\Cms\Request\CmsRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -41,7 +42,8 @@ final class CmsMiddleware implements MiddlewarePipeInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
-            return $this->middlewarePipe->process($request, $handler);
+            $cmsRequest = new CmsRequest($request);
+            return $this->middlewarePipe->process($cmsRequest, $handler);
         } catch (EmptyPipelineException $e) {
 
         }
@@ -62,7 +64,8 @@ final class CmsMiddleware implements MiddlewarePipeInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            return $this->middlewarePipe->handle($request);
+            $cmsRequest = new CmsRequest($request);
+            return $this->middlewarePipe->handle($cmsRequest);
         } catch (EmptyPipelineException $e) {
 
         }

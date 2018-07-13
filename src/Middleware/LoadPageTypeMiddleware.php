@@ -33,11 +33,11 @@ final class LoadPageTypeMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var Sitemap $sitemap */
-        $sitemap = $request->getAttribute(Sitemap::class);
+        $sitemap = $request->getSitemap();
 
         $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-        $request = $request->withAttribute(PageTypeInterface::class, $pageType);
+        $request = $request->withPageType($pageType);
 
         return $handler->handle($request);
     }

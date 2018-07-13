@@ -35,7 +35,7 @@ final class LoadPageMiddleware implements MiddlewareInterface
 
         //TODO check page
 
-        $request = $request->withAttribute(Page::class, $page);
+        $request = $request->withPage($page);
 
         return $handler->handle($request);
     }

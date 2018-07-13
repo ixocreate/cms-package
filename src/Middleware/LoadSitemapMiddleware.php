@@ -30,11 +30,11 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var Page $page */
-        $page = $request->getAttribute(Page::class);
+        $page = $request->getPage();
 
         $sitemap = $this->sitemapRepository->find($page->sitemapId());
 
-        $request = $request->withAttribute(Sitemap::class, $sitemap);
+        $request = $request->withSitemap($sitemap);
 
         return $handler->handle($request);
     }

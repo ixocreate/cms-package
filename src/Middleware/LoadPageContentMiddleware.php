@@ -30,7 +30,7 @@ final class LoadPageContentMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var Page $page */
-        $page = $request->getAttribute(Page::class);
+        $page = $request->getPage();
 
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('pageId', $page->id()));
@@ -42,7 +42,7 @@ final class LoadPageContentMiddleware implements MiddlewareInterface
         /** @var PageVersion $pageVersion */
         $pageVersion = $pageVersion->current();
 
-        $request = $request->withAttribute(PageVersion::class, $pageVersion->content());
+        $request = $request->withPageVersion($pageVersion);
 
         return $handler->handle($request);
     }

@@ -41,6 +41,24 @@ final class Container implements \Iterator
         return (count($this->children) > 0);
     }
 
+    public function asFlat(): Container
+    {
+        return new Container($this->navigationRepository, $this->asRecursiveFlat($this->children));
+    }
+
+    private function asRecursiveFlat(array $items): array
+    {
+        $newItems = [];
+        foreach ($items as $item) {
+            $newItems[] = $item;
+            if ($item->hasChildren()) {
+                $newItems = array_merge($newItems, $this->asRecursiveFlat($item->children()));
+            }
+        }
+
+        return $newItems;
+    }
+
     public function withFilteredItems(callable $callable): Container
     {
         return new Container($this->navigationRepository, $this->recursiveFiltering($this->children, $callable));

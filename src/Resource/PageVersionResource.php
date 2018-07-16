@@ -6,7 +6,9 @@ use KiwiSuite\Admin\Resource\DefaultAdminTrait;
 use KiwiSuite\Cms\Repository\PageVersionRepository;
 use KiwiSuite\Contract\Resource\AdminAwareInterface;
 use KiwiSuite\Contract\Schema\BuilderInterface;
+use KiwiSuite\Contract\Schema\Listing\ListSchemaInterface;
 use KiwiSuite\Contract\Schema\SchemaInterface;
+use KiwiSuite\Schema\Listing\ListSchema;
 use KiwiSuite\Schema\Schema;
 
 final class PageVersionResource implements AdminAwareInterface
@@ -42,11 +44,11 @@ final class PageVersionResource implements AdminAwareInterface
     }
 
     /**
-     * @return array
+     * @return ListSchemaInterface
      */
-    public function listSchema(): array
+    public function listSchema(): ListSchemaInterface
     {
-        return [];
+        return new ListSchema();
     }
 
     public function repository(): string

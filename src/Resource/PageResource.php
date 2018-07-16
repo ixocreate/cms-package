@@ -9,11 +9,13 @@ use KiwiSuite\Cms\Action\Page\IndexAction;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Contract\Resource\AdminAwareInterface;
 use KiwiSuite\Contract\Schema\BuilderInterface;
+use KiwiSuite\Contract\Schema\Listing\ListSchemaInterface;
 use KiwiSuite\Contract\Schema\SchemaInterface;
 use KiwiSuite\Schema\Elements\DateTimeElement;
 use KiwiSuite\Schema\Elements\SectionElement;
 use KiwiSuite\Schema\Elements\SelectElement;
 use KiwiSuite\Schema\Elements\TextElement;
+use KiwiSuite\Schema\Listing\ListSchema;
 use KiwiSuite\Schema\Schema;
 
 final class PageResource implements AdminAwareInterface
@@ -103,11 +105,11 @@ final class PageResource implements AdminAwareInterface
     }
 
     /**
-     * @return array
+     * @return ListSchemaInterface
      */
-    public function listSchema(): array
+    public function listSchema(): ListSchemaInterface
     {
-        return [];
+        return new ListSchema();
     }
 
     public function repository(): string

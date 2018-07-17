@@ -5,6 +5,7 @@ namespace KiwiSuite\Cms\Resource;
 use KiwiSuite\Admin\Resource\DefaultAdminTrait;
 use KiwiSuite\Cms\Action\Page\CreateAction;
 use KiwiSuite\Cms\Action\Page\DeleteAction;
+use KiwiSuite\Cms\Action\Page\DetailAction;
 use KiwiSuite\Cms\Action\Page\IndexAction;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Contract\Resource\AdminAwareInterface;
@@ -45,6 +46,11 @@ final class PageResource implements AdminAwareInterface
     public function deleteAction(): ?string
     {
         return DeleteAction::class;
+    }
+
+    public function detailAction(): ?string
+    {
+        return DetailAction::class;
     }
 
     /**

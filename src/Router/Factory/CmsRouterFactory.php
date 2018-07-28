@@ -17,8 +17,10 @@ use KiwiSuite\Contract\ServiceManager\FactoryInterface;
 use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
 use KiwiSuite\Database\Repository\Factory\RepositorySubManager;
 use KiwiSuite\Intl\LocaleManager;
+use KiwiSuite\ProjectUri\ProjectUri;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
+use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Expressive\Router\Route;
 
 final class CmsRouterFactory implements FactoryInterface
@@ -51,25 +53,24 @@ final class CmsRouterFactory implements FactoryInterface
         $pageRepository = $container->get(RepositorySubManager::class)->get(PageRepository::class);
 
         $tree = $pageRepository->fetchTree();
-        $router = new CmsRouter();
-
+        $i18nRouters = [];
         foreach ($container->get(LocaleManager::class)->all() as $locale) {
-            $uri = $cmsConfig->localizationUri($locale['locale']);
+            $i18nRouters[$locale['locale']] = new FastRouteRouter();
             $routes = [];
             $this->parseTree($tree, $routes, $locale['locale']);
             $routes = array_reverse($routes);
 
 
             foreach ($routes as $item) {
-                $routeObj = new Route(rtrim($uri->getPath(), '/') . $item['path'], $item['middleware'], Route::HTTP_METHOD_ANY, "page." . $item['id']);
+                $routeObj = new Route($item['path'], $item['middleware'], Route::HTTP_METHOD_ANY, "page." . $item['id']);
                 $routeObj->setOptions([
                     'pageId' => $item['id'],
                 ]);
-                $router->addRoute($routeObj);
+                $i18nRouters[$locale['locale']]->addRoute($routeObj);
             }
         }
 
-        return $router;
+        return new CmsRouter($i18nRouters, $cmsConfig, $container->get(LocaleManager::class), $container->get(ProjectUri::class));
     }
 
     /**

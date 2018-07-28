@@ -9,8 +9,16 @@ final class Configurator implements ConfiguratorInterface
     /**
      * @var string
      */
-    private $localizationUrlSchema = '/${LANG}';
+    private $localizationUrlSchema = '%MAIN_URL%/%LANG%';
 
+    /**
+     * @var string|null
+     */
+    private $defaultBaseUrl = '%MAIN_URL%';
+
+    /**
+     * @var array
+     */
     private $navigation = [];
 
     /**
@@ -47,6 +55,22 @@ final class Configurator implements ConfiguratorInterface
     public function getNavigation(): array
     {
         return array_values($this->navigation);
+    }
+
+    /**
+     * @param string $defaultBaseUrl
+     */
+    public function setDefaultBaseUrl(?string $defaultBaseUrl): void
+    {
+        $this->defaultBaseUrl = $defaultBaseUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultBaseUrl(): ?string
+    {
+        return $this->defaultBaseUrl;
     }
 
 

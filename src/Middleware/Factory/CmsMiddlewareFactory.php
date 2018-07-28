@@ -30,12 +30,6 @@ final class CmsMiddlewareFactory implements FactoryInterface
         $cmsMiddleware = new CmsMiddleware();
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
-        $cmsMiddleware->pipe($middlewareFactory->callable(function(ServerRequestInterface $request, RequestHandlerInterface $handler) {
-            if (substr($request->getUri()->getPath(), 0, 3) !== '/de') {
-                return new RedirectResponse('/de/');
-            }
-            return $handler->handle($request);
-        }));
         $cmsMiddleware->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
         $cmsMiddleware->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
 

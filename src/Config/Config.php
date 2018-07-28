@@ -16,10 +16,16 @@ final class Config implements SerializableServiceInterface
      */
     private $navigation = [];
 
+    /**
+     * @var string
+     */
+    private $defaultBaseUrl;
+
     public function __construct(Configurator $configurator)
     {
         $this->localizationUrlSchema = $configurator->getLocalizationUrlSchema();
         $this->navigation = $configurator->getNavigation();
+        $this->defaultBaseUrl = $configurator->getDefaultBaseUrl();
     }
 
     /**
@@ -31,22 +37,16 @@ final class Config implements SerializableServiceInterface
     }
 
     /**
-     * @param string $locale
-     * @return Uri
-     */
-    public function localizationUri(string $locale): Uri
-    {
-        $uriString = str_replace('${LANG}', \Locale::getPrimaryLanguage($locale), $this->localizationUrlSchema());
-        $uriString = str_replace('${REGION}', \Locale::getRegion($locale), $uriString);
-        return new Uri($uriString);
-    }
-
-    /**
      * @return array
      */
     public function navigation(): array
     {
         return $this->navigation;
+    }
+
+    public function defaultBaseUrl(): ?string
+    {
+        return $this->defaultBaseUrl;
     }
 
     /**
@@ -56,6 +56,7 @@ final class Config implements SerializableServiceInterface
     {
         return serialize([
             'localizationUrlSchema' => $this->localizationUrlSchema,
+            'defaultBaseUrl' => $this->defaultBaseUrl,
             'navigation' => $this->navigation,
         ]);
     }
@@ -68,6 +69,7 @@ final class Config implements SerializableServiceInterface
         $unserialized = unserialize($serialized);
 
         $this->navigation = $unserialized['navigation'];
+        $this->defaultBaseUrl = $unserialized['defaultBaseUrl'];
         $this->localizationUrlSchema = $unserialized['localizationUrlSchema'];
     }
 }

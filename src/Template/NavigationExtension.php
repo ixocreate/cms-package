@@ -1,4 +1,5 @@
 <?php
+
 namespace KiwiSuite\Cms\Template;
 
 use KiwiSuite\Cms\Navigation\Container;
@@ -35,12 +36,12 @@ final class NavigationExtension implements ExtensionInterface
         return 'nav';
     }
 
-    public function __invoke()
+    public function __invoke(?string $locale = null)
     {
         if ($this->container === null) {
             $this->container = new Container(
                 $this->navigationRepository,
-                $this->walkRecursive($this->pageRepository->fetchTree(), 'de_AT', 0)
+                $this->walkRecursive($this->pageRepository->fetchTree(), $locale ?? \Locale::getDefault(), 0)
             );
         }
 
@@ -51,12 +52,15 @@ final class NavigationExtension implements ExtensionInterface
     {
         $collection = [];
         foreach ($items as $arrayItem) {
+            if (!isset($arrayItem['pages'][$locale])) {
+                continue;
+            }
             $page = $arrayItem['pages'][$locale];
-            if ((string) $page->status !== "online") {
+            if ((string)$page->status !== "online") {
                 continue;
             }
 
-            $children = $this->walkRecursive($arrayItem['children'], $locale, $level +1);
+            $children = $this->walkRecursive($arrayItem['children'], $locale, $level + 1);
 
             $collection[] = new Item($page, $arrayItem['sitemap'], $level, $children, false);
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace KiwiSuite\Cms\Router;
 
 use KiwiSuite\Cms\Config\Config;
@@ -27,8 +28,9 @@ final class PageRoute
         $this->projectUri = $projectUri;
     }
 
-    public function fromPage(Page $page, array $params = []): string
+    public function fromPage(Page $page, array $params = [], ?string $locale = null): string
     {
-        return $this->cmsRouter->generateUri("page." . (string) $page->id(), $params, ['locale' => $page->locale()]);
+        return $this->cmsRouter->generateUri("page." . (string)$page->id(), $params,
+            ['locale' => $locale ?? $page->locale()]);
     }
 }

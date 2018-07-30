@@ -27,7 +27,9 @@ final class PageUrlExtension implements ExtensionInterface
     /**
      * PageUrlExtension constructor.
      *
-     * @param PageRoute $pageRoute
+     * @param PageRoute         $pageRoute
+     * @param SitemapRepository $sitemapRepository
+     * @param PageRepository    $pageRepository
      */
     public function __construct(
         PageRoute $pageRoute,
@@ -66,8 +68,9 @@ final class PageUrlExtension implements ExtensionInterface
     }
 
     /**
-     * @param Page  $page
-     * @param array $params
+     * @param string      $handle
+     * @param array       $params
+     * @param null|string $locale
      * @return string
      */
     public function fromHandle(string $handle, array $params = [], ?string $locale = null): string

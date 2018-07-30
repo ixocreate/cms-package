@@ -58,8 +58,9 @@ final class PageUrlExtension implements ExtensionInterface
     }
 
     /**
-     * @param Page  $page
-     * @param array $params
+     * @param Page        $page
+     * @param array       $params
+     * @param null|string $locale
      * @return string
      */
     public function fromPage(Page $page, array $params = [], ?string $locale = null): string
@@ -77,14 +78,14 @@ final class PageUrlExtension implements ExtensionInterface
     {
         $sitemap = $this->sitemapRepository->findOneBy(['handle' => $handle]);
         if (!$sitemap) {
-            return null;
+            return '';
         }
         $page = $this->pageRepository->findOneBy([
             'sitemapId' => $sitemap->id(),
             'locale'    => $locale ? $locale : \Locale::getDefault(),
         ]);
         if (!$page) {
-            return null;
+            return '';
         }
         return $this->fromPage($page, $params, $locale);
     }

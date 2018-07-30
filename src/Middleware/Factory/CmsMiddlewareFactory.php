@@ -8,13 +8,11 @@ use KiwiSuite\Cms\Middleware\CmsMiddleware;
 use KiwiSuite\Cms\Router\CmsRouter;
 use KiwiSuite\Contract\ServiceManager\FactoryInterface;
 use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
 use Zend\Expressive\Router\Middleware\DispatchMiddleware;
 use Zend\Expressive\Router\Middleware\RouteMiddleware;
+use Zend\Stratigility\MiddlewarePipe;
 
 final class CmsMiddlewareFactory implements FactoryInterface
 {
@@ -27,12 +25,12 @@ final class CmsMiddlewareFactory implements FactoryInterface
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
-        $cmsMiddleware = new CmsMiddleware();
+        $middlewarePipe = new MiddlewarePipe();
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
-        $cmsMiddleware->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
-        $cmsMiddleware->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
+        $middlewarePipe->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
+        $middlewarePipe->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
 
-        return $cmsMiddleware;
+        return new CmsMiddleware($middlewarePipe);
     }
 }

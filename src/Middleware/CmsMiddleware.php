@@ -18,9 +18,8 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Stratigility\Exception\EmptyPipelineException;
 use Zend\Stratigility\MiddlewarePipe;
-use Zend\Stratigility\MiddlewarePipeInterface;
 
-final class CmsMiddleware implements MiddlewarePipeInterface
+final class CmsMiddleware implements MiddlewareInterface
 {
     /**
      * @var MiddlewarePipe
@@ -30,9 +29,9 @@ final class CmsMiddleware implements MiddlewarePipeInterface
     /**
      * GroupMiddlewarePipe constructor.
      */
-    public function __construct()
+    public function __construct(MiddlewarePipe $middlewarePipe)
     {
-        $this->middlewarePipe = new MiddlewarePipe();
+        $this->middlewarePipe = $middlewarePipe;
     }
 
     /**
@@ -45,29 +44,7 @@ final class CmsMiddleware implements MiddlewarePipeInterface
             $cmsRequest = new CmsRequest($request);
             return $this->middlewarePipe->process($cmsRequest, $handler);
         } catch (EmptyPipelineException $e) {
-
-        }
-
-    }
-
-    /**
-     * @param MiddlewareInterface $middleware
-     */
-    public function pipe(MiddlewareInterface $middleware): void
-    {
-        $this->middlewarePipe->pipe($middleware);
-    }
-
-    /**
-     * Handle the request and return a response.
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        try {
-            $cmsRequest = new CmsRequest($request);
-            return $this->middlewarePipe->handle($cmsRequest);
-        } catch (EmptyPipelineException $e) {
-
+            return $handler->handle($request);
         }
     }
 }

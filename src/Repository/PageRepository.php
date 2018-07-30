@@ -3,6 +3,7 @@
 namespace KiwiSuite\Cms\Repository;
 
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use KiwiSuite\Cms\Entity\Page;
@@ -92,11 +93,23 @@ final class PageRepository extends AbstractRepository
     private function getFlatResult(array $queryResult): array
     {
         $flat = [];
-        for ($i = 0; $i < count($queryResult); $i++) {
-            /** @var Page $page */
-            $page = $queryResult[$i++];
-            /** @var Sitemap $sitemap */
-            $sitemap = $queryResult[$i];
+        $sitemaps = [];
+
+        foreach ($queryResult as $item) {
+            if (!($item instanceof Sitemap)) {
+                continue;
+            }
+
+            $sitemaps[(string) $item->id()] = $item;
+         }
+
+        foreach ($queryResult as $item) {
+            if ($item instanceof Sitemap) {
+                continue;
+            }
+
+            $page = $item;
+            $sitemap = $sitemaps[(string) $item->sitemapId()];
 
             /** @var PageTypeInterface $pageType */
             $pageType = $this->pageTypeSubManager->get($sitemap->pageType());

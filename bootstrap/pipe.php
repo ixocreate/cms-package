@@ -5,9 +5,12 @@ namespace KiwiSuite\Admin;
 
 /** @var PipeConfigurator $pipe */
 use KiwiSuite\Admin\Config\AdminConfig;
+use KiwiSuite\Admin\Middleware\Api\ResourceInjectionMiddleware;
 use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
+use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
 use KiwiSuite\Cms\Action\Navigation\SaveAction;
+use KiwiSuite\Cms\Action\Page\AddAction;
 use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
 use KiwiSuite\Cms\Action\Page\FlatIndexAction;
 use KiwiSuite\Cms\Action\Page\SortAction;
@@ -28,7 +31,7 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
             $group->get('/page/create-schema[/{parentSitemapId}]', CreateSchemaAction::class, "admin.api.page.createSchema");
 
             $group->get('/page/flat/{handle}', FlatIndexAction::class, 'admin.api.flatPages.index');
-
+            $group->post('/page/add', AddAction::class, 'admin.api.page.add');
         });
     });
 });

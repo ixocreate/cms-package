@@ -33,6 +33,8 @@ final class LoadPageMiddleware implements MiddlewareInterface
         $pageId = $routeResult->getMatchedRoute()->getOptions()['pageId'];
         $page = $this->pageRepository->find($pageId);
 
+        \Locale::setDefault($page->locale());
+
         //TODO check page
 
         $request = $request->withPage($page);

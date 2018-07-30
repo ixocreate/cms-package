@@ -82,7 +82,7 @@ final class PageUrlExtension implements ExtensionInterface
         }
         $page = $this->pageRepository->findOneBy([
             'sitemapId' => $sitemap->id(),
-            'locale'    => $locale ? $locale : \Locale::getDefault(),
+            'locale'    => $locale ?? \Locale::getDefault(),
         ]);
         if (!$page) {
             return '';

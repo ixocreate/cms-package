@@ -5,6 +5,7 @@ namespace KiwiSuite\Cms\Middleware\Factory;
 
 use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
 use KiwiSuite\Cms\Middleware\CmsMiddleware;
+use KiwiSuite\Cms\Middleware\DefaultLocaleMiddleware;
 use KiwiSuite\Cms\Router\CmsRouter;
 use KiwiSuite\Contract\ServiceManager\FactoryInterface;
 use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
@@ -28,6 +29,7 @@ final class CmsMiddlewareFactory implements FactoryInterface
         $middlewarePipe = new MiddlewarePipe();
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
+        $middlewarePipe->pipe($middlewareFactory->lazy(DefaultLocaleMiddleware::class));
         $middlewarePipe->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
         $middlewarePipe->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
 

@@ -3,6 +3,7 @@ namespace KiwiSuite\Cms\Middleware;
 
 use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Repository\PageRepository;
+use KiwiSuite\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -15,10 +16,15 @@ final class LoadPageMiddleware implements MiddlewareInterface
      * @var PageRepository
      */
     private $pageRepository;
+    /**
+     * @var LocaleManager
+     */
+    private $localeManager;
 
-    public function __construct(PageRepository $pageRepository)
+    public function __construct(PageRepository $pageRepository, LocaleManager $localeManager)
     {
         $this->pageRepository = $pageRepository;
+        $this->localeManager = $localeManager;
     }
 
     /**
@@ -33,7 +39,7 @@ final class LoadPageMiddleware implements MiddlewareInterface
         $pageId = $routeResult->getMatchedRoute()->getOptions()['pageId'];
         $page = $this->pageRepository->find($pageId);
 
-        \Locale::setDefault($page->locale());
+        $this->localeManager->acceptLocale($page->locale());
 
         //TODO check page
 

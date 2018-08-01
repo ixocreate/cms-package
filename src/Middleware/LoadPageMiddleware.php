@@ -1,7 +1,7 @@
 <?php
+
 namespace KiwiSuite\Cms\Middleware;
 
-use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;

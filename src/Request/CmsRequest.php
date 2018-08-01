@@ -32,6 +32,8 @@ final class CmsRequest extends AbstractRequestWrapper
 
     private $templateAttributes = [];
 
+    private $globalTemplateAttributes = [];
+
     public function getPage(): ?Page
     {
         return $this->page;
@@ -93,6 +95,19 @@ final class CmsRequest extends AbstractRequestWrapper
     {
         $request = clone $this;
         $request->templateAttributes[$name] = $value;
+
+        return $request;
+    }
+
+    public function getGlobalTemplateAttributes(): array
+    {
+        return $this->globalTemplateAttributes;
+    }
+
+    public function withAddedGlobalTemplateAttribute(string $name, $value): CmsRequest
+    {
+        $request = clone $this;
+        $request->globalTemplateAttributes[$name] = $value;
 
         return $request;
     }

@@ -50,7 +50,7 @@ final class DefaultLocaleMiddleware implements MiddlewareInterface
     {
         $this->localeManager->acceptLocale($this->localeManager->defaultLocale());
         foreach ($this->localeManager->all() as $locale) {
-            if (stripos((string) $request->getUri(), $this->getLocalizationBaseUrl($locale['locale']))) {
+            if (stripos((string) $request->getUri(), (string) $this->getLocalizationBaseUrl($locale['locale'])) !== false) {
                 $this->localeManager->acceptLocale($locale['locale']);
                 break;
             }

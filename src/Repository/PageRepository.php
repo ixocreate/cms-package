@@ -77,6 +77,10 @@ final class PageRepository extends AbstractRepository
             $sitemapIds[] = (string) $item->id();
         }
 
+        if (empty($sitemapIds)) {
+            return [];
+        }
+
         $queryBuilder = $this->createSelectQueryBuilder('p');
         $queryBuilder->join(Sitemap::class, 's', Join::WITH, 's.id = p.sitemapId');
         $queryBuilder->addSelect("s");
@@ -86,6 +90,8 @@ final class PageRepository extends AbstractRepository
 
         $queryBuilder->where($or);
         $queryBuilder->orderBy('s.nestedLeft', 'ASC');
+
+
 
         return array_values($this->getFlatResult($queryBuilder->getQuery()->getResult()));
     }

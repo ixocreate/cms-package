@@ -16,6 +16,7 @@ use KiwiSuite\Cms\Action\Page\FlatIndexAction;
 use KiwiSuite\Cms\Action\Page\SortAction;
 use KiwiSuite\Cms\Action\PageVersion\CreateAction;
 use KiwiSuite\Cms\Action\PageVersion\PageVersionDetailAction;
+use KiwiSuite\Cms\Action\PageVersion\ReplaceAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
@@ -27,6 +28,7 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
 
             $group->get('/page-version/{id}', PageVersionDetailAction::class, "admin.api.pageVersion.detail");
             $group->post('/page-version/{id}', CreateAction::class, "admin.api.pageVersion.create");
+            $group->post('/page-version/replace/{fromId}/{toId}', ReplaceAction::class, "admin.api.pageVersion.replace");
 
             $group->get('/page/create-schema[/{parentSitemapId}]', CreateSchemaAction::class, "admin.api.page.createSchema");
 

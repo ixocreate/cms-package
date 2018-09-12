@@ -30,7 +30,6 @@ final class PageRoute
 
     public function fromPage(Page $page, array $params = [], ?string $locale = null): string
     {
-        return $this->cmsRouter->generateUri("page." . (string)$page->id(), $params,
-            ['locale' => $locale ?? $page->locale()]);
+        return $this->cmsRouter->generateUri("page." . (string)$page->id(), $params, ['locale' => $locale ?? $page->locale()]);
     }
 }

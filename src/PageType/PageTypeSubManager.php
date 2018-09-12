@@ -25,4 +25,40 @@ final class PageTypeSubManager extends SubManager implements SchemaReceiverInter
 
         return $pageType->receiveSchema($builder);
     }
+
+    /**
+     * @param string $pageType
+     * @param array $usedHandles
+     * @return array
+     */
+    public function allowedChildPageTypes(string $pageType, array $usedHandles): array
+    {
+        $allowedPageTypes = [];
+        /** @var PageTypeInterface $pageType */
+        $pageType = $this->get($pageType);
+
+        $allowedChildren = $pageType->allowedChildren();
+
+        if (empty($allowedChildren)) {
+            return $allowedPageTypes;
+        }
+
+        foreach ($allowedChildren as $childPageType) {
+            /** @var PageTypeInterface $childPageType */
+            $childPageType = $this->get($childPageType);
+
+            if (empty($childPageType->handle())) {
+                $allowedPageTypes[] = $childPageType::serviceName();
+                continue;
+            }
+
+            if (in_array($childPageType->handle(), $usedHandles)) {
+                continue;
+            }
+
+            $allowedPageTypes[] = $childPageType::serviceName();
+        }
+
+        return $allowedPageTypes;
+    }
 }

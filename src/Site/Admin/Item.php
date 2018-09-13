@@ -259,6 +259,7 @@ final class Item implements \JsonSerializable
                 'label' => $this->pageType()->label(),
                 'allowedChildren' => $this->pageType()->allowedChildren(),
                 'isRoot' => $this->pageType()->isRoot(),
+                'name' => $this->pageType()::serviceName(),
             ],
             'children' => $this->children()
         ];

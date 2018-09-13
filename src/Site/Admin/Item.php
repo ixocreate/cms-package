@@ -138,13 +138,36 @@ final class Item implements \JsonSerializable
             $pages[$page->locale()] = [
                 'page' => $page,
                 'url' => null,
-                'isOnline' => true,
             ];
 
             try {
                 $pages[$page->locale()]['url'] = $this->pageRoute->fromPage($page);
             } catch (\Exception $e) {
 
+            }
+        }
+
+        $parent = $this->parent();
+        foreach ($pages as $locale => $pageItem) {
+            $pages[$locale]['isOnline'] = $pageItem['page']->isOnline();
+            if ($pages[$locale]['isOnline'] === false) {
+                continue;
+            }
+
+            if (empty($parent)) {
+                continue;
+            }
+
+            $parentPages = $parent->pages();
+
+            if (empty($parentPages[$locale])) {
+                $pages[$locale]['isOnline'] = false;
+                continue;
+            }
+
+            if ($parentPages[$locale]['isOnline'] === false) {
+                $pages[$locale]['isOnline'] = false;
+                continue;
             }
         }
 

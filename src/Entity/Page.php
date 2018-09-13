@@ -86,6 +86,23 @@ final class Page implements EntityInterface
         return $this->createdAt;
     }
 
+    public function isOnline(): bool
+    {
+        if ($this->status() === "offline") {
+            return false;
+        }
+
+        if ($this->publishedFrom() instanceof DateTimeType && $this->publishedFrom()->value()->getTimestamp() > time()) {
+            return false;
+        }
+
+        if ($this->publishedUntil() instanceof DateTimeType && $this->publishedUntil()->value()->getTimestamp() < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected static function createDefinitions(): DefinitionCollection
     {
         return new DefinitionCollection([

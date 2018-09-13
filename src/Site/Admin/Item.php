@@ -137,7 +137,8 @@ final class Item implements \JsonSerializable
 
             $pages[$page->locale()] = [
                 'page' => $page,
-                'url' => null
+                'url' => null,
+                'isOnline' => true,
             ];
 
             try {
@@ -207,7 +208,7 @@ final class Item implements \JsonSerializable
 
     public function childrenAllowed(): bool
     {
-        return (!empty($this->pageTypeSubManager->allowedChildPageTypes($this->pageType()::serviceName(), $this->sitemapLoader->receiveHandles())));
+        return (!empty($this->pageTypeSubManager->allowedChildPageTypes($this->sitemapLoader->receiveHandles(), $this->pageType()::serviceName())));
     }
 
     /**
@@ -221,6 +222,7 @@ final class Item implements \JsonSerializable
             $pages[$locale] = [
                 'page' => $pageInfo['page']->toPublicArray(),
                 'url' => $pageInfo['url'],
+                'isOnline' => $pageInfo['isOnline'],
             ];
         }
 

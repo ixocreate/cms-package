@@ -62,7 +62,10 @@ class IndexAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new ApiSuccessResponse($this->fetchTree());
+        return new ApiSuccessResponse([
+            'items' => $this->fetchTree(),
+            'allowedAddingRoot' => (count($this->pageTypeSubManager->allowedChildPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
+        ]);
     }
 
     private function fetchTree()

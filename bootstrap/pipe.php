@@ -14,6 +14,7 @@ use KiwiSuite\Cms\Action\Page\AddAction;
 use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
 use KiwiSuite\Cms\Action\Page\FlatIndexAction;
 use KiwiSuite\Cms\Action\Page\IndexAction;
+use KiwiSuite\Cms\Action\Page\MoveAction;
 use KiwiSuite\Cms\Action\Page\SortAction;
 use KiwiSuite\Cms\Action\PageVersion\CreateAction;
 use KiwiSuite\Cms\Action\PageVersion\PageVersionDetailAction;
@@ -23,6 +24,7 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
         $pipe->group("admin.authorized")(function (GroupPipeConfigurator $group) {
             $group->get('/page/index', IndexAction::class, 'admin.api.page.index');
+            $group->post('/page/move', MoveAction::class, "admin.api.page.move");
 
             $group->post('/page/sort', SortAction::class, "admin.api.page.sort");
 

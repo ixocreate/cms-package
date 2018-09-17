@@ -1,12 +1,14 @@
 <?php
 namespace KiwiSuite\Cms\Action\Page;
 
-use KiwiSuite\Admin\Response\ApiDetailResponse;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\Cms\Resource\PageResource;
-use KiwiSuite\Schema\Builder;
+use Doctrine\Common\Collections\Criteria;
+use KiwiSuite\Admin\Response\ApiErrorResponse;
+use KiwiSuite\Admin\Response\ApiSuccessResponse;
+use KiwiSuite\Cms\Config\Config;
+use KiwiSuite\Cms\Entity\PageVersion;
+use KiwiSuite\Cms\Repository\PageVersionRepository;
+use KiwiSuite\Cms\Site\Admin\Builder;
+use KiwiSuite\Cms\Site\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -19,73 +21,113 @@ final class DetailAction implements MiddlewareInterface
      */
     private $builder;
     /**
-     * @var PageRepository
+     * @var Config
      */
-    private $pageRepository;
+    private $config;
     /**
-     * @var PageResource
+     * @var \KiwiSuite\Schema\Builder
      */
-    private $pageResource;
+    private $schemaBuilder;
     /**
-     * @var SitemapRepository
+     * @var PageVersionRepository
      */
-    private $sitemapRepository;
+    private $pageVersionRepository;
 
-    public function __construct(PageRepository $pageRepository, PageResource $pageResource, Builder $builder, SitemapRepository $sitemapRepository)
-    {
+    /**
+     * DetailAction constructor.
+     * @param Builder $builder
+     * @param Config $config
+     * @param \KiwiSuite\Schema\Builder $schemaBuilder
+     * @param PageVersionRepository $pageVersionRepository
+     */
+    public function __construct(
+        Builder $builder,
+        Config $config,
+        \KiwiSuite\Schema\Builder $schemaBuilder,
+        PageVersionRepository $pageVersionRepository
+    ) {
         $this->builder = $builder;
-        $this->pageRepository = $pageRepository;
-        $this->pageResource = $pageResource;
-        $this->sitemapRepository = $sitemapRepository;
+        $this->config = $config;
+        $this->schemaBuilder = $schemaBuilder;
+        $this->pageVersionRepository = $pageVersionRepository;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $pageId = $request->getAttribute("id");
+        $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
+            $pages = $item->pages();
+            foreach ($pages as $pageItem) {
+                if ((string) $pageItem['page']->id() === $pageId) {
+                    return true;
+                }
+            }
 
-        /** @var Page $entity */
-        $entity = $this->pageRepository->find($request->getAttribute("id"));
+            return false;
+        });
 
-        $hasChildren = ($this->sitemapRepository->count(['parentId' => $entity->sitemapId()]) > 0);
+        if (empty($item)) {
+            return new ApiErrorResponse("invalid_page_id");
+        }
 
-        $otherLanguages = [];
-        $result = $this->pageRepository->findBy(['sitemapId' => $entity->sitemapId()]);
-        /** @var Page $item */
-        foreach ($result as $item) {
-            if ((string) $item->id() === (string) $entity->id()) {
+        $result = $item->jsonSerialize();
+
+        $page = null;
+        $localizedPages = [];
+        foreach ($item->pages() as $locale =>  $pageItem) {
+            if ((string) $pageItem['page']->id() === $pageId) {
+                $page = $pageItem;
                 continue;
             }
-
-            $otherLanguages[] = $item->toPublicArray();
+            $localizedPages[$locale] = $pageItem;
+        }
+        unset($result['pages']);
+        if (empty($page)) {
+            return new ApiErrorResponse("invalid_page_id");
         }
 
-        $samePageTypePages = [];
-        $sitemap = $this->sitemapRepository->find($entity->sitemapId());
-        $result = $this->sitemapRepository->findBy(['pageType' => $sitemap->pageType()]);
-        $sitemapIds = [];
-        foreach ($result as $item) {
-            $sitemapIds[] = (string) $item->id();
+        $page['version'] = [
+            'head' => null,
+            'approved' => null,
+        ];
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('pageId', $page['page']->id()));
+        $criteria->andWhere(Criteria::expr()->neq('approvedAt', null));
+        $criteria->orderBy(['approvedAt' => 'DESC']);
+        $criteria->setMaxResults(1);
+        $pageVersion = $this->pageVersionRepository->matching($criteria);
+        if ($pageVersion->count() > 0) {
+            /** @var PageVersion $pageVersion */
+            $pageVersion = $pageVersion->current();
+            $page['version']['approved'] = (string) $pageVersion->id();
         }
-        if (!empty($sitemapIds)) {
-            $result = $this->pageRepository->findBy(['locale' => $entity->locale(), 'sitemapId' => $sitemapIds], ['name' => 'ASC']);
-
-            foreach ($result as $item) {
-                if ((string) $item->id() === (string) $entity->id()) {
-                    continue;
-                }
-
-                $samePageTypePages[] = $item->toPublicArray();
-            }
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('pageId', $page['page']->id()));
+        $criteria->orderBy(['createdAt' => 'DESC']);
+        $criteria->setMaxResults(1);
+        $pageVersion = $this->pageVersionRepository->matching($criteria);
+        if ($pageVersion->count() > 0) {
+            /** @var PageVersion $pageVersion */
+            $pageVersion = $pageVersion->current();
+            $page['version']['head'] = (string) $pageVersion->id();
         }
 
-        return new ApiDetailResponse(
-            $this->pageResource,
-            $entity->toPublicArray(),
-            $this->pageResource->updateSchema($this->builder),
-            [
-                'hasChildren' => $hasChildren,
-                'otherLanguages' => $otherLanguages,
-                'samePageTypePages' => $samePageTypePages
-            ]
-        );
+        $result['page'] = $page;
+        $result['localizedPages'] = $localizedPages;
+
+        $result['hasChildren'] = (count($result['children']) > 0);
+        unset($result['children']);
+        unset($result['childrenAllowed']);
+
+        $navigation = $this->config->navigation();
+        $navigation = array_map(function ($value) use ($item){
+            $value['active'] = (in_array($value['name'], $item->navigation()));
+            return $value;
+        }, $navigation);
+        $result['navigation'] = $navigation;
+
+        $result['schema'] = $item->pageType()->receiveSchema($this->schemaBuilder);
+
+        return new ApiSuccessResponse($result);
     }
 }

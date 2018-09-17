@@ -17,7 +17,19 @@ final class Structure implements Serializable
 
     public function structure(): array
     {
-        return $this->structure;
+        $structureItems = [];
+        foreach ($this->structure as $item) {
+            $structureItems[] = new StructureItem(
+                $item['sitemapId'],
+                $item['handle'],
+                $item['pages'],
+                $item['navigation'],
+                $item['children'],
+                0
+            );
+        }
+
+        return $structureItems;
     }
 
     /**

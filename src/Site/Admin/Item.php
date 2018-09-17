@@ -7,34 +7,11 @@ use KiwiSuite\Cms\Loader\SitemapLoaderInterface;
 use KiwiSuite\Cms\PageType\PageTypeInterface;
 use KiwiSuite\Cms\PageType\PageTypeSubManager;
 use KiwiSuite\Cms\Router\PageRoute;
+use KiwiSuite\Cms\Site\Structure\StructureItem;
+use RecursiveIterator;
 
-final class Item implements \JsonSerializable
+final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
 {
-    /**
-     * @var null|string
-     */
-    private $sitemapId;
-
-    /**
-     * @var array|null
-     */
-    private $pages;
-
-    /**
-     * @var array|null
-     */
-    private $navigation;
-
-    /**
-     * @var array|null
-     */
-    private $children;
-
-    /**
-     * @var int
-     */
-    private $level;
-
     /**
      * @var Item|null
      */
@@ -61,9 +38,34 @@ final class Item implements \JsonSerializable
     private $pageRoute;
 
     /**
-     * @var null|string
+     * @var StructureItem
      */
-    private $handle;
+    private $structureItem;
+
+    /**
+     * @var array
+     */
+    private $pages;
+
+    /**
+     * @var PageTypeInterface
+     */
+    private $pageType;
+
+    /**
+     * @var Sitemap
+     */
+    private $sitemap;
+
+    /**
+     * @var Item[]
+     */
+    private $children;
+
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * Item constructor.
@@ -71,39 +73,32 @@ final class Item implements \JsonSerializable
      * @param PageLoaderInterface $pageLoader
      * @param PageTypeSubManager $pageTypeSubManager
      * @param PageRoute $pageRoute
-     * @param int $level
      * @param Item|null $parent
-     * @param null|string $sitemapId
-     * @param null|string $handle
-     * @param array|null $pages
-     * @param array|null $navigation
-     * @param array|null $children
+     * @param StructureItem $structureItem
      */
     public function __construct(
         SitemapLoaderInterface $sitemapLoader,
         PageLoaderInterface $pageLoader,
         PageTypeSubManager $pageTypeSubManager,
         PageRoute $pageRoute,
-        int $level,
-        ?Item $parent,
-        ?string $sitemapId,
-        ?string $handle,
-        ?array $pages,
-        ?array $navigation,
-        ?array $children
+        StructureItem $structureItem,
+        ?Item $parent = null
     ) {
 
-        $this->sitemapId = $sitemapId;
-        $this->pages = $pages;
-        $this->navigation = $navigation;
-        $this->children = $children;
-        $this->level = $level;
         $this->parent = $parent;
         $this->sitemapLoader = $sitemapLoader;
         $this->pageLoader = $pageLoader;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->pageRoute = $pageRoute;
-        $this->handle = $handle;
+        $this->structureItem = $structureItem;
+
+        $this->container = new Container(
+            $sitemapLoader,
+            $pageLoader,
+            $pageTypeSubManager,
+            $pageRoute,
+            $structureItem->children()
+        );
     }
 
     /**
@@ -111,7 +106,15 @@ final class Item implements \JsonSerializable
      */
     public function level(): int
     {
-        return $this->level;
+        return $this->structureItem->level();
+    }
+
+    /**
+     * @return array
+     */
+    public function navigation(): array
+    {
+        return $this->structureItem->navigation();
     }
 
     /**
@@ -119,7 +122,7 @@ final class Item implements \JsonSerializable
      */
     public function handle(): ?string
     {
-        return $this->handle;
+        return $this->structureItem->handle();
     }
 
     /**
@@ -127,51 +130,53 @@ final class Item implements \JsonSerializable
      */
     public function pages(): array
     {
-        $pages = [];
+        if ($this->pages === null) {
+            $this->pages = [];
 
-        foreach ($this->pages as $locale => $pageId) {
-            $page = $this->pageLoader->receivePage($pageId);
-            if (empty($page)) {
-                continue;
+            foreach ($this->structureItem->pages() as $locale => $pageId) {
+                $page = $this->pageLoader->receivePage($pageId);
+                if (empty($page)) {
+                    continue;
+                }
+
+                $this->pages[$page->locale()] = [
+                    'page' => $page,
+                    'url' => null,
+                ];
+
+                try {
+                    $this->pages[$page->locale()]['url'] = $this->pageRoute->fromPage($page);
+                } catch (\Exception $e) {
+
+                }
             }
 
-            $pages[$page->locale()] = [
-                'page' => $page,
-                'url' => null,
-            ];
+            $parent = $this->parent();
+            foreach ($this->pages as $locale => $pageItem) {
+                $this->pages[$locale]['isOnline'] = $pageItem['page']->isOnline();
+                if ($this->pages[$locale]['isOnline'] === false) {
+                    continue;
+                }
 
-            try {
-                $pages[$page->locale()]['url'] = $this->pageRoute->fromPage($page);
-            } catch (\Exception $e) {
+                if (empty($parent)) {
+                    continue;
+                }
 
+                $parentPages = $parent->pages();
+
+                if (empty($parentPages[$locale])) {
+                    $this->pages[$locale]['isOnline'] = false;
+                    continue;
+                }
+
+                if ($parentPages[$locale]['isOnline'] === false) {
+                    $this->pages[$locale]['isOnline'] = false;
+                    continue;
+                }
             }
         }
 
-        $parent = $this->parent();
-        foreach ($pages as $locale => $pageItem) {
-            $pages[$locale]['isOnline'] = $pageItem['page']->isOnline();
-            if ($pages[$locale]['isOnline'] === false) {
-                continue;
-            }
-
-            if (empty($parent)) {
-                continue;
-            }
-
-            $parentPages = $parent->pages();
-
-            if (empty($parentPages[$locale])) {
-                $pages[$locale]['isOnline'] = false;
-                continue;
-            }
-
-            if ($parentPages[$locale]['isOnline'] === false) {
-                $pages[$locale]['isOnline'] = false;
-                continue;
-            }
-        }
-
-        return $pages;
+        return $this->pages;
     }
 
     /**
@@ -179,12 +184,16 @@ final class Item implements \JsonSerializable
      */
     public function pageType(): ?PageTypeInterface
     {
-        $sitemap = $this->sitemap();
-        if (empty($sitemap)) {
-            return null;
+        if ($this->pageType === null) {
+            $sitemap = $this->sitemap();
+            if (empty($sitemap)) {
+                return null;
+            }
+
+            $this->pageType = $this->pageTypeSubManager->get($sitemap->pageType());
         }
 
-        return $this->pageTypeSubManager->get($sitemap->pageType());
+        return $this->pageType;
     }
 
     /**
@@ -192,7 +201,11 @@ final class Item implements \JsonSerializable
      */
     public function sitemap(): ?Sitemap
     {
-        return $this->sitemapLoader->receiveSitemap($this->sitemapId);
+        if ($this->sitemap === null) {
+            $this->sitemap = $this->sitemapLoader->receiveSitemap($this->structureItem->sitemapId());
+        }
+
+        return $this->sitemap;
     }
 
     /**
@@ -204,29 +217,11 @@ final class Item implements \JsonSerializable
     }
 
     /**
-     * @return ItemCollection
+     * @return Container
      */
-    public function children(): ItemCollection
+    public function children(): Container
     {
-        $items = [];
-
-        foreach ($this->children as $child) {
-            $items[] = new Item(
-                $this->sitemapLoader,
-                $this->pageLoader,
-                $this->pageTypeSubManager,
-                $this->pageRoute,
-                $this->level + 1,
-                $this,
-                $child['sitemapId'],
-                $child['handle'],
-                $child['pages'],
-                $child['navigation'],
-                $child['children']
-            );
-        }
-
-        return new ItemCollection($items);
+        return $this->container;
     }
 
     public function childrenAllowed(): bool
@@ -263,5 +258,78 @@ final class Item implements \JsonSerializable
             ],
             'children' => $this->children()
         ];
+    }
+
+    /**
+     * @param callable $callable
+     * @return Item|null
+     */
+    public function findOneBy(callable $callable): ?Item
+    {
+        return $this->container->findOneBy($callable);
+    }
+
+    /**
+     * @return Item
+     */
+    public function current()
+    {
+        return $this->container->current();
+    }
+
+    /**
+     * @return void
+     */
+    public function next()
+    {
+        $this->container->next();
+    }
+
+    /**
+     * @return int
+     */
+    public function key()
+    {
+        return $this->container->key();
+    }
+
+    /**
+     * @return bool
+     */
+    public function valid()
+    {
+        return $this->container->valid();
+    }
+
+    /**
+     *
+     */
+    public function rewind()
+    {
+        $this->container->rewind();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasChildren()
+    {
+        return $this->container->hasChildren();
+    }
+
+    /**
+     * @return RecursiveIterator
+     */
+    public function getChildren()
+    {
+        return $this->container->getChildren();
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return $this->container->count();
     }
 }

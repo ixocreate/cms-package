@@ -5,40 +5,32 @@ namespace KiwiSuite\Admin;
 
 /** @var PipeConfigurator $pipe */
 use KiwiSuite\Admin\Config\AdminConfig;
-use KiwiSuite\Admin\Middleware\Api\ResourceInjectionMiddleware;
 use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
-use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
-use KiwiSuite\Cms\Action\Navigation\SaveAction;
 use KiwiSuite\Cms\Action\Page\AddAction;
-use KiwiSuite\Cms\Action\Page\CreateSchemaAction;
-use KiwiSuite\Cms\Action\Page\FlatIndexAction;
+use KiwiSuite\Cms\Action\Page\CopyAction;
+use KiwiSuite\Cms\Action\Page\CreateAction;
+use KiwiSuite\Cms\Action\Page\DeleteAction;
+use KiwiSuite\Cms\Action\Page\DetailAction;
 use KiwiSuite\Cms\Action\Page\IndexAction;
 use KiwiSuite\Cms\Action\Page\MoveAction;
-use KiwiSuite\Cms\Action\Page\SortAction;
-use KiwiSuite\Cms\Action\PageVersion\CreateAction;
-use KiwiSuite\Cms\Action\PageVersion\PageVersionDetailAction;
 use KiwiSuite\Cms\Action\PageVersion\ReplaceAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
         $pipe->group("admin.authorized")(function (GroupPipeConfigurator $group) {
+            $group->get('/page/{id}', DetailAction::class, 'admin.api.page.detail');
+            $group->get('/page/{pageId}/version', \KiwiSuite\Cms\Action\Page\Version\IndexAction::class, 'admin.api.page.version.index');
+            $group->get('/page/{pageId}/version/{id}', \KiwiSuite\Cms\Action\Page\Version\DetailAction::class, 'admin.api.page.version.detail');
             $group->get('/page/index', IndexAction::class, 'admin.api.page.index');
             $group->post('/page/move', MoveAction::class, "admin.api.page.move");
+            $group->post('/page/copy', CopyAction::class, "admin.api.page.copy");
+            $group->delete('/page/{id}', DeleteAction::class, 'admin.api.page.delete');
 
-            $group->post('/page/sort', SortAction::class, "admin.api.page.sort");
-
-            $group->get('/page/navigation/{id}', \KiwiSuite\Cms\Action\Navigation\IndexAction::class, "admin.api.page.navigation.index");
-            $group->post('/page/navigation/{id}', SaveAction::class, "admin.api.page.navigation.save");
-
-            $group->get('/page-version/{id}', PageVersionDetailAction::class, "admin.api.pageVersion.detail");
-            $group->post('/page-version/{id}', CreateAction::class, "admin.api.pageVersion.create");
-            $group->post('/page-version/replace/{fromId}/{toId}', ReplaceAction::class, "admin.api.pageVersion.replace");
-
-            $group->get('/page/create-schema[/{parentSitemapId}]', CreateSchemaAction::class, "admin.api.page.createSchema");
-
-            $group->get('/page/flat/{handle}', FlatIndexAction::class, 'admin.api.flatPages.index');
+            $group->post('/page/create', CreateAction::class, 'admin.api.page.create');
             $group->post('/page/add', AddAction::class, 'admin.api.page.add');
+
+            $group->post('/page-version/replace/{fromId}/{toId}', ReplaceAction::class, "admin.api.pageVersion.replace");
         });
     });
 });

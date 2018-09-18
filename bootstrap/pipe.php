@@ -8,6 +8,7 @@ use KiwiSuite\Admin\Config\AdminConfig;
 use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
 use KiwiSuite\Cms\Action\Page\AddAction;
+use KiwiSuite\Cms\Action\Page\AvailablePageTypesAction;
 use KiwiSuite\Cms\Action\Page\CopyAction;
 use KiwiSuite\Cms\Action\Page\CreateAction;
 use KiwiSuite\Cms\Action\Page\DeleteAction;
@@ -25,6 +26,7 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
             $group->post('/page/{pageId}', \KiwiSuite\Cms\Action\Page\Version\CreateAction::class, 'admin.api.page.version.create');
             $group->get('/page/{pageId}/version/{id}', \KiwiSuite\Cms\Action\Page\Version\DetailAction::class, 'admin.api.page.version.detail');
             $group->get('/page/index', IndexAction::class, 'admin.api.page.index');
+            $group->get('/page/available-page-types[/{parentSitemapId}]', AvailablePageTypesAction::class, 'admin.api.page.availablePageTypes');
             $group->post('/page/move', MoveAction::class, "admin.api.page.move");
             $group->post('/page/copy', CopyAction::class, "admin.api.page.copy");
             $group->put('/page/{id}', UpdateAction::class, "admin.api.page.pageUpdate");

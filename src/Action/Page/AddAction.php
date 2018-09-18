@@ -63,7 +63,7 @@ class AddAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $request->getParsedBody();
-        
+
         /** @var Sitemap $sitemap */
         $sitemap = $this->sitemapRepository->find($data['sitemapId']);
         /** @var PageTypeInterface $pageType */

@@ -29,7 +29,7 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
             $group->get('/page/available-page-types[/{parentSitemapId}]', AvailablePageTypesAction::class, 'admin.api.page.availablePageTypes');
             $group->post('/page/move', MoveAction::class, "admin.api.page.move");
             $group->post('/page/copy', CopyAction::class, "admin.api.page.copy");
-            $group->put('/page/{id}', UpdateAction::class, "admin.api.page.pageUpdate");
+            $group->patch('/page/{id}', UpdateAction::class, "admin.api.page.pageUpdate");
             $group->delete('/page/{id}', DeleteAction::class, 'admin.api.page.delete');
 
             $group->post('/page/create', CreateAction::class, 'admin.api.page.create');

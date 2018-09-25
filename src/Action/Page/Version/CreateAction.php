@@ -4,48 +4,34 @@ namespace KiwiSuite\Cms\Action\Page\Version;
 use KiwiSuite\Admin\Entity\User;
 use KiwiSuite\Admin\Response\ApiErrorResponse;
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Event\PageEvent;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Repository\PageVersionRepository;
+use KiwiSuite\Cms\Command\Page\CreateVersionCommand;
 use KiwiSuite\Cms\Site\Admin\Builder;
 use KiwiSuite\Cms\Site\Admin\Item;
-use KiwiSuite\Event\EventDispatcher;
+use KiwiSuite\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Ramsey\Uuid\Uuid;
 
 final class CreateAction implements MiddlewareInterface
 {
     /**
-     * @var PageVersionRepository
+     * @var CommandBus
      */
-    private $pageVersionRepository;
+    private $commandBus;
     /**
      * @var Builder
      */
     private $builder;
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
 
     /**
      * DetailAction constructor.
+     * @param CommandBus $commandBus
      * @param Builder $builder
-     * @param PageVersionRepository $pageVersionRepository
-     * @param EventDispatcher $eventDispatcher
      */
-    public function __construct(
-        Builder $builder,
-        PageVersionRepository $pageVersionRepository,
-        EventDispatcher $eventDispatcher
-    ) {
-        $this->pageVersionRepository = $pageVersionRepository;
+    public function __construct(CommandBus $commandBus, Builder $builder) {
+        $this->commandBus = $commandBus;
         $this->builder = $builder;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -85,44 +71,18 @@ final class CreateAction implements MiddlewareInterface
             $content = $request->getParsedBody()['content'];
         }
 
-        $queryBuilder = $this->pageVersionRepository->createQueryBuilder();
-        $queryBuilder->update(PageVersion::class, "version")
-            ->set("version.approvedAt", ":approvedAt")
-            ->setParameter("approvedAt", null)
-            ->where("version.pageId = :pageId")
-            ->setParameter("pageId", $pageId);
-
-        $queryBuilder->getQuery()->execute();
-
-        $pageVersion = new PageVersion([
-            'id' => Uuid::uuid4()->toString(),
-            'pageId' => $pageId,
-            'content' => [
-                '__receiver__' => [
-                    'receiver' => PageTypeSubManager::class,
-                    'options' => [
-                        'pageType' => $item->pageType()::serviceName()
-                    ]
-                ],
-                '__value__' => $content,
-            ],
+        $result = $this->commandBus->command(CreateVersionCommand::class, [
+            'pageType' => $item->pageType()::serviceName(),
+            'pageId' => (string) $page->id(),
             'createdBy' => $request->getAttribute(User::class, null)->id(),
-            'approvedAt' => new \DateTime(),
-            'createdAt' => new \DateTime(),
-
+            'content' => $content,
+            'approve' => true,
         ]);
-        /** @var PageVersion $pageVersion */
-        $pageVersion = $this->pageVersionRepository->save($pageVersion);
 
-        $pageEvent = new PageEvent(
-            $item->sitemap(),
-            $page,
-            $pageVersion,
-            $item->pageType()
-        );
+        if ($result->isSuccessful()) {
+            return new ApiSuccessResponse((string) $result->command()->uuid());
+        }
 
-        $this->eventDispatcher->dispatch('page-version.publish', $pageEvent);
-
-        return new ApiSuccessResponse();
+        return new ApiErrorResponse('execution_error', $result->messages());
     }
 }

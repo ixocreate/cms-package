@@ -3,11 +3,10 @@
 namespace KiwiSuite\Cms\Action\Page;
 
 
-use Cocur\Slugify\Slugify;
 use KiwiSuite\Admin\Response\ApiErrorResponse;
 use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Repository\PageRepository;
+use KiwiSuite\Cms\Command\Page\UpdateCommand;
+use KiwiSuite\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -15,18 +14,15 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class UpdateAction implements MiddlewareInterface
 {
-    /**
-     * @var PageRepository
-     */
-    private $pageRepository;
 
     /**
-     * UpdateAction constructor.
-     * @param PageRepository $pageRepository
+     * @var CommandBus
      */
-    public function __construct(PageRepository $pageRepository)
+    private $commandBus;
+
+    public function __construct(CommandBus $commandBus)
     {
-        $this->pageRepository = $pageRepository;
+        $this->commandBus = $commandBus;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -35,44 +31,13 @@ class UpdateAction implements MiddlewareInterface
         if (!is_array($data)) {
             return new ApiErrorResponse("invalid_data", [], 400);
         }
+        $data['pageId'] = $request->getAttribute("id");
 
-        /** @var Page $page */
-        $page = $this->pageRepository->find($request->getAttribute("id"));
-        if (empty($page)) {
-            return new ApiErrorResponse("invalid_page");
+        $result = $this->commandBus->command(UpdateCommand::class, $data);
+        if ($result->isSuccessful()) {
+            return new ApiSuccessResponse((string) $result->command()->uuid());
         }
 
-        $updated = false;
-        if (!empty($data['name'])) {
-            $updated = true;
-            $page = $page->with("name", $data['name']);
-        }
-
-        if (!empty($data['publishedFrom'])) {
-            $updated = true;
-            $page = $page->with("publishedFrom", $data['publishedFrom']);
-        }
-
-        if (!empty($data['publishedUntil'])) {
-            $updated = true;
-            $page = $page->with("publishedUntil", $data['publishedUntil']);
-        }
-
-        if (!empty($data['status']) && in_array($data['status'], ['offline', 'online'])) {
-            $updated = true;
-            $page = $page->with("status", $data['status']);
-        }
-
-        if (!empty($data['slug'])) {
-            $updated = true;
-            $page = $page->with("slug", (new Slugify())->slugify($data['slug']));
-        }
-
-        if ($updated === true) {
-            $page = $page->with('updatedAt', new \DateTime());
-            $this->pageRepository->save($page);
-        }
-
-        return new ApiSuccessResponse();
+        return new ApiErrorResponse('execution_error', $result->messages());
     }
 }

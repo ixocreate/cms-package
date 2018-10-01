@@ -26,13 +26,15 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
      * @param PageTypeSubManager $pageTypeSubManager
      * @param PageRoute $pageRoute
      * @param array $children
+     * @param Item|null $parent
      */
     public function __construct(
         SitemapLoaderInterface $sitemapLoader,
         PageLoaderInterface $pageLoader,
         PageTypeSubManager $pageTypeSubManager,
         PageRoute $pageRoute,
-        array $children
+        array $children,
+        ?Item $parent = null
     ) {
         foreach ($children as $child) {
             $this->children[] = new Item(
@@ -40,9 +42,15 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
                 $pageLoader,
                 $pageTypeSubManager,
                 $pageRoute,
-                $child
+                $child,
+                $parent
             );
         }
+    }
+
+    public function __clone()
+    {
+
     }
 
     /**
@@ -60,6 +68,29 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
         }
 
         return null;
+    }
+
+    /**
+     * @param callable $callable
+     * @return Container
+     */
+    public function filter(callable $callable): Container
+    {
+        $newItems = [];
+        /** @var Item $item */
+        foreach ($this->children as $item) {
+            if ($callable($item) === false) {
+                continue;
+            }
+
+            $newItems[] = $item->filter($callable);
+
+        }
+
+        $container = clone $this;
+        $container->children = $newItems;
+
+        return $container;
     }
 
     /**

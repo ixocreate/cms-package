@@ -23,4 +23,6 @@ interface PageTypeInterface extends NamedServiceInterface, SchemaReceiverInterfa
     public function middleware(): ?array;
 
     public function layout(): string;
+
+    public function terminal(): bool;
 }

@@ -58,11 +58,6 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
     private $sitemap;
 
     /**
-     * @var Item[]
-     */
-    private $children;
-
-    /**
      * @var Container
      */
     private $container;
@@ -97,8 +92,17 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
             $pageLoader,
             $pageTypeSubManager,
             $pageRoute,
-            $structureItem->children()
+            $structureItem->children(),
+            $this
         );
+    }
+
+    public function __clone()
+    {
+        $this->container = clone $this->container;
+        if (!empty($this->parent)) {
+            $this->parent = clone $this->parent;
+        }
     }
 
     /**
@@ -255,6 +259,7 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
                 'allowedChildren' => $this->pageType()->allowedChildren(),
                 'isRoot' => $this->pageType()->isRoot(),
                 'name' => $this->pageType()::serviceName(),
+                'terminal' => $this->pageType()->terminal(),
             ],
             'children' => $this->children()
         ];
@@ -267,6 +272,19 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
     public function findOneBy(callable $callable): ?Item
     {
         return $this->container->findOneBy($callable);
+    }
+
+    /**
+     * @param callable $callable
+     * @return Item
+     */
+    public function filter(callable $callable): Item
+    {
+        $container = $this->container->filter($callable);
+        $item = clone $this;
+        $item->container = $container;
+
+        return $item;
     }
 
     /**

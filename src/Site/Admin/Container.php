@@ -94,6 +94,14 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->children;
+    }
+
+    /**
      * @return Item
      */
     public function current()

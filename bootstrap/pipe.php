@@ -14,6 +14,8 @@ use KiwiSuite\Cms\Action\Page\CreateAction;
 use KiwiSuite\Cms\Action\Page\DeleteAction;
 use KiwiSuite\Cms\Action\Page\DetailAction;
 use KiwiSuite\Cms\Action\Page\IndexAction;
+use KiwiSuite\Cms\Action\Page\IndexFlatAction;
+use KiwiSuite\Cms\Action\Page\IndexSubSitemapAction;
 use KiwiSuite\Cms\Action\Page\MoveAction;
 use KiwiSuite\Cms\Action\Page\UpdateAction;
 use KiwiSuite\Cms\Action\PageVersion\ReplaceAction;
@@ -26,6 +28,8 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
             $group->post('/page/{pageId}', \KiwiSuite\Cms\Action\Page\Version\CreateAction::class, 'admin.api.page.version.create');
             $group->get('/page/{pageId}/version/{id}', \KiwiSuite\Cms\Action\Page\Version\DetailAction::class, 'admin.api.page.version.detail');
             $group->get('/page/index', IndexAction::class, 'admin.api.page.index');
+            $group->get('/page/sub/index/{handle}', IndexSubSitemapAction::class, 'admin.api.page.indexSub');
+            $group->get('/page/flat/index/{handle}', IndexFlatAction::class, 'admin.api.page.indexFlat');
             $group->get('/page/available-page-types[/{parentSitemapId}]', AvailablePageTypesAction::class, 'admin.api.page.availablePageTypes');
             $group->post('/page/move', MoveAction::class, "admin.api.page.move");
             $group->post('/page/copy', CopyAction::class, "admin.api.page.copy");

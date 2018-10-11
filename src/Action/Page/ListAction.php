@@ -39,10 +39,24 @@ class ListAction implements MiddlewareInterface
             if (array_key_exists($locale, $item->pages())) {
                 $result[] = [
                     'id' => $item->pages()[$locale]['page']->id(),
-                    'name' => $item->pages()[$locale]['page']->name()
+                    'name' => $this->receiveName($item, $locale)
                 ];
             }
         }
         return new ApiSuccessResponse($result);
+    }
+
+    private function receiveName(Item $item, string $locale): string
+    {
+        $name = "";
+        if (!empty($item->parent())) {
+            $name = $this->receiveName($item->parent(), $locale) . ' / ';
+        }
+
+        if (!array_key_exists($locale, $item->pages())) {
+            return " --- ";
+        }
+
+        return $name . $item->pages()[$locale]['page']->name();
     }
 }

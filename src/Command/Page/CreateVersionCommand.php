@@ -74,7 +74,7 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
         /** @var PageTypeInterface $pageType */
         $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
         /** @var Sitemap $sitemap */
-        $sitemap = $this->sitemapRepository->find($page->id());
+        $sitemap = $this->sitemapRepository->find($page->sitemapId());
 
         if ($this->dataValue("approve") === true) {
             $queryBuilder = $this->pageVersionRepository->createQueryBuilder();

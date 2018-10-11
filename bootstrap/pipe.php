@@ -5,8 +5,13 @@ namespace KiwiSuite\Admin;
 
 /** @var PipeConfigurator $pipe */
 use KiwiSuite\Admin\Config\AdminConfig;
+use KiwiSuite\Admin\Middleware\Api\AuthorizationGuardMiddleware;
+use KiwiSuite\Admin\Middleware\Api\SessionDataMiddleware;
+use KiwiSuite\Admin\Middleware\Api\UserMiddleware;
+use KiwiSuite\Admin\Middleware\Api\XsrfProtectionMiddleware;
 use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
+use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
 use KiwiSuite\Cms\Action\Page\AddAction;
 use KiwiSuite\Cms\Action\Page\AvailablePageTypesAction;
 use KiwiSuite\Cms\Action\Page\CopyAction;
@@ -19,6 +24,7 @@ use KiwiSuite\Cms\Action\Page\IndexSubSitemapAction;
 use KiwiSuite\Cms\Action\Page\MoveAction;
 use KiwiSuite\Cms\Action\Page\UpdateAction;
 use KiwiSuite\Cms\Action\PageVersion\ReplaceAction;
+use KiwiSuite\Cms\Action\Preview\PreviewAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
@@ -40,6 +46,16 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
             $group->post('/page/add', AddAction::class, 'admin.api.page.add');
 
             $group->post('/page-version/replace/{fromId}/{toId}', ReplaceAction::class, "admin.api.pageVersion.replace");
+        });
+    });
+
+    $pipe->group("cms.preview")(function (GroupPipeConfigurator $group) {
+        $group->before(SessionDataMiddleware::class);
+        $group->before(UserMiddleware::class);
+        $group->before(AuthorizationGuardMiddleware::class);
+
+        $group->get('/preview', PreviewAction::class, 'admin.cms.preview')(function (RouteConfigurator $routeConfigurator) {
+           $routeConfigurator->enablePost();
         });
     });
 });

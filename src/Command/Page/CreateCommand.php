@@ -94,6 +94,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
             'status' => 'offline',
             'updatedAt' => $this->createdAt(),
             'createdAt' => $this->createdAt(),
+            'releasedAt' => $this->createdAt(),
         ]);
 
         /** @var Page $page */

@@ -35,6 +35,7 @@ final class Page implements EntityInterface
     private $status;
     private $updatedAt;
     private $createdAt;
+    private $releasedAt;
 
     public function id(): UuidType
     {
@@ -81,6 +82,11 @@ final class Page implements EntityInterface
         return $this->updatedAt;
     }
 
+    public function releasedAt(): DateTimeType
+    {
+        return $this->releasedAt;
+    }
+
     public function createdAt(): DateTimeType
     {
         return $this->createdAt;
@@ -116,6 +122,7 @@ final class Page implements EntityInterface
             new Definition('status', TypeInterface::TYPE_STRING, false, true),
             new Definition('updatedAt', DateTimeType::class, false, true),
             new Definition('createdAt', DateTimeType::class, false, true),
+            new Definition('releasedAt', DateTimeType::class, false, true),
         ]);
     }
 }

@@ -67,6 +67,10 @@ final class PageMetadata extends AbstractMetadata
         $this->setFieldBuilder('createdAt',
             $builder->createField('createdAt', DateTimeType::class)
         )->build();
+
+        $this->setFieldBuilder('releasedAt',
+            $builder->createField('releasedAt', DateTimeType::class)
+        )->build();
     }
     
     public function id(): FieldBuilder
@@ -117,6 +121,11 @@ final class PageMetadata extends AbstractMetadata
     public function createdAt(): FieldBuilder
     {
         return $this->getField('createdAt');
+    }
+
+    public function releasedAt(): FieldBuilder
+    {
+        return $this->getField('releasedAt');
     }
 }
 

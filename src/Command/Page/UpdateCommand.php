@@ -3,6 +3,7 @@ namespace KiwiSuite\Cms\Command\Page;
 
 use KiwiSuite\Cms\Config\Config;
 use KiwiSuite\Cms\Entity\Navigation;
+use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Repository\NavigationRepository;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\CommandBus\Command\AbstractCommand;
@@ -57,30 +58,37 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
      */
     public function execute(): bool
     {
+        /** @var Page $page */
         $page = $this->pageRepository->find($this->dataValue("pageId"));
 
         $updated = false;
-        if (!empty($this->dataValue('name'))) {
+        if ($this->dataValue('name') !== false) {
             $updated = true;
             $page = $page->with("name", $this->dataValue('name'));
         }
 
-        if (!empty($this->dataValue('publishedFrom'))) {
+        if ($this->dataValue('publishedFrom') !== false) {
             $updated = true;
             $page = $page->with("publishedFrom", $this->dataValue('publishedFrom'));
+
+            if (empty($this->dataValue('publishedFrom'))) {
+                $page = $page->with("releasedAt", $page->createdAt());
+            } else {
+                $page = $page->with("releasedAt", $this->dataValue('publishedFrom'));
+            }
         }
 
-        if (!empty($this->dataValue('publishedUntil'))) {
+        if ($this->dataValue('publishedUntil') !== false) {
             $updated = true;
             $page = $page->with("publishedUntil", $this->dataValue('publishedUntil'));
         }
 
-        if (!empty($this->dataValue('status'))) {
+        if ($this->dataValue('status') !== false) {
             $updated = true;
             $page = $page->with("status", $this->dataValue('status'));
         }
 
-        if (!empty($this->dataValue('slug'))) {
+        if ($this->dataValue('slug') !== false) {
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string) $this->dataValue('slug'),
                 'pageId' => (string) $page->id()
@@ -144,11 +152,11 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
     {
         $newData = [];
         $newData['pageId'] = $this->dataValue('pageId');
-        $newData['name'] = $this->dataValue('name');
-        $newData['publishedFrom'] = $this->dataValue('publishedFrom');
-        $newData['publishedUntil'] = $this->dataValue('publishedUntil');
-        $newData['status'] = $this->dataValue('status');
-        $newData['slug'] = $this->dataValue('slug');
+        $newData['name'] = $this->dataValue('name', false);
+        $newData['publishedFrom'] = $this->dataValue('publishedFrom', false);
+        $newData['publishedUntil'] = $this->dataValue('publishedUntil', false);
+        $newData['status'] = $this->dataValue('status', false);
+        $newData['slug'] = $this->dataValue('slug', false);
         $newData['navigation'] = null;
 
         if (!empty($this->dataValue('navigation'))) {

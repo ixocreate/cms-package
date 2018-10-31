@@ -3,6 +3,7 @@
 namespace KiwiSuite\Cms\Template;
 
 use KiwiSuite\Cms\Entity\Page;
+use KiwiSuite\Cms\Entity\Sitemap;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Cms\Repository\SitemapRepository;
 use KiwiSuite\Cms\Router\PageRoute;
@@ -84,9 +85,38 @@ final class PageUrlExtension implements ExtensionInterface
             'sitemapId' => $sitemap->id(),
             'locale'    => $locale ?? \Locale::getDefault(),
         ]);
-        if (!$page) {
+        if (empty($page)) {
             return '';
         }
+
+        if (!$page->isOnline()) {
+            return '';
+        }
+
         return $this->fromPage($page, $params, $locale);
+    }
+
+    /**
+     * @param Sitemap $sitemap
+     * @param string $locale
+     * @param string $defaultHandle
+     * @return string
+     */
+    public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle): string
+    {
+        $page = $this->pageRepository->findOneBy([
+            'sitemapId' => $sitemap->id(),
+            'locale'    => $locale,
+        ]);
+
+        if (empty($page)) {
+            return $this->fromHandle($defaultHandle, [], $locale);
+        }
+
+        if (!$page->isOnline()) {
+            return $this->fromHandle($defaultHandle, [], $locale);
+        }
+
+        return $this->fromPage($page, [], $locale);
     }
 }

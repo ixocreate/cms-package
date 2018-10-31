@@ -14,7 +14,7 @@ final class Version20181019082844 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         $table = $schema->getTable('cms_page');
-        $table->addColumn('releasedAt', DateTimeType::class);
+        $table->addColumn('releasedAt', DateTimeType::class)->setNotnull(false);
 
         $table->addIndex(['releasedAt']);
     }

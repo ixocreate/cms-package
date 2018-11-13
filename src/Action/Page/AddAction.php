@@ -76,7 +76,8 @@ class AddAction implements MiddlewareInterface
             'name' => $data['name'],
             'status' => 'offline',
             'updatedAt' => new \DateTime(),
-            'createdAt' => new \DateTime(),
+            'updatedAt' => new \DateTime(),
+            'releasedAt' => new \DateTime(),
         ]);
 
         /** @var Page $page */

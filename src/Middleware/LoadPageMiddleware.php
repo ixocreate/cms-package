@@ -50,7 +50,7 @@ final class LoadPageMiddleware implements MiddlewareInterface
         $page = $this->pageRepository->find($pageId);
         
         if (!$page->isOnline()) {
-            return $this->notFoundHandler->process($request);
+            return $this->notFoundHandler->process($request, $handler);
         }
 
         $this->localeManager->acceptLocale($page->locale());

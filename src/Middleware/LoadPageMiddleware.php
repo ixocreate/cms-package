@@ -2,6 +2,8 @@
 
 namespace KiwiSuite\Cms\Middleware;
 
+use KiwiSuite\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
+use KiwiSuite\Cms\Entity\Page;
 use KiwiSuite\Cms\Repository\PageRepository;
 use KiwiSuite\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
@@ -21,10 +23,16 @@ final class LoadPageMiddleware implements MiddlewareInterface
      */
     private $localeManager;
 
-    public function __construct(PageRepository $pageRepository, LocaleManager $localeManager)
+    /**
+     * @var NotFoundHandler
+     */
+    private $notFoundHandler;
+
+    public function __construct(PageRepository $pageRepository, LocaleManager $localeManager, NotFoundHandler $notFoundHandler)
     {
         $this->pageRepository = $pageRepository;
         $this->localeManager = $localeManager;
+        $this->notFoundHandler = $notFoundHandler;
     }
 
     /**
@@ -37,7 +45,13 @@ final class LoadPageMiddleware implements MiddlewareInterface
         $routeResult = $request->getAttribute(RouteResult::class);
 
         $pageId = $routeResult->getMatchedRoute()->getOptions()['pageId'];
+
+        /** @var Page $page */
         $page = $this->pageRepository->find($pageId);
+        
+        if (!$page->isOnline()) {
+            return $this->notFoundHandler->process($request);
+        }
 
         $this->localeManager->acceptLocale($page->locale());
 

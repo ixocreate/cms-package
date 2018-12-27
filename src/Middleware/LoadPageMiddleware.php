@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
@@ -18,6 +25,7 @@ final class LoadPageMiddleware implements MiddlewareInterface
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var LocaleManager
      */
@@ -48,7 +56,7 @@ final class LoadPageMiddleware implements MiddlewareInterface
 
         /** @var Page $page */
         $page = $this->pageRepository->find($pageId);
-        
+
         if (!$page->isOnline()) {
             return $this->notFoundHandler->process($request, $handler);
         }

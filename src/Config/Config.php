@@ -1,8 +1,15 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Config;
 
 use Ixocreate\Contract\Application\SerializableServiceInterface;
-use Zend\Diactoros\Uri;
 
 final class Config implements SerializableServiceInterface
 {
@@ -54,7 +61,7 @@ final class Config implements SerializableServiceInterface
      */
     public function serialize()
     {
-        return serialize([
+        return \serialize([
             'localizationUrlSchema' => $this->localizationUrlSchema,
             'defaultBaseUrl' => $this->defaultBaseUrl,
             'navigation' => $this->navigation,
@@ -66,7 +73,7 @@ final class Config implements SerializableServiceInterface
      */
     public function unserialize($serialized)
     {
-        $unserialized = unserialize($serialized);
+        $unserialized = \unserialize($serialized);
 
         $this->navigation = $unserialized['navigation'];
         $this->defaultBaseUrl = $unserialized['defaultBaseUrl'];

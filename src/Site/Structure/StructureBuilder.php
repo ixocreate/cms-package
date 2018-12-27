@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Structure;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,7 +53,7 @@ final class StructureBuilder
 
         $flat = [];
         foreach ($result as $item) {
-            if (!array_key_exists($item['id'], $flat)) {
+            if (!\array_key_exists($item['id'], $flat)) {
                 $flat[$item['id']] = [
                     'sitemapId' => $item['id'],
                     'parentId' => $item['parentId'],
@@ -81,7 +89,7 @@ final class StructureBuilder
 
         foreach ($flat as &$item) {
             unset($item['parentId']);
-            $item['navigation'] = array_unique($item['navigation']);
+            $item['navigation'] = \array_unique($item['navigation']);
         }
 
         return new Structure($tree);

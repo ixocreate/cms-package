@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Structure;
 
 use Serializable;
@@ -37,7 +45,7 @@ final class Structure implements Serializable
      */
     public function serialize()
     {
-        return serialize($this->structure);
+        return \serialize($this->structure);
     }
 
     /**
@@ -45,6 +53,6 @@ final class Structure implements Serializable
      */
     public function unserialize($serialized)
     {
-        $this->structure = unserialize($serialized);
+        $this->structure = \unserialize($serialized);
     }
 }

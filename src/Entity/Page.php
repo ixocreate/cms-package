@@ -1,11 +1,7 @@
 <?php
-
 /**
- * kiwi-suite/cms (https://github.com/kiwi-suite/cms)
- *
- * @package kiwi-suite/cms
- * @see https://github.com/kiwi-suite/cms
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -26,15 +22,25 @@ final class Page implements EntityInterface
     use EntityTrait;
 
     private $id;
+
     private $sitemapId;
+
     private $locale;
+
     private $name;
+
     private $slug;
+
     private $publishedFrom;
+
     private $publishedUntil;
+
     private $status;
+
     private $updatedAt;
+
     private $createdAt;
+
     private $releasedAt;
 
     public function id(): UuidType
@@ -98,11 +104,11 @@ final class Page implements EntityInterface
             return false;
         }
 
-        if ($this->publishedFrom() instanceof DateTimeType && $this->publishedFrom()->value()->getTimestamp() > time()) {
+        if ($this->publishedFrom() instanceof DateTimeType && $this->publishedFrom()->value()->getTimestamp() > \time()) {
             return false;
         }
 
-        if ($this->publishedUntil() instanceof DateTimeType && $this->publishedUntil()->value()->getTimestamp() < time()) {
+        if ($this->publishedUntil() instanceof DateTimeType && $this->publishedUntil()->value()->getTimestamp() < \time()) {
             return false;
         }
 
@@ -126,4 +132,3 @@ final class Page implements EntityInterface
         ]);
     }
 }
-

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Admin;
 
 use Ixocreate\Cms\Entity\Sitemap;
@@ -79,7 +87,6 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
         StructureItem $structureItem,
         ?Item $parent = null
     ) {
-
         $this->parent = $parent;
         $this->sitemapLoader = $sitemapLoader;
         $this->pageLoader = $pageLoader;
@@ -151,7 +158,6 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
                 try {
                     $this->pages[$page->locale()]['url'] = $this->pageRoute->fromPage($page);
                 } catch (\Exception $e) {
-
                 }
             }
 
@@ -230,7 +236,7 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
 
     public function childrenAllowed(): bool
     {
-        return (!empty($this->pageTypeSubManager->allowedChildPageTypes($this->sitemapLoader->receiveHandles(), $this->pageType()::serviceName())));
+        return !empty($this->pageTypeSubManager->allowedChildPageTypes($this->sitemapLoader->receiveHandles(), $this->pageType()::serviceName()));
     }
 
     /**
@@ -261,7 +267,7 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
                 'name' => $this->pageType()::serviceName(),
                 'terminal' => $this->pageType()->terminal(),
             ],
-            'children' => $this->children()
+            'children' => $this->children(),
         ];
     }
 

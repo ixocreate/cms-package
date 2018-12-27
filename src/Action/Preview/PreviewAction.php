@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Action\Preview;
 
 use Ixocreate\Admin\Entity\User;
@@ -29,10 +37,12 @@ final class PreviewAction implements MiddlewareInterface
      * @var Builder
      */
     private $builder;
+
     /**
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var MiddlewareSubManager
      */
@@ -50,7 +60,7 @@ final class PreviewAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!array_key_exists('pageId', $request->getQueryParams())) {
+        if (!\array_key_exists('pageId', $request->getQueryParams())) {
             return new TextResponse("Invalid preview");
         }
         $pageId = $request->getQueryParams()['pageId'];
@@ -108,7 +118,7 @@ final class PreviewAction implements MiddlewareInterface
 
     private function loadPageVersion(ServerRequestInterface $request, Page $page, PageTypeInterface $pageType): ?PageVersion
     {
-        if (array_key_exists('versionId', $request->getQueryParams())) {
+        if (\array_key_exists('versionId', $request->getQueryParams())) {
             return $this->pageVersionRepository->find($request->getQueryParams()['versionId']);
         }
 
@@ -123,9 +133,9 @@ final class PreviewAction implements MiddlewareInterface
         }
 
         $parsedBody = [];
-        parse_str($body, $parsedBody);
+        \parse_str($body, $parsedBody);
 
-        if (!array_key_exists('preview', $parsedBody) || empty($parsedBody['preview'])) {
+        if (!\array_key_exists('preview', $parsedBody) || empty($parsedBody['preview'])) {
             return null;
         }
 
@@ -133,7 +143,7 @@ final class PreviewAction implements MiddlewareInterface
 
         $parsedBody = \json_decode($json, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (\json_last_error() !== JSON_ERROR_NONE) {
             return null;
         }
 
@@ -141,8 +151,8 @@ final class PreviewAction implements MiddlewareInterface
             '__receiver__' => [
                 'receiver' => PageTypeSubManager::class,
                 'options' => [
-                    'pageType' => $pageType::serviceName()
-                ]
+                    'pageType' => $pageType::serviceName(),
+                ],
             ],
             '__value__' => $parsedBody,
         ];

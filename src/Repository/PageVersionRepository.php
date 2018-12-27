@@ -1,7 +1,13 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Repository;
-
 
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Metadata\PageVersionMetadata;
@@ -10,7 +16,6 @@ use Ixocreate\Database\Repository\AbstractRepository;
 
 final class PageVersionRepository extends AbstractRepository
 {
-    
     /**
      * @return string
      */
@@ -18,11 +23,9 @@ final class PageVersionRepository extends AbstractRepository
     {
         return PageVersion::class;
     }
-    
+
     public function loadMetadata(ClassMetadataBuilder $builder): void
     {
         $metadata = (new PageVersionMetadata($builder));
     }
-    
 }
-

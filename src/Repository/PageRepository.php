@@ -1,9 +1,14 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Repository;
 
-
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Ixocreate\Cms\Entity\Page;
@@ -20,6 +25,7 @@ final class PageRepository extends AbstractRepository
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var SitemapRepository
      */
@@ -39,7 +45,7 @@ final class PageRepository extends AbstractRepository
     {
         return Page::class;
     }
-    
+
     public function loadMetadata(ClassMetadataBuilder $builder): void
     {
         $metadata = (new PageMetadata($builder));
@@ -93,7 +99,7 @@ final class PageRepository extends AbstractRepository
 
 
 
-        return array_values($this->getFlatResult($queryBuilder->getQuery()->getResult()));
+        return \array_values($this->getFlatResult($queryBuilder->getQuery()->getResult()));
     }
 
     private function getFlatResult(array $queryResult): array
@@ -107,7 +113,7 @@ final class PageRepository extends AbstractRepository
             }
 
             $sitemaps[(string) $item->id()] = $item;
-         }
+        }
 
         foreach ($queryResult as $item) {
             if ($item instanceof Sitemap) {
@@ -127,7 +133,7 @@ final class PageRepository extends AbstractRepository
 
             $flat[(string)$sitemap->id()] = [
                 'pages' => [
-                    $page->locale() => $page
+                    $page->locale() => $page,
                 ],
                 'sitemap' => $sitemap,
                 'pageType' => [
@@ -144,4 +150,3 @@ final class PageRepository extends AbstractRepository
         return $flat;
     }
 }
-

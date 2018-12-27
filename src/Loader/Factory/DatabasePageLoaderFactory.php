@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Loader\Factory;
 
 use Ixocreate\Cms\Loader\DatabasePageLoader;
@@ -9,7 +17,6 @@ use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 
 final class DatabasePageLoaderFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName

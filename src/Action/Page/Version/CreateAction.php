@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Action\Page\Version;
 
 use Ixocreate\Admin\Entity\User;
@@ -19,6 +27,7 @@ final class CreateAction implements MiddlewareInterface
      * @var CommandBus
      */
     private $commandBus;
+
     /**
      * @var Builder
      */
@@ -29,7 +38,8 @@ final class CreateAction implements MiddlewareInterface
      * @param CommandBus $commandBus
      * @param Builder $builder
      */
-    public function __construct(CommandBus $commandBus, Builder $builder) {
+    public function __construct(CommandBus $commandBus, Builder $builder)
+    {
         $this->commandBus = $commandBus;
         $this->builder = $builder;
     }
@@ -37,8 +47,8 @@ final class CreateAction implements MiddlewareInterface
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
      * @throws \Exception
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -67,7 +77,7 @@ final class CreateAction implements MiddlewareInterface
         }
 
         $content = [];
-        if (!empty($request->getParsedBody()['content']) && is_array($request->getParsedBody()['content'])) {
+        if (!empty($request->getParsedBody()['content']) && \is_array($request->getParsedBody()['content'])) {
             $content = $request->getParsedBody()['content'];
         }
 

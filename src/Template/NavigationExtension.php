@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Template;
 
@@ -10,11 +17,11 @@ use Ixocreate\Contract\Template\ExtensionInterface;
 
 final class NavigationExtension implements ExtensionInterface
 {
-
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var NavigationRepository
      */

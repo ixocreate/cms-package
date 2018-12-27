@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms;
 
 use Ixocreate\Cms\BootstrapItem\BlockBootstrapItem;
@@ -11,7 +19,6 @@ use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
 
 final class Package implements PackageInterface
 {
-
     /**
      * @param ConfiguratorRegistryInterface $configuratorRegistry
      */

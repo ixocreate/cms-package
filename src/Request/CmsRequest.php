@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Request;
 
 use Ixocreate\ApplicationHttp\Request\AbstractRequestWrapper;
@@ -9,7 +17,6 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 
 final class CmsRequest extends AbstractRequestWrapper
 {
-
     /**
      * @var Page
      */

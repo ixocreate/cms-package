@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
@@ -12,10 +19,12 @@ final class PageRoute
      * @var Config
      */
     private $config;
+
     /**
      * @var CmsRouter
      */
     private $cmsRouter;
+
     /**
      * @var ProjectUri
      */

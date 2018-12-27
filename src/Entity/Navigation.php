@@ -1,11 +1,7 @@
 <?php
-
 /**
- * kiwi-suite/cms (https://github.com/kiwi-suite/cms)
- *
- * @package kiwi-suite/cms
- * @see https://github.com/kiwi-suite/cms
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -13,8 +9,6 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
-use Ixocreate\CommonTypes\Entity\DateTimeType;
-use Ixocreate\Database\Tree\NodeInterface;
 use Ixocreate\Entity\Entity\Definition;
 use Ixocreate\Entity\Entity\DefinitionCollection;
 use Ixocreate\Entity\Entity\EntityInterface;
@@ -27,7 +21,9 @@ final class Navigation implements EntityInterface
     use EntityTrait;
 
     private $id;
+
     private $pageId;
+
     private $navigation;
 
     public function id(): UuidType
@@ -54,4 +50,3 @@ final class Navigation implements EntityInterface
         ]);
     }
 }
-

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Command\Page;
 
 use Ixocreate\Cms\Entity\Page;
@@ -24,18 +32,22 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var EventDispatcher
      */
@@ -64,8 +76,8 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     * @return bool
      */
     public function execute(): bool
     {
@@ -90,8 +102,8 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
             '__receiver__' => [
                 'receiver' => PageTypeSubManager::class,
                 'options' => [
-                    'pageType' => $pageType::serviceName()
-                ]
+                    'pageType' => $pageType::serviceName(),
+                ],
             ],
             '__value__' => $this->dataValue("content"),
         ];

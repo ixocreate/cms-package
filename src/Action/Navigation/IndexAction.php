@@ -1,18 +1,18 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Navigation;
 
-
-use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Navigation;
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\NavigationRepository;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -39,7 +39,7 @@ class IndexAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $navigation = $this->config->navigation();
-        $navigation = array_map(function ($value){
+        $navigation = \array_map(function ($value) {
             $value['active'] = false;
             return $value;
         }, $navigation);

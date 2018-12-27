@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Navigation;
 
 use Ixocreate\Cms\Entity\Page;
@@ -10,14 +18,17 @@ final class Item
      * @var Page
      */
     private $page;
+
     /**
      * @var Sitemap
      */
     private $sitemap;
+
     /**
      * @var int
      */
     private $level;
+
     /**
      * @var bool
      */
@@ -84,6 +95,6 @@ final class Item
 
     final public function hasChildren(): bool
     {
-        return (count($this->children) > 0);
+        return \count($this->children) > 0;
     }
 }

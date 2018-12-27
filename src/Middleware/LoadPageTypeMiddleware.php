@@ -1,8 +1,15 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Middleware;
 
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,7 +18,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class LoadPageTypeMiddleware implements MiddlewareInterface
 {
-
     /**
      * @var PageTypeSubManager
      */

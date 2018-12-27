@@ -1,9 +1,15 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Middleware;
 
 use Ixocreate\Cms\Config\Config;
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ResponseInterface;
@@ -11,19 +17,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Uri;
-use Zend\Expressive\Router\RouteResult;
 
 final class DefaultLocaleMiddleware implements MiddlewareInterface
 {
-
     /**
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var Config
      */
     private $config;
+
     /**
      * @var ProjectUri
      */
@@ -50,7 +56,7 @@ final class DefaultLocaleMiddleware implements MiddlewareInterface
     {
         $this->localeManager->acceptLocale($this->localeManager->defaultLocale());
         foreach ($this->localeManager->all() as $locale) {
-            if (stripos((string) $request->getUri(), (string) $this->getLocalizationBaseUrl($locale['locale'])) !== false) {
+            if (\mb_stripos((string) $request->getUri(), (string) $this->getLocalizationBaseUrl($locale['locale'])) !== false) {
                 $this->localeManager->acceptLocale($locale['locale']);
                 break;
             }
@@ -61,10 +67,10 @@ final class DefaultLocaleMiddleware implements MiddlewareInterface
 
     private function getLocalizationBaseUrl(string $locale): Uri
     {
-        $uriString = strtr(
+        $uriString = \strtr(
             $this->config->localizationUrlSchema(),
             [
-                '%MAIN_URL%' => rtrim((string) $this->projectUri->getMainUrl(), '/'),
+                '%MAIN_URL%' => \rtrim((string) $this->projectUri->getMainUrl(), '/'),
                 '%LANG%' => \Locale::getPrimaryLanguage($locale),
                 '%REGION%' => \Locale::getRegion($locale),
             ]

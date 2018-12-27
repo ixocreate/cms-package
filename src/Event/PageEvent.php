@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Event;
 
 use Ixocreate\Cms\Entity\Page;
@@ -13,14 +21,17 @@ final class PageEvent extends Event
      * @var Sitemap
      */
     private $sitemap;
+
     /**
      * @var Page
      */
     private $page;
+
     /**
      * @var PageVersion
      */
     private $pageVersion;
+
     /**
      * @var PageTypeInterface
      */

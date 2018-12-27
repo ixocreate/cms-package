@@ -1,7 +1,13 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
-
 
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
@@ -19,10 +25,12 @@ class IndexAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var Builder
      */
     private $builder;
+
     /**
      * @var DatabaseSitemapLoader
      */
@@ -47,7 +55,7 @@ class IndexAction implements MiddlewareInterface
                 }
                 return !($item->parent()->pageType()->terminal());
             }),
-            'allowedAddingRoot' => (count($this->pageTypeSubManager->allowedChildPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
+            'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedChildPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
         ]);
     }
 }

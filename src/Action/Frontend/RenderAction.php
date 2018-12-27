@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Frontend;
@@ -17,7 +23,7 @@ final class RenderAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $globalTemplateVars = array_merge(
+        $globalTemplateVars = \array_merge(
             $request->getGlobalTemplateAttributes(),
             [
                 'page'        => $request->getPage(),
@@ -28,7 +34,10 @@ final class RenderAction implements MiddlewareInterface
             ]
         );
 
-        return new TemplateResponse($request->getPageType()->layout(), $request->getTemplateAttributes(),
-            $globalTemplateVars);
+        return new TemplateResponse(
+            $request->getPageType()->layout(),
+            $request->getTemplateAttributes(),
+            $globalTemplateVars
+        );
     }
 }

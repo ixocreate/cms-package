@@ -1,7 +1,13 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
-
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
@@ -14,7 +20,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class UpdateAction implements MiddlewareInterface
 {
-
     /**
      * @var CommandBus
      */
@@ -28,7 +33,7 @@ class UpdateAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $data = $request->getParsedBody();
-        if (!is_array($data)) {
+        if (!\is_array($data)) {
             return new ApiErrorResponse("invalid_data", [], 400);
         }
         $data['pageId'] = $request->getAttribute("id");

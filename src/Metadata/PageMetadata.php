@@ -1,11 +1,7 @@
 <?php
-
 /**
- * kiwi-suite/cms (https://github.com/kiwi-suite/cms)
- *
- * @package kiwi-suite/cms
- * @see https://github.com/kiwi-suite/cms
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -21,58 +17,68 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class PageMetadata extends AbstractMetadata
 {
-
     protected function buildMetadata(): void
     {
         $builder = $this->getBuilder();
         $builder->setTable('cms_page');
 
-        $this->setFieldBuilder('id',
+        $this->setFieldBuilder(
+            'id',
             $builder->createField('id', UuidType::class)
                 ->makePrimaryKey()
         )->build();
 
-        $this->setFieldBuilder('sitemapId',
+        $this->setFieldBuilder(
+            'sitemapId',
             $builder->createField('sitemapId', UuidType::class)
         )->build();
 
-        $this->setFieldBuilder('locale',
+        $this->setFieldBuilder(
+            'locale',
             $builder->createField('locale', Type::STRING)
         )->build();
 
-        $this->setFieldBuilder('name',
+        $this->setFieldBuilder(
+            'name',
             $builder->createField('name', Type::STRING)
         )->build();
 
-        $this->setFieldBuilder('slug',
+        $this->setFieldBuilder(
+            'slug',
             $builder->createField('slug', Type::STRING)
         )->build();
 
-        $this->setFieldBuilder('publishedFrom',
+        $this->setFieldBuilder(
+            'publishedFrom',
             $builder->createField('publishedFrom', DateTimeType::class)
         )->build();
 
-        $this->setFieldBuilder('publishedUntil',
+        $this->setFieldBuilder(
+            'publishedUntil',
             $builder->createField('publishedUntil', DateTimeType::class)
         )->build();
 
-        $this->setFieldBuilder('status',
+        $this->setFieldBuilder(
+            'status',
             $builder->createField('status', Type::STRING)
         )->build();
 
-        $this->setFieldBuilder('updatedAt',
+        $this->setFieldBuilder(
+            'updatedAt',
             $builder->createField('updatedAt', DateTimeType::class)
         )->build();
 
-        $this->setFieldBuilder('createdAt',
+        $this->setFieldBuilder(
+            'createdAt',
             $builder->createField('createdAt', DateTimeType::class)
         )->build();
 
-        $this->setFieldBuilder('releasedAt',
+        $this->setFieldBuilder(
+            'releasedAt',
             $builder->createField('releasedAt', DateTimeType::class)
         )->build();
     }
-    
+
     public function id(): FieldBuilder
     {
         return $this->getField('id');
@@ -128,4 +134,3 @@ final class PageMetadata extends AbstractMetadata
         return $this->getField('releasedAt');
     }
 }
-

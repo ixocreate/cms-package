@@ -1,7 +1,13 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
-
 
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\Criteria;
@@ -23,19 +29,21 @@ use Ramsey\Uuid\Uuid;
 
 class AddAction implements MiddlewareInterface
 {
-
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var PageTypeSubManager
      */
@@ -112,7 +120,7 @@ class AddAction implements MiddlewareInterface
         do {
             $name = $page->name();
             if ($i > 0) {
-                $name .= " ".$i;
+                $name .= " " . $i;
             }
 
             $slug = $slugify->slugify($name);
@@ -147,8 +155,8 @@ class AddAction implements MiddlewareInterface
                 '__receiver__' => [
                     'receiver' => PageTypeSubManager::class,
                     'options' => [
-                        'pageType' => $pageType::serviceName()
-                    ]
+                        'pageType' => $pageType::serviceName(),
+                    ],
                 ],
                 '__value__' => $content,
             ],

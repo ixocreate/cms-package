@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Config\Client\Provider;
@@ -16,7 +22,6 @@ final class CmsProvider implements ClientConfigProviderInterface
 
     public function __construct(AdminConfig $adminConfig)
     {
-
         $this->adminConfig = $adminConfig;
     }
 

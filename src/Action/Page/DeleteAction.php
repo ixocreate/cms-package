@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
 
@@ -19,10 +26,12 @@ class DeleteAction implements MiddlewareInterface
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var SitemapRepository
      */

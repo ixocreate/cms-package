@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Loader;
 
 use Ixocreate\Cms\Entity\Sitemap;
@@ -38,7 +46,7 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
     {
         $this->init();
 
-        if (!$this->collection->has($sitemapId)){
+        if (!$this->collection->has($sitemapId)) {
             return null;
         }
 
@@ -60,13 +68,13 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
 
     public function receiveHandles(): array
     {
-        if (!is_array($this->handles)) {
+        if (!\is_array($this->handles)) {
             $this->handles = [];
 
             $this->init();
 
             $this->handles = $this->collection->filter(function (Sitemap $sitemap) {
-                return (!empty($sitemap->handle()));
+                return !empty($sitemap->handle());
             })->parts('handle');
         }
 

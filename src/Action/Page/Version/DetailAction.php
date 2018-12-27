@@ -1,7 +1,14 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Action\Page\Version;
 
-use Doctrine\Common\Collections\Criteria;
 use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Repository\UserRepository;
 use Ixocreate\Admin\Response\ApiErrorResponse;
@@ -22,10 +29,12 @@ final class DetailAction implements MiddlewareInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var Builder
      */
     private $builder;
+
     /**
      * @var UserRepository
      */
@@ -102,7 +111,6 @@ final class DetailAction implements MiddlewareInterface
         $content = [];
         if (!empty($pageVersion->content()->value())) {
             $content = $pageVersion->content()->value();
-
         }
 
         $result = [
@@ -114,7 +122,7 @@ final class DetailAction implements MiddlewareInterface
             'userEmail' => $user['email'],
             'userAvatar' => $user['avatar'],
         ];
-        
+
         return new ApiSuccessResponse($result);
     }
 }

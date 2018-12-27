@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Command\Page;
 
 use Ixocreate\Cms\Entity\Page;
@@ -21,18 +29,22 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var CommandBus
      */
@@ -61,8 +73,8 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     * @return bool
      */
     public function execute(): bool
     {
@@ -102,7 +114,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
 
         $this->commandBus->command(SlugCommand::class, [
             'name' => (string) $page->name(),
-            'pageId' => (string) $page->id()
+            'pageId' => (string) $page->id(),
         ]);
 
         $this->commandBus->command(CreateVersionCommand::class, [
@@ -127,12 +139,12 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
             $violationCollector->add("pageType", "invalid_pageType");
         }
 
-        if (empty($this->dataValue('name')) || !is_string($this->dataValue('name'))) {
+        if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
             $violationCollector->add("name", "invalid_name");
         }
 
         if (!empty($this->dataValue("parentSitemapId"))) {
-            if (!is_string($this->dataValue("parentSitemapId"))) {
+            if (!\is_string($this->dataValue("parentSitemapId"))) {
                 $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
             } else {
                 $sitemap = $this->sitemapRepository->find($this->dataValue("parentSitemapId"));

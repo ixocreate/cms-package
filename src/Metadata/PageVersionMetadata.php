@@ -1,11 +1,7 @@
 <?php
-
 /**
- * kiwi-suite/cms (https://github.com/kiwi-suite/cms)
- *
- * @package kiwi-suite/cms
- * @see https://github.com/kiwi-suite/cms
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -21,38 +17,43 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class PageVersionMetadata extends AbstractMetadata
 {
-
     protected function buildMetadata(): void
     {
         $builder = $this->getBuilder();
         $builder->setTable('cms_page_version');
 
-        $this->setFieldBuilder('id',
+        $this->setFieldBuilder(
+            'id',
             $builder->createField('id', UuidType::class)
                 ->makePrimaryKey()
         )->build();
 
-        $this->setFieldBuilder('pageId',
+        $this->setFieldBuilder(
+            'pageId',
             $builder->createField('pageId', UuidType::class)
         )->build();
 
-        $this->setFieldBuilder('content',
+        $this->setFieldBuilder(
+            'content',
             $builder->createField('content', SchemaType::class)
         )->build();
 
-        $this->setFieldBuilder('createdBy',
+        $this->setFieldBuilder(
+            'createdBy',
             $builder->createField('createdBy', UuidType::class)
         )->build();
 
-        $this->setFieldBuilder('approvedAt',
+        $this->setFieldBuilder(
+            'approvedAt',
             $builder->createField('approvedAt', DateTimeType::class)
         )->build();
 
-        $this->setFieldBuilder('createdAt',
+        $this->setFieldBuilder(
+            'createdAt',
             $builder->createField('createdAt', DateTimeType::class)
         )->build();
     }
-    
+
     public function id(): FieldBuilder
     {
         return $this->getField('id');
@@ -83,4 +84,3 @@ final class PageVersionMetadata extends AbstractMetadata
         return $this->getField('createdAt');
     }
 }
-

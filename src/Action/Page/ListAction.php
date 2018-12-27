@@ -1,7 +1,13 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
-
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
@@ -27,7 +33,7 @@ class ListAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!array_key_exists('locale', $request->getQueryParams())) {
+        if (!\array_key_exists('locale', $request->getQueryParams())) {
             return new ApiErrorResponse("invalid locale");
         }
         $locale = $request->getQueryParams()['locale'];
@@ -36,10 +42,10 @@ class ListAction implements MiddlewareInterface
         $iterator = new \RecursiveIteratorIterator($this->builder->build(), \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if (array_key_exists($locale, $item->pages())) {
+            if (\array_key_exists($locale, $item->pages())) {
                 $result[] = [
                     'id' => $item->pages()[$locale]['page']->id(),
-                    'name' => $this->receiveName($item, $locale)
+                    'name' => $this->receiveName($item, $locale),
                 ];
             }
         }
@@ -53,7 +59,7 @@ class ListAction implements MiddlewareInterface
             $name = $this->receiveName($item->parent(), $locale) . ' / ';
         }
 
-        if (!array_key_exists($locale, $item->pages())) {
+        if (!\array_key_exists($locale, $item->pages())) {
             return " --- ";
         }
 

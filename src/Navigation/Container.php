@@ -1,6 +1,13 @@
 <?php
-namespace Ixocreate\Cms\Navigation;
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
 
+declare(strict_types=1);
+
+namespace Ixocreate\Cms\Navigation;
 
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
@@ -12,6 +19,7 @@ final class Container implements \Iterator
      * @var Item[]
      */
     private $children;
+
     /**
      * @var NavigationRepository
      */
@@ -38,7 +46,7 @@ final class Container implements \Iterator
 
     public function hasChildren(): bool
     {
-        return (count($this->children) > 0);
+        return \count($this->children) > 0;
     }
 
     public function asFlat(): Container
@@ -52,7 +60,7 @@ final class Container implements \Iterator
         foreach ($items as $item) {
             $newItems[] = $item;
             if ($item->hasChildren()) {
-                $newItems = array_merge($newItems, $this->asRecursiveFlat($item->children()));
+                $newItems = \array_merge($newItems, $this->asRecursiveFlat($item->children()));
             }
         }
 
@@ -259,7 +267,7 @@ final class Container implements \Iterator
      */
     public function current()
     {
-        return current($this->children);
+        return \current($this->children);
     }
 
     /**
@@ -267,7 +275,7 @@ final class Container implements \Iterator
      */
     public function next()
     {
-        next($this->children);
+        \next($this->children);
     }
 
     /**
@@ -275,7 +283,7 @@ final class Container implements \Iterator
      */
     public function key()
     {
-        return key($this->children);
+        return \key($this->children);
     }
 
     /**
@@ -283,8 +291,8 @@ final class Container implements \Iterator
      */
     public function valid()
     {
-        $key = key($this->children);
-        return ($key !== null && $key !== false);
+        $key = \key($this->children);
+        return $key !== null && $key !== false;
     }
 
     /**
@@ -292,7 +300,7 @@ final class Container implements \Iterator
      */
     public function rewind()
     {
-        reset($this->children);
+        \reset($this->children);
     }
 
     public function __debugInfo()

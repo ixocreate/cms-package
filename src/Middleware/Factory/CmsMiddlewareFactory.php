@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware\Factory;
@@ -17,7 +23,6 @@ use Zend\Stratigility\MiddlewarePipe;
 
 final class CmsMiddlewareFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Command\Page;
 
 use Ixocreate\Cms\Config\Config;
@@ -20,14 +28,17 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var CommandBus
      */
     private $commandBus;
+
     /**
      * @var Config
      */
     private $config;
+
     /**
      * @var NavigationRepository
      */
@@ -53,8 +64,8 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     * @return bool
      */
     public function execute(): bool
     {
@@ -91,7 +102,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
         if ($this->dataValue('slug') !== false) {
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string) $this->dataValue('slug'),
-                'pageId' => (string) $page->id()
+                'pageId' => (string) $page->id(),
             ]);
         }
 
@@ -138,12 +149,12 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
         }
 
         if (!empty($this->dataValue("status"))) {
-            if (!in_array($this->dataValue("status"), ['online', 'offline'])) {
+            if (!\in_array($this->dataValue("status"), ['online', 'offline'])) {
                 $violationCollector->add("status", "invalid_status");
             }
         }
 
-        if (!empty($this->dataValue("navigation")) && !is_array($this->dataValue("navigation"))) {
+        if (!empty($this->dataValue("navigation")) && !\is_array($this->dataValue("navigation"))) {
             $violationCollector->add("navigation", "invalid_navigation");
         }
     }
@@ -161,12 +172,12 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
 
         if (!empty($this->dataValue('navigation'))) {
             $newData['navigation'] = [];
-            $navItems = array_map(function($nav) {
+            $navItems = \array_map(function ($nav) {
                 return $nav['name'];
             }, $this->config->navigation());
 
             foreach ($this->dataValue("navigation") as $nav) {
-                if (in_array($nav, $navItems)) {
+                if (\in_array($nav, $navItems)) {
                     $newData['navigation'][] = $nav;
                 }
             }

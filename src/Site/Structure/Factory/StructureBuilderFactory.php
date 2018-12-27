@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Structure\Factory;
 
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
@@ -8,7 +16,6 @@ use Ixocreate\Database\EntityManager\Factory\EntityManagerSubManager;
 
 final class StructureBuilderFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Admin;
 
 use Ixocreate\Cms\Loader\PageLoaderInterface;
@@ -50,7 +58,6 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
 
     public function __clone()
     {
-
     }
 
     /**
@@ -84,7 +91,6 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
             }
 
             $newItems[] = $item->filter($callable);
-
         }
 
         $container = clone $this;
@@ -146,7 +152,7 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
      */
     public function hasChildren()
     {
-        return (count($this->children) > 0);
+        return \count($this->children) > 0;
     }
 
     /**
@@ -170,6 +176,6 @@ final class Container implements \RecursiveIterator, \JsonSerializable, \Countab
      */
     public function count()
     {
-        return count($this->children);
+        return \count($this->children);
     }
 }

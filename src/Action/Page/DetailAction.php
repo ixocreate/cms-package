@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Action\Page;
 
 use Doctrine\Common\Collections\Criteria;
@@ -20,14 +28,17 @@ final class DetailAction implements MiddlewareInterface
      * @var Builder
      */
     private $builder;
+
     /**
      * @var Config
      */
     private $config;
+
     /**
      * @var \Ixocreate\Schema\Builder
      */
     private $schemaBuilder;
+
     /**
      * @var PageVersionRepository
      */
@@ -115,13 +126,13 @@ final class DetailAction implements MiddlewareInterface
         $result['page'] = $page;
         $result['localizedPages'] = $localizedPages;
 
-        $result['hasChildren'] = (count($result['children']) > 0);
-        unset($result['children']);
-        unset($result['childrenAllowed']);
+        $result['hasChildren'] = (\count($result['children']) > 0);
+        unset($result['children'], $result['childrenAllowed']);
+
 
         $navigation = $this->config->navigation();
-        $navigation = array_map(function ($value) use ($item){
-            $value['active'] = (in_array($value['name'], $item->navigation()));
+        $navigation = \array_map(function ($value) use ($item) {
+            $value['active'] = (\in_array($value['name'], $item->navigation()));
             return $value;
         }, $navigation);
         $result['navigation'] = $navigation;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Config;
 
 use Ixocreate\Contract\Application\ConfiguratorInterface;
@@ -54,7 +62,7 @@ final class Configurator implements ConfiguratorInterface
      */
     public function getNavigation(): array
     {
-        return array_values($this->navigation);
+        return \array_values($this->navigation);
     }
 
     /**
@@ -72,7 +80,6 @@ final class Configurator implements ConfiguratorInterface
     {
         return $this->defaultBaseUrl;
     }
-
 
     /**
      * @param ServiceRegistryInterface $serviceRegistry

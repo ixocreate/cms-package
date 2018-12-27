@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Command\Page;
 
 use Cocur\Slugify\Slugify;
@@ -19,6 +27,7 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var SitemapRepository
      */
@@ -33,14 +42,13 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository
     ) {
-
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     * @return bool
      */
     public function execute(): bool
     {
@@ -68,7 +76,7 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
         $iterationName = $this->dataValue("name");
         do {
             if ($i > 0) {
-                $iterationName .= "-".$i;
+                $iterationName .= "-" . $i;
             }
 
             if ($iterationName === $page->slug()) {

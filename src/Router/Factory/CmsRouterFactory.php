@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Router\Factory;
 
 use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
@@ -9,7 +17,6 @@ use Ixocreate\Cms\Middleware\LoadPageMiddleware;
 use Ixocreate\Cms\Middleware\LoadPageTypeMiddleware;
 use Ixocreate\Cms\Middleware\LoadSitemapMiddleware;
 use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Cms\PageType\PageTypeMapping;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Router\CmsRouter;
@@ -58,7 +65,7 @@ final class CmsRouterFactory implements FactoryInterface
             $i18nRouters[$locale['locale']] = new FastRouteRouter();
             $routes = [];
             $this->parseTree($tree, $routes, $locale['locale']);
-            $routes = array_reverse($routes);
+            $routes = \array_reverse($routes);
 
 
             foreach ($routes as $item) {
@@ -100,26 +107,26 @@ final class CmsRouterFactory implements FactoryInterface
             if (empty($itemMiddleware)) {
                 $itemMiddleware = $middleware;
             } else {
-                $itemMiddleware = array_merge($middleware, array_values($itemMiddleware));
+                $itemMiddleware = \array_merge($middleware, \array_values($itemMiddleware));
             }
 
             $itemMiddleware[] = RenderAction::class;
 
-            $routing = '/' . ltrim($pageType->routing(), '/');
-            $currentPath = rtrim($path, '/') . $routing;
+            $routing = '/' . \ltrim($pageType->routing(), '/');
+            $currentPath = \rtrim($path, '/') . $routing;
 
-            if (empty($item['pages'][$locale]->slug()) && strpos($pageType->routing(), '${SLUG}') !== false) {
+            if (empty($item['pages'][$locale]->slug()) && \mb_strpos($pageType->routing(), '${SLUG}') !== false) {
                 continue;
             }
 
             if (!empty($item['pages'][$locale]->slug())) {
-                $currentPath = str_replace('${SLUG}', $item['pages'][$locale]->slug(), $currentPath);
+                $currentPath = \str_replace('${SLUG}', $item['pages'][$locale]->slug(), $currentPath);
             }
 
             $routes[] = [
                 'path' => $currentPath,
                 'id' => (string) $item['pages'][$locale]->id(),
-                'middleware' => $this->middlewareFactory->pipeline($itemMiddleware)
+                'middleware' => $this->middlewareFactory->pipeline($itemMiddleware),
             ];
 
 

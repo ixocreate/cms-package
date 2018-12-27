@@ -1,7 +1,13 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Admin;
-
 
 use Ixocreate\Cms\Loader\DatabasePageLoader;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
@@ -15,18 +21,22 @@ class Builder
      * @var StructureBuilder
      */
     private $structureBuilder;
+
     /**
      * @var DatabasePageLoader
      */
     private $databasePageLoader;
+
     /**
      * @var DatabaseSitemapLoader
      */
     private $databaseSitemapLoader;
+
     /**
      * @var PageRoute
      */
     private $pageRoute;
+
     /**
      * @var PageTypeSubManager
      */

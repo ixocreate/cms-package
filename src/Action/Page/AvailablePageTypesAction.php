@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
 
@@ -20,10 +27,12 @@ class AvailablePageTypesAction implements MiddlewareInterface
      * @var DatabaseSitemapLoader
      */
     private $databaseSitemapLoader;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var Builder
      */
@@ -34,7 +43,6 @@ class AvailablePageTypesAction implements MiddlewareInterface
         PageTypeSubManager $pageTypeSubManager,
         Builder $builder
     ) {
-
         $this->databaseSitemapLoader = $databaseSitemapLoader;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->builder = $builder;
@@ -48,7 +56,7 @@ class AvailablePageTypesAction implements MiddlewareInterface
         if (!empty($parentSitemapId)) {
             /** @var Item $item */
             $item = $this->builder->build()->findOneBy(function (Item $item) use ($parentSitemapId) {
-                return ((string) $item->sitemap()->id() === $parentSitemapId);
+                return (string) $item->sitemap()->id() === $parentSitemapId;
             });
 
             if (empty($item)) {

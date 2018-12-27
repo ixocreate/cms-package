@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Middleware;
 
 use Doctrine\Common\Collections\Criteria;
@@ -12,7 +20,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class LoadPageContentMiddleware implements MiddlewareInterface
 {
-
     /**
      * @var PageVersionRepository
      */

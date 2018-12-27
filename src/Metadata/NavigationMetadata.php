@@ -1,11 +1,7 @@
 <?php
-
 /**
- * kiwi-suite/cms (https://github.com/kiwi-suite/cms)
- *
- * @package kiwi-suite/cms
- * @see https://github.com/kiwi-suite/cms
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -20,26 +16,28 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class NavigationMetadata extends AbstractMetadata
 {
-
     protected function buildMetadata(): void
     {
         $builder = $this->getBuilder();
         $builder->setTable('cms_navigation');
 
-        $this->setFieldBuilder('id',
+        $this->setFieldBuilder(
+            'id',
             $builder->createField('id', UuidType::class)
                 ->makePrimaryKey()
         )->build();
 
-        $this->setFieldBuilder('pageId',
+        $this->setFieldBuilder(
+            'pageId',
             $builder->createField('pageId', UuidType::class)
         )->build();
 
-        $this->setFieldBuilder('navigation',
+        $this->setFieldBuilder(
+            'navigation',
             $builder->createField('navigation', Type::STRING)
         )->build();
     }
-    
+
     public function id(): FieldBuilder
     {
         return $this->getField('id');
@@ -55,4 +53,3 @@ final class NavigationMetadata extends AbstractMetadata
         return $this->getField('navigation');
     }
 }
-

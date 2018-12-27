@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Cms\Template;
 
@@ -15,6 +22,7 @@ final class PageUrlExtension implements ExtensionInterface
      * @var PageRoute
      */
     private $pageRoute;
+
     /**
      * @var SitemapRepository
      */

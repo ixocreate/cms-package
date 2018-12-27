@@ -1,11 +1,7 @@
 <?php
-
 /**
- * kiwi-suite/cms (https://github.com/kiwi-suite/cms)
- *
- * @package kiwi-suite/cms
- * @see https://github.com/kiwi-suite/cms
- * @copyright Copyright (c) 2010 - 2018 kiwi suite GmbH
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
  * @license MIT License
  */
 
@@ -20,38 +16,43 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class SitemapMetadata extends AbstractMetadata
 {
-
     protected function buildMetadata(): void
     {
         $builder = $this->getBuilder();
         $builder->setTable('cms_sitemap');
 
-        $this->setFieldBuilder('id',
+        $this->setFieldBuilder(
+            'id',
             $builder->createField('id', UuidType::class)
                 ->makePrimaryKey()
         )->build();
 
-        $this->setFieldBuilder('nestedLeft',
+        $this->setFieldBuilder(
+            'nestedLeft',
             $builder->createField('nestedLeft', Type::INTEGER)
         )->build();
 
-        $this->setFieldBuilder('nestedRight',
+        $this->setFieldBuilder(
+            'nestedRight',
             $builder->createField('nestedRight', Type::INTEGER)
         )->build();
 
-        $this->setFieldBuilder('parentId',
+        $this->setFieldBuilder(
+            'parentId',
             $builder->createField('parentId', UuidType::class)
         )->build();
 
-        $this->setFieldBuilder('pageType',
+        $this->setFieldBuilder(
+            'pageType',
             $builder->createField('pageType', Type::STRING)
         )->build();
 
-        $this->setFieldBuilder('handle',
+        $this->setFieldBuilder(
+            'handle',
             $builder->createField('handle', Type::STRING)
         )->build();
     }
-    
+
     public function id(): FieldBuilder
     {
         return $this->getField('id');
@@ -82,4 +83,3 @@ final class SitemapMetadata extends AbstractMetadata
         return $this->getField('handle');
     }
 }
-

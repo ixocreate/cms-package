@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Ixocreate\Cms\Action\Page\Version;
 
 use Doctrine\Common\Collections\Criteria;
@@ -22,10 +30,12 @@ final class IndexAction implements MiddlewareInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var Builder
      */
     private $builder;
+
     /**
      * @var UserRepository
      */

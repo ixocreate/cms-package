@@ -1,12 +1,12 @@
 <?php
-namespace KiwiSuite\Cms\PageType;
+namespace Ixocreate\Cms\PageType;
 
-use KiwiSuite\Admin\Schema\Form\Elements\Form;
-use KiwiSuite\Contract\Schema\SchemaInterface;
-use KiwiSuite\Contract\Schema\SchemaReceiverInterface;
-use KiwiSuite\Contract\ServiceManager\NamedServiceInterface;
-use KiwiSuite\Schema\Builder;
-use KiwiSuite\Schema\Schema;
+use Ixocreate\Admin\Schema\Form\Elements\Form;
+use Ixocreate\Contract\Schema\SchemaInterface;
+use Ixocreate\Contract\Schema\SchemaReceiverInterface;
+use Ixocreate\Contract\ServiceManager\NamedServiceInterface;
+use Ixocreate\Schema\Builder;
+use Ixocreate\Schema\Schema;
 
 interface PageTypeInterface extends NamedServiceInterface, SchemaReceiverInterface
 {

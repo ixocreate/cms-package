@@ -1,6 +1,6 @@
 <?php
-namespace KiwiSuite\Cms;
-use KiwiSuite\Cms\Config\Client\Provider\CmsProvider;
+namespace Ixocreate\Cms;
+use Ixocreate\Cms\Config\Client\Provider\CmsProvider;
 
-/** @var \KiwiSuite\Admin\Config\AdminConfigurator $admin */
+/** @var \Ixocreate\Admin\Config\AdminConfigurator $admin */
 $admin->addClientProvider(CmsProvider::class);

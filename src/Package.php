@@ -1,13 +1,13 @@
 <?php
-namespace KiwiSuite\Cms;
+namespace Ixocreate\Cms;
 
-use KiwiSuite\Cms\BootstrapItem\BlockBootstrapItem;
-use KiwiSuite\Cms\BootstrapItem\CmsBootstrapItem;
-use KiwiSuite\Cms\BootstrapItem\PageTypeBootstrapItem;
-use KiwiSuite\Contract\Application\ConfiguratorRegistryInterface;
-use KiwiSuite\Contract\Application\PackageInterface;
-use KiwiSuite\Contract\Application\ServiceRegistryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Cms\BootstrapItem\BlockBootstrapItem;
+use Ixocreate\Cms\BootstrapItem\CmsBootstrapItem;
+use Ixocreate\Cms\BootstrapItem\PageTypeBootstrapItem;
+use Ixocreate\Contract\Application\ConfiguratorRegistryInterface;
+use Ixocreate\Contract\Application\PackageInterface;
+use Ixocreate\Contract\Application\ServiceRegistryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
 
 final class Package implements PackageInterface
 {

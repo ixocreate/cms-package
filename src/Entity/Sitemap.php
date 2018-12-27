@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Entity;
+namespace Ixocreate\Cms\Entity;
 
-use KiwiSuite\Database\Tree\NodeInterface;
-use KiwiSuite\Entity\Entity\Definition;
-use KiwiSuite\Entity\Entity\DefinitionCollection;
-use KiwiSuite\Entity\Entity\EntityTrait;
-use KiwiSuite\CommonTypes\Entity\UuidType;
-use KiwiSuite\Entity\Type\TypeInterface;
+use Ixocreate\Database\Tree\NodeInterface;
+use Ixocreate\Entity\Entity\Definition;
+use Ixocreate\Entity\Entity\DefinitionCollection;
+use Ixocreate\Entity\Entity\EntityTrait;
+use Ixocreate\CommonTypes\Entity\UuidType;
+use Ixocreate\Entity\Type\TypeInterface;
 
 final class Sitemap implements NodeInterface
 {

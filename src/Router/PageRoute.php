@@ -1,10 +1,10 @@
 <?php
 
-namespace KiwiSuite\Cms\Router;
+namespace Ixocreate\Cms\Router;
 
-use KiwiSuite\Cms\Config\Config;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\ProjectUri\ProjectUri;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\ProjectUri\ProjectUri;
 
 final class PageRoute
 {

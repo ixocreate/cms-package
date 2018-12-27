@@ -1,12 +1,12 @@
 <?php
 
-namespace KiwiSuite\Cms\Repository;
+namespace Ixocreate\Cms\Repository;
 
 
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Metadata\PageVersionMetadata;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Metadata\PageVersionMetadata;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use KiwiSuite\Database\Repository\AbstractRepository;
+use Ixocreate\Database\Repository\AbstractRepository;
 
 final class PageVersionRepository extends AbstractRepository
 {

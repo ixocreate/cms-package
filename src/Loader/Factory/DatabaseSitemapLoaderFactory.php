@@ -1,11 +1,11 @@
 <?php
-namespace KiwiSuite\Cms\Loader\Factory;
+namespace Ixocreate\Cms\Loader\Factory;
 
-use KiwiSuite\Cms\Loader\DatabaseSitemapLoader;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Database\Repository\Factory\RepositorySubManager;
+use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 
 final class DatabaseSitemapLoaderFactory implements FactoryInterface
 {

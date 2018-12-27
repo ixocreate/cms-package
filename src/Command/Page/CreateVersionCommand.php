@@ -1,22 +1,22 @@
 <?php
-namespace KiwiSuite\Cms\Command\Page;
+namespace Ixocreate\Cms\Command\Page;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Event\PageEvent;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\PageVersionRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\CommandBus\Command\AbstractCommand;
-use KiwiSuite\CommonTypes\Entity\SchemaType;
-use KiwiSuite\Contract\Filter\FilterableInterface;
-use KiwiSuite\Contract\Validation\ValidatableInterface;
-use KiwiSuite\Contract\Validation\ViolationCollectorInterface;
-use KiwiSuite\Entity\Type\Type;
-use KiwiSuite\Event\EventDispatcher;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Event\PageEvent;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\CommandBus\Command\AbstractCommand;
+use Ixocreate\CommonTypes\Entity\SchemaType;
+use Ixocreate\Contract\Filter\FilterableInterface;
+use Ixocreate\Contract\Validation\ValidatableInterface;
+use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\Entity\Type\Type;
+use Ixocreate\Event\EventDispatcher;
 
 final class CreateVersionCommand extends AbstractCommand implements FilterableInterface, ValidatableInterface
 {

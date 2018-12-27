@@ -1,13 +1,13 @@
 <?php
 
-namespace KiwiSuite\Cms\Site\Admin;
+namespace Ixocreate\Cms\Site\Admin;
 
 
-use KiwiSuite\Cms\Loader\DatabasePageLoader;
-use KiwiSuite\Cms\Loader\DatabaseSitemapLoader;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Router\PageRoute;
-use KiwiSuite\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Cms\Loader\DatabasePageLoader;
+use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\Structure\StructureBuilder;
 
 class Builder
 {

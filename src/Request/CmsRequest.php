@@ -1,11 +1,11 @@
 <?php
-namespace KiwiSuite\Cms\Request;
+namespace Ixocreate\Cms\Request;
 
-use KiwiSuite\ApplicationHttp\Request\AbstractRequestWrapper;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
+use Ixocreate\ApplicationHttp\Request\AbstractRequestWrapper;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
 
 final class CmsRequest extends AbstractRequestWrapper
 {

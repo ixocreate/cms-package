@@ -9,11 +9,11 @@
  */
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\BootstrapItem;
+namespace Ixocreate\Cms\BootstrapItem;
 
-use KiwiSuite\Cms\PageType\PageTypeConfigurator;
-use KiwiSuite\Contract\Application\BootstrapItemInterface;
-use KiwiSuite\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Cms\PageType\PageTypeConfigurator;
+use Ixocreate\Contract\Application\BootstrapItemInterface;
+use Ixocreate\Contract\Application\ConfiguratorInterface;
 
 final class PageTypeBootstrapItem implements BootstrapItemInterface
 {

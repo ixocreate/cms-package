@@ -1,12 +1,12 @@
 <?php
 
-namespace KiwiSuite\Cms\Repository;
+namespace Ixocreate\Cms\Repository;
 
 
-use KiwiSuite\Cms\Entity\Navigation;
-use KiwiSuite\Cms\Metadata\NavigationMetadata;
+use Ixocreate\Cms\Entity\Navigation;
+use Ixocreate\Cms\Metadata\NavigationMetadata;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use KiwiSuite\Database\Repository\AbstractRepository;
+use Ixocreate\Database\Repository\AbstractRepository;
 
 final class NavigationRepository extends AbstractRepository
 {

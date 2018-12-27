@@ -1,12 +1,12 @@
 <?php
 
-namespace KiwiSuite\Cms\Action\Page;
+namespace Ixocreate\Cms\Action\Page;
 
 
-use KiwiSuite\Admin\Response\ApiErrorResponse;
-use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Cms\Command\Page\UpdateCommand;
-use KiwiSuite\CommandBus\CommandBus;
+use Ixocreate\Admin\Response\ApiErrorResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Command\Page\UpdateCommand;
+use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

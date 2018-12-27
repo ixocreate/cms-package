@@ -9,9 +9,9 @@
  */
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Block;
+namespace Ixocreate\Cms\Block;
 
-use KiwiSuite\ServiceManager\SubManager\SubManager;
+use Ixocreate\ServiceManager\SubManager\SubManager;
 
 final class BlockSubManager extends SubManager
 {

@@ -1,11 +1,11 @@
 <?php
-namespace KiwiSuite\Cms\Middleware;
+namespace Ixocreate\Cms\Middleware;
 
-use KiwiSuite\Cms\Config\Config;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Intl\LocaleManager;
-use KiwiSuite\ProjectUri\ProjectUri;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Intl\LocaleManager;
+use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

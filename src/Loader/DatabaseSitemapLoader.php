@@ -1,9 +1,9 @@
 <?php
-namespace KiwiSuite\Cms\Loader;
+namespace Ixocreate\Cms\Loader;
 
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\Entity\Entity\EntityCollection;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Entity\Entity\EntityCollection;
 
 final class DatabaseSitemapLoader implements SitemapLoaderInterface
 {

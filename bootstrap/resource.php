@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms;
+namespace Ixocreate\Cms;
 
 /** @var ResourceConfigurator $resource */
-use KiwiSuite\Resource\SubManager\ResourceConfigurator;
+use Ixocreate\Resource\SubManager\ResourceConfigurator;
 

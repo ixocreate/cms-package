@@ -1,8 +1,8 @@
 <?php
-namespace KiwiSuite\Cms\Config;
+namespace Ixocreate\Cms\Config;
 
-use KiwiSuite\Contract\Application\ConfiguratorInterface;
-use KiwiSuite\Contract\Application\ServiceRegistryInterface;
+use Ixocreate\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Contract\Application\ServiceRegistryInterface;
 
 final class Configurator implements ConfiguratorInterface
 {

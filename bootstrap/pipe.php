@@ -1,39 +1,39 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Admin;
+namespace Ixocreate\Admin;
 
 /** @var PipeConfigurator $pipe */
-use KiwiSuite\Admin\Config\AdminConfig;
-use KiwiSuite\Admin\Middleware\Api\AuthorizationGuardMiddleware;
-use KiwiSuite\Admin\Middleware\Api\SessionDataMiddleware;
-use KiwiSuite\Admin\Middleware\Api\UserMiddleware;
-use KiwiSuite\Admin\Middleware\Api\XsrfProtectionMiddleware;
-use KiwiSuite\ApplicationHttp\Pipe\GroupPipeConfigurator;
-use KiwiSuite\ApplicationHttp\Pipe\PipeConfigurator;
-use KiwiSuite\ApplicationHttp\Pipe\RouteConfigurator;
-use KiwiSuite\Cms\Action\Page\AddAction;
-use KiwiSuite\Cms\Action\Page\AvailablePageTypesAction;
-use KiwiSuite\Cms\Action\Page\CopyAction;
-use KiwiSuite\Cms\Action\Page\CreateAction;
-use KiwiSuite\Cms\Action\Page\DeleteAction;
-use KiwiSuite\Cms\Action\Page\DetailAction;
-use KiwiSuite\Cms\Action\Page\IndexAction;
-use KiwiSuite\Cms\Action\Page\IndexFlatAction;
-use KiwiSuite\Cms\Action\Page\IndexSubSitemapAction;
-use KiwiSuite\Cms\Action\Page\ListAction;
-use KiwiSuite\Cms\Action\Page\MoveAction;
-use KiwiSuite\Cms\Action\Page\UpdateAction;
-use KiwiSuite\Cms\Action\PageVersion\ReplaceAction;
-use KiwiSuite\Cms\Action\Preview\PreviewAction;
+use Ixocreate\Admin\Config\AdminConfig;
+use Ixocreate\Admin\Middleware\Api\AuthorizationGuardMiddleware;
+use Ixocreate\Admin\Middleware\Api\SessionDataMiddleware;
+use Ixocreate\Admin\Middleware\Api\UserMiddleware;
+use Ixocreate\Admin\Middleware\Api\XsrfProtectionMiddleware;
+use Ixocreate\ApplicationHttp\Pipe\GroupPipeConfigurator;
+use Ixocreate\ApplicationHttp\Pipe\PipeConfigurator;
+use Ixocreate\ApplicationHttp\Pipe\RouteConfigurator;
+use Ixocreate\Cms\Action\Page\AddAction;
+use Ixocreate\Cms\Action\Page\AvailablePageTypesAction;
+use Ixocreate\Cms\Action\Page\CopyAction;
+use Ixocreate\Cms\Action\Page\CreateAction;
+use Ixocreate\Cms\Action\Page\DeleteAction;
+use Ixocreate\Cms\Action\Page\DetailAction;
+use Ixocreate\Cms\Action\Page\IndexAction;
+use Ixocreate\Cms\Action\Page\IndexFlatAction;
+use Ixocreate\Cms\Action\Page\IndexSubSitemapAction;
+use Ixocreate\Cms\Action\Page\ListAction;
+use Ixocreate\Cms\Action\Page\MoveAction;
+use Ixocreate\Cms\Action\Page\UpdateAction;
+use Ixocreate\Cms\Action\PageVersion\ReplaceAction;
+use Ixocreate\Cms\Action\Preview\PreviewAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
         $pipe->group("admin.authorized")(function (GroupPipeConfigurator $group) {
             $group->get('/page/{id}', DetailAction::class, 'admin.api.page.detail');
-            $group->get('/page/{pageId}/version', \KiwiSuite\Cms\Action\Page\Version\IndexAction::class, 'admin.api.page.version.index');
-            $group->post('/page/{pageId}', \KiwiSuite\Cms\Action\Page\Version\CreateAction::class, 'admin.api.page.version.create');
-            $group->get('/page/{pageId}/version/{id}', \KiwiSuite\Cms\Action\Page\Version\DetailAction::class, 'admin.api.page.version.detail');
+            $group->get('/page/{pageId}/version', \Ixocreate\Cms\Action\Page\Version\IndexAction::class, 'admin.api.page.version.index');
+            $group->post('/page/{pageId}', \Ixocreate\Cms\Action\Page\Version\CreateAction::class, 'admin.api.page.version.create');
+            $group->get('/page/{pageId}/version/{id}', \Ixocreate\Cms\Action\Page\Version\DetailAction::class, 'admin.api.page.version.detail');
             $group->get('/page/index', IndexAction::class, 'admin.api.page.index');
             $group->get('/page/list', ListAction::class, 'admin.api.page.list');
             $group->get('/page/sub/index/{handle}', IndexSubSitemapAction::class, 'admin.api.page.indexSub');

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Config\Client\Provider;
+namespace Ixocreate\Cms\Config\Client\Provider;
 
-use KiwiSuite\Admin\Config\AdminConfig;
-use KiwiSuite\Contract\Admin\ClientConfigProviderInterface;
-use KiwiSuite\Contract\Admin\RoleInterface;
+use Ixocreate\Admin\Config\AdminConfig;
+use Ixocreate\Contract\Admin\ClientConfigProviderInterface;
+use Ixocreate\Contract\Admin\RoleInterface;
 
 final class CmsProvider implements ClientConfigProviderInterface
 {

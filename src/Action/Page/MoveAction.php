@@ -1,15 +1,15 @@
 <?php
 
-namespace KiwiSuite\Cms\Action\Page;
+namespace Ixocreate\Cms\Action\Page;
 
 
-use KiwiSuite\Admin\Response\ApiErrorResponse;
-use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
+use Ixocreate\Admin\Response\ApiErrorResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

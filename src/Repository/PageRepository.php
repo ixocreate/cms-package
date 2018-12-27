@@ -1,18 +1,18 @@
 <?php
 
-namespace KiwiSuite\Cms\Repository;
+namespace Ixocreate\Cms\Repository;
 
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Metadata\PageMetadata;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Metadata\PageMetadata;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Database\Repository\AbstractRepository;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Database\Repository\AbstractRepository;
 
 final class PageRepository extends AbstractRepository
 {

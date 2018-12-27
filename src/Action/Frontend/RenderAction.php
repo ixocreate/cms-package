@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Action\Frontend;
+namespace Ixocreate\Cms\Action\Frontend;
 
-use KiwiSuite\Template\TemplateResponse;
+use Ixocreate\Template\TemplateResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

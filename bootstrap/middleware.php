@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms;
+namespace Ixocreate\Cms;
 
 /** @var MiddlewareConfigurator $middleware */
-use KiwiSuite\ApplicationHttp\Middleware\MiddlewareConfigurator;
-use KiwiSuite\Cms\Middleware\CmsMiddleware;
-use KiwiSuite\Cms\Middleware\Factory\CmsMiddlewareFactory;
+use Ixocreate\ApplicationHttp\Middleware\MiddlewareConfigurator;
+use Ixocreate\Cms\Middleware\CmsMiddleware;
+use Ixocreate\Cms\Middleware\Factory\CmsMiddlewareFactory;
 
 $middleware->addMiddleware(CmsMiddleware::class, CmsMiddlewareFactory::class);
 

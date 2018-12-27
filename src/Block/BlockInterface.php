@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Block;
+namespace Ixocreate\Cms\Block;
 
-use KiwiSuite\Contract\Schema\SchemaReceiverInterface;
-use KiwiSuite\Contract\ServiceManager\NamedServiceInterface;
+use Ixocreate\Contract\Schema\SchemaReceiverInterface;
+use Ixocreate\Contract\ServiceManager\NamedServiceInterface;
 
 interface BlockInterface extends NamedServiceInterface, SchemaReceiverInterface
 {

@@ -5,7 +5,7 @@ namespace KiwiMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
-use KiwiSuite\CommonTypes\Entity\UuidType;
+use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class Version20180601120527 extends AbstractMigration
 {

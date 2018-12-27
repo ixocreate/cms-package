@@ -11,13 +11,13 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Metadata;
+namespace Ixocreate\Cms\Metadata;
 
 use Doctrine\DBAL\Types\Type;
-use KiwiSuite\CommonTypes\Entity\DateTimeType;
-use KiwiSuite\Database\ORM\Metadata\AbstractMetadata;
+use Ixocreate\CommonTypes\Entity\DateTimeType;
+use Ixocreate\Database\ORM\Metadata\AbstractMetadata;
 use Doctrine\ORM\Mapping\Builder\FieldBuilder;
-use KiwiSuite\CommonTypes\Entity\UuidType;
+use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class PageMetadata extends AbstractMetadata
 {

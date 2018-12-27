@@ -1,17 +1,17 @@
 <?php
-namespace KiwiSuite\Cms\Command\Page;
+namespace Ixocreate\Cms\Command\Page;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\Criteria;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\CommandBus\Command\AbstractCommand;
-use KiwiSuite\Contract\CommandBus\CommandInterface;
-use KiwiSuite\Contract\Filter\FilterableInterface;
-use KiwiSuite\Contract\Validation\ValidatableInterface;
-use KiwiSuite\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\CommandBus\Command\AbstractCommand;
+use Ixocreate\Contract\CommandBus\CommandInterface;
+use Ixocreate\Contract\Filter\FilterableInterface;
+use Ixocreate\Contract\Validation\ValidatableInterface;
+use Ixocreate\Contract\Validation\ViolationCollectorInterface;
 
 final class SlugCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {

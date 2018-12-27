@@ -5,9 +5,9 @@ namespace KiwiMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
-use KiwiSuite\CommonTypes\Entity\DateTimeType;
-use KiwiSuite\CommonTypes\Entity\SchemaType;
-use KiwiSuite\CommonTypes\Entity\UuidType;
+use Ixocreate\CommonTypes\Entity\DateTimeType;
+use Ixocreate\CommonTypes\Entity\SchemaType;
+use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class Version20180514145818 extends AbstractMigration
 {

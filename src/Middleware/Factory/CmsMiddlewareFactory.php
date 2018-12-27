@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Middleware\Factory;
+namespace Ixocreate\Cms\Middleware\Factory;
 
-use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
-use KiwiSuite\Cms\Middleware\CmsMiddleware;
-use KiwiSuite\Cms\Middleware\DefaultLocaleMiddleware;
-use KiwiSuite\Cms\Router\CmsRouter;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
+use Ixocreate\Cms\Middleware\CmsMiddleware;
+use Ixocreate\Cms\Middleware\DefaultLocaleMiddleware;
+use Ixocreate\Cms\Router\CmsRouter;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
 use Zend\Expressive\Router\Middleware\DispatchMiddleware;

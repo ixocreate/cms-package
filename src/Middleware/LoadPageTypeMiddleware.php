@@ -1,9 +1,9 @@
 <?php
-namespace KiwiSuite\Cms\Middleware;
+namespace Ixocreate\Cms\Middleware;
 
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

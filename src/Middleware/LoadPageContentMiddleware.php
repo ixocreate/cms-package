@@ -1,10 +1,10 @@
 <?php
-namespace KiwiSuite\Cms\Middleware;
+namespace Ixocreate\Cms\Middleware;
 
 use Doctrine\Common\Collections\Criteria;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageVersionRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

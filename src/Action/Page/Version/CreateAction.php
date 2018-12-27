@@ -1,13 +1,13 @@
 <?php
-namespace KiwiSuite\Cms\Action\Page\Version;
+namespace Ixocreate\Cms\Action\Page\Version;
 
-use KiwiSuite\Admin\Entity\User;
-use KiwiSuite\Admin\Response\ApiErrorResponse;
-use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Cms\Command\Page\CreateVersionCommand;
-use KiwiSuite\Cms\Site\Admin\Builder;
-use KiwiSuite\Cms\Site\Admin\Item;
-use KiwiSuite\CommandBus\CommandBus;
+use Ixocreate\Admin\Entity\User;
+use Ixocreate\Admin\Response\ApiErrorResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Command\Page\CreateVersionCommand;
+use Ixocreate\Cms\Site\Admin\Builder;
+use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

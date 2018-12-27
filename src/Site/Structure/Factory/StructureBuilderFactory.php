@@ -1,10 +1,10 @@
 <?php
-namespace KiwiSuite\Cms\Site\Structure\Factory;
+namespace Ixocreate\Cms\Site\Structure\Factory;
 
-use KiwiSuite\Cms\Site\Structure\StructureBuilder;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Database\EntityManager\Factory\EntityManagerSubManager;
+use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Database\EntityManager\Factory\EntityManagerSubManager;
 
 final class StructureBuilderFactory implements FactoryInterface
 {

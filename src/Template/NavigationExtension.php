@@ -1,12 +1,12 @@
 <?php
 
-namespace KiwiSuite\Cms\Template;
+namespace Ixocreate\Cms\Template;
 
-use KiwiSuite\Cms\Navigation\Container;
-use KiwiSuite\Cms\Navigation\Item;
-use KiwiSuite\Cms\Repository\NavigationRepository;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Contract\Template\ExtensionInterface;
+use Ixocreate\Cms\Navigation\Container;
+use Ixocreate\Cms\Navigation\Item;
+use Ixocreate\Cms\Repository\NavigationRepository;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Contract\Template\ExtensionInterface;
 
 final class NavigationExtension implements ExtensionInterface
 {

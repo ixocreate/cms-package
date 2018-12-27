@@ -1,11 +1,11 @@
 <?php
-namespace KiwiSuite\Cms\Loader\Factory;
+namespace Ixocreate\Cms\Loader\Factory;
 
-use KiwiSuite\Cms\Loader\DatabasePageLoader;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Contract\ServiceManager\FactoryInterface;
-use KiwiSuite\Contract\ServiceManager\ServiceManagerInterface;
-use KiwiSuite\Database\Repository\Factory\RepositorySubManager;
+use Ixocreate\Cms\Loader\DatabasePageLoader;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Contract\ServiceManager\FactoryInterface;
+use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 
 final class DatabasePageLoaderFactory implements FactoryInterface
 {

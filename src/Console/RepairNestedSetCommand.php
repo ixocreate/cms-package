@@ -1,9 +1,9 @@
 <?php
-namespace KiwiSuite\Cms\Console;
+namespace Ixocreate\Cms\Console;
 
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\Contract\Command\CommandInterface;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Contract\Command\CommandInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

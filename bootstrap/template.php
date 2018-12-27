@@ -1,8 +1,8 @@
 <?php
 namespace App;
-use KiwiSuite\Cms\Template\NavigationExtension;
-use KiwiSuite\Cms\Template\PageUrlExtension;
-use KiwiSuite\Template\TemplateConfigurator;
+use Ixocreate\Cms\Template\NavigationExtension;
+use Ixocreate\Cms\Template\PageUrlExtension;
+use Ixocreate\Template\TemplateConfigurator;
 
 /** @var TemplateConfigurator $template */
 

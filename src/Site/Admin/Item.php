@@ -1,13 +1,13 @@
 <?php
-namespace KiwiSuite\Cms\Site\Admin;
+namespace Ixocreate\Cms\Site\Admin;
 
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Loader\PageLoaderInterface;
-use KiwiSuite\Cms\Loader\SitemapLoaderInterface;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Router\PageRoute;
-use KiwiSuite\Cms\Site\Structure\StructureItem;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Loader\PageLoaderInterface;
+use Ixocreate\Cms\Loader\SitemapLoaderInterface;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\Structure\StructureItem;
 use RecursiveIterator;
 
 final class Item implements \JsonSerializable, \RecursiveIterator, \Countable

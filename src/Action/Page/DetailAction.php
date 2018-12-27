@@ -1,14 +1,14 @@
 <?php
-namespace KiwiSuite\Cms\Action\Page;
+namespace Ixocreate\Cms\Action\Page;
 
 use Doctrine\Common\Collections\Criteria;
-use KiwiSuite\Admin\Response\ApiErrorResponse;
-use KiwiSuite\Admin\Response\ApiSuccessResponse;
-use KiwiSuite\Cms\Config\Config;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Repository\PageVersionRepository;
-use KiwiSuite\Cms\Site\Admin\Builder;
-use KiwiSuite\Cms\Site\Admin\Item;
+use Ixocreate\Admin\Response\ApiErrorResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Site\Admin\Builder;
+use Ixocreate\Cms\Site\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -25,7 +25,7 @@ final class DetailAction implements MiddlewareInterface
      */
     private $config;
     /**
-     * @var \KiwiSuite\Schema\Builder
+     * @var \Ixocreate\Schema\Builder
      */
     private $schemaBuilder;
     /**
@@ -37,13 +37,13 @@ final class DetailAction implements MiddlewareInterface
      * DetailAction constructor.
      * @param Builder $builder
      * @param Config $config
-     * @param \KiwiSuite\Schema\Builder $schemaBuilder
+     * @param \Ixocreate\Schema\Builder $schemaBuilder
      * @param PageVersionRepository $pageVersionRepository
      */
     public function __construct(
         Builder $builder,
         Config $config,
-        \KiwiSuite\Schema\Builder $schemaBuilder,
+        \Ixocreate\Schema\Builder $schemaBuilder,
         PageVersionRepository $pageVersionRepository
     ) {
         $this->builder = $builder;

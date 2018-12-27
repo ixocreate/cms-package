@@ -1,7 +1,7 @@
 <?php
-namespace KiwiSuite\Cms\Loader;
+namespace Ixocreate\Cms\Loader;
 
-use KiwiSuite\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Entity\Sitemap;
 
 interface SitemapLoaderInterface
 {

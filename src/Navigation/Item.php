@@ -1,8 +1,8 @@
 <?php
-namespace KiwiSuite\Cms\Navigation;
+namespace Ixocreate\Cms\Navigation;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
 
 final class Item
 {

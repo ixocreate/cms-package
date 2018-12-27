@@ -1,9 +1,9 @@
 <?php
-namespace KiwiSuite\Cms\Loader;
+namespace Ixocreate\Cms\Loader;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Entity\Entity\EntityCollection;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Entity\Entity\EntityCollection;
 
 final class DatabasePageLoader implements PageLoaderInterface
 {

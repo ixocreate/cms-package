@@ -1,10 +1,10 @@
 <?php
-namespace KiwiSuite\Cms\Site\Admin;
+namespace Ixocreate\Cms\Site\Admin;
 
-use KiwiSuite\Cms\Loader\PageLoaderInterface;
-use KiwiSuite\Cms\Loader\SitemapLoaderInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Router\PageRoute;
+use Ixocreate\Cms\Loader\PageLoaderInterface;
+use Ixocreate\Cms\Loader\SitemapLoaderInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\PageRoute;
 use RecursiveIterator;
 
 final class Container implements \RecursiveIterator, \JsonSerializable, \Countable

@@ -1,11 +1,11 @@
 <?php
-namespace KiwiSuite\Cms\Event;
+namespace Ixocreate\Cms\Event;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Event\Event;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Event\Event;
 
 final class PageEvent extends Event
 {

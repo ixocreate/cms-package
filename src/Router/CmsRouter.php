@@ -10,12 +10,12 @@
 
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Router;
+namespace Ixocreate\Cms\Router;
 
-use KiwiSuite\ApplicationHttp\Request\RequestWrapperInterface;
-use KiwiSuite\Cms\Config\Config;
-use KiwiSuite\Intl\LocaleManager;
-use KiwiSuite\ProjectUri\ProjectUri;
+use Ixocreate\ApplicationHttp\Request\RequestWrapperInterface;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Intl\LocaleManager;
+use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Zend\Diactoros\Uri;
 use Zend\Expressive\Router\Exception;

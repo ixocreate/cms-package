@@ -1,10 +1,10 @@
 <?php
-namespace KiwiSuite\Cms\Middleware;
+namespace Ixocreate\Cms\Middleware;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

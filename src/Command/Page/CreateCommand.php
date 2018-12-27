@@ -1,19 +1,19 @@
 <?php
-namespace KiwiSuite\Cms\Command\Page;
+namespace Ixocreate\Cms\Command\Page;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\CommandBus\Command\AbstractCommand;
-use KiwiSuite\CommandBus\CommandBus;
-use KiwiSuite\Contract\CommandBus\CommandInterface;
-use KiwiSuite\Contract\Filter\FilterableInterface;
-use KiwiSuite\Contract\Validation\ValidatableInterface;
-use KiwiSuite\Contract\Validation\ViolationCollectorInterface;
-use KiwiSuite\Intl\LocaleManager;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\CommandBus\Command\AbstractCommand;
+use Ixocreate\CommandBus\CommandBus;
+use Ixocreate\Contract\CommandBus\CommandInterface;
+use Ixocreate\Contract\Filter\FilterableInterface;
+use Ixocreate\Contract\Validation\ValidatableInterface;
+use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\Intl\LocaleManager;
 
 final class CreateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {

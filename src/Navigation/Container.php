@@ -1,10 +1,10 @@
 <?php
-namespace KiwiSuite\Cms\Navigation;
+namespace Ixocreate\Cms\Navigation;
 
 
-use KiwiSuite\Cms\Entity\Navigation;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Repository\NavigationRepository;
+use Ixocreate\Cms\Entity\Navigation;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Repository\NavigationRepository;
 
 final class Container implements \Iterator
 {

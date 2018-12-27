@@ -1,7 +1,7 @@
 <?php
-namespace KiwiSuite\Cms\Loader;
+namespace Ixocreate\Cms\Loader;
 
-use KiwiSuite\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Page;
 
 interface PageLoaderInterface
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace KiwiSuite\Cms\Template;
+namespace Ixocreate\Cms\Template;
 
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\Sitemap;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\Cms\Repository\SitemapRepository;
-use KiwiSuite\Cms\Router\PageRoute;
-use KiwiSuite\Contract\Template\ExtensionInterface;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Contract\Template\ExtensionInterface;
 
 final class PageUrlExtension implements ExtensionInterface
 {

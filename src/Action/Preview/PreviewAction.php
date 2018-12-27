@@ -1,19 +1,19 @@
 <?php
-namespace KiwiSuite\Cms\Action\Preview;
+namespace Ixocreate\Cms\Action\Preview;
 
-use KiwiSuite\Admin\Entity\User;
-use KiwiSuite\ApplicationHttp\Middleware\MiddlewareSubManager;
-use KiwiSuite\Cms\Action\Frontend\RenderAction;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Entity\PageVersion;
-use KiwiSuite\Cms\PageType\PageTypeInterface;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Repository\PageVersionRepository;
-use KiwiSuite\Cms\Request\CmsRequest;
-use KiwiSuite\Cms\Site\Admin\Builder;
-use KiwiSuite\Cms\Site\Admin\Item;
-use KiwiSuite\CommonTypes\Entity\SchemaType;
-use KiwiSuite\Entity\Type\Type;
+use Ixocreate\Admin\Entity\User;
+use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
+use Ixocreate\Cms\Action\Frontend\RenderAction;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Request\CmsRequest;
+use Ixocreate\Cms\Site\Admin\Builder;
+use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\CommonTypes\Entity\SchemaType;
+use Ixocreate\Entity\Type\Type;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

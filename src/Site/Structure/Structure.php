@@ -1,5 +1,5 @@
 <?php
-namespace KiwiSuite\Cms\Site\Structure;
+namespace Ixocreate\Cms\Site\Structure;
 
 use Serializable;
 

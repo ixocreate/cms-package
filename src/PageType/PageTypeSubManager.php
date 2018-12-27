@@ -9,12 +9,12 @@
  */
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\PageType;
+namespace Ixocreate\Cms\PageType;
 
-use KiwiSuite\Contract\Schema\SchemaInterface;
-use KiwiSuite\Contract\Schema\SchemaReceiverInterface;
-use KiwiSuite\Schema\Builder;
-use KiwiSuite\ServiceManager\SubManager\SubManager;
+use Ixocreate\Contract\Schema\SchemaInterface;
+use Ixocreate\Contract\Schema\SchemaReceiverInterface;
+use Ixocreate\Schema\Builder;
+use Ixocreate\ServiceManager\SubManager\SubManager;
 
 final class PageTypeSubManager extends SubManager implements SchemaReceiverInterface
 {

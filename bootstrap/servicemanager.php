@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
-namespace KiwiSuite\Cms;
+namespace Ixocreate\Cms;
 
-use KiwiSuite\Cms\Block\BlockSubManager;
-use KiwiSuite\Cms\Loader\DatabasePageLoader;
-use KiwiSuite\Cms\Loader\DatabaseSitemapLoader;
-use KiwiSuite\Cms\Loader\Factory\DatabasePageLoaderFactory;
-use KiwiSuite\Cms\Loader\Factory\DatabaseSitemapLoaderFactory;
-use KiwiSuite\Cms\PageType\PageTypeSubManager;
-use KiwiSuite\Cms\Router\CmsRouter;
-use KiwiSuite\Cms\Router\Factory\CmsRouterFactory;
-use KiwiSuite\Cms\Router\PageRoute;
-use KiwiSuite\Cms\Site\Admin\Builder;
-use KiwiSuite\Cms\Site\Structure\Factory\StructureBuilderFactory;
-use KiwiSuite\Cms\Site\Structure\StructureBuilder;
-use KiwiSuite\ServiceManager\ServiceManagerConfigurator;
+use Ixocreate\Cms\Block\BlockSubManager;
+use Ixocreate\Cms\Loader\DatabasePageLoader;
+use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\Loader\Factory\DatabasePageLoaderFactory;
+use Ixocreate\Cms\Loader\Factory\DatabaseSitemapLoaderFactory;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\CmsRouter;
+use Ixocreate\Cms\Router\Factory\CmsRouterFactory;
+use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\Admin\Builder;
+use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
+use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\ServiceManager\ServiceManagerConfigurator;
 
 /** @var ServiceManagerConfigurator $serviceManager */
 $serviceManager->addSubManager(PageTypeSubManager::class);

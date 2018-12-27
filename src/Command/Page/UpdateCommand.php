@@ -1,17 +1,17 @@
 <?php
-namespace KiwiSuite\Cms\Command\Page;
+namespace Ixocreate\Cms\Command\Page;
 
-use KiwiSuite\Cms\Config\Config;
-use KiwiSuite\Cms\Entity\Navigation;
-use KiwiSuite\Cms\Entity\Page;
-use KiwiSuite\Cms\Repository\NavigationRepository;
-use KiwiSuite\Cms\Repository\PageRepository;
-use KiwiSuite\CommandBus\Command\AbstractCommand;
-use KiwiSuite\CommandBus\CommandBus;
-use KiwiSuite\Contract\CommandBus\CommandInterface;
-use KiwiSuite\Contract\Filter\FilterableInterface;
-use KiwiSuite\Contract\Validation\ValidatableInterface;
-use KiwiSuite\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Navigation;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Repository\NavigationRepository;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\CommandBus\Command\AbstractCommand;
+use Ixocreate\CommandBus\CommandBus;
+use Ixocreate\Contract\CommandBus\CommandInterface;
+use Ixocreate\Contract\Filter\FilterableInterface;
+use Ixocreate\Contract\Validation\ValidatableInterface;
+use Ixocreate\Contract\Validation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
 final class UpdateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface

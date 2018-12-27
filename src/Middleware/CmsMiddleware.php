@@ -9,9 +9,9 @@
  */
 
 declare(strict_types=1);
-namespace KiwiSuite\Cms\Middleware;
+namespace Ixocreate\Cms\Middleware;
 
-use KiwiSuite\Cms\Request\CmsRequest;
+use Ixocreate\Cms\Request\CmsRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

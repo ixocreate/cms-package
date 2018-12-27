@@ -9,12 +9,12 @@
  */
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\BootstrapItem;
+namespace Ixocreate\Cms\BootstrapItem;
 
-use KiwiSuite\Cms\Block\BlockConfigurator;
-use KiwiSuite\Cms\Config\Configurator;
-use KiwiSuite\Contract\Application\BootstrapItemInterface;
-use KiwiSuite\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Cms\Block\BlockConfigurator;
+use Ixocreate\Cms\Config\Configurator;
+use Ixocreate\Contract\Application\BootstrapItemInterface;
+use Ixocreate\Contract\Application\ConfiguratorInterface;
 
 final class CmsBootstrapItem implements BootstrapItemInterface
 {

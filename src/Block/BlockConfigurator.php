@@ -9,12 +9,12 @@
  */
 declare(strict_types=1);
 
-namespace KiwiSuite\Cms\Block;
+namespace Ixocreate\Cms\Block;
 
-use KiwiSuite\Contract\Application\ConfiguratorInterface;
-use KiwiSuite\Contract\Application\ServiceRegistryInterface;
-use KiwiSuite\ServiceManager\Factory\AutowireFactory;
-use KiwiSuite\ServiceManager\SubManager\SubManagerConfigurator;
+use Ixocreate\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Contract\Application\ServiceRegistryInterface;
+use Ixocreate\ServiceManager\Factory\AutowireFactory;
+use Ixocreate\ServiceManager\SubManager\SubManagerConfigurator;
 
 final class BlockConfigurator implements ConfiguratorInterface
 {

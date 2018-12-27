@@ -1,8 +1,8 @@
 <?php
 
-namespace KiwiSuite\Cms\Action\Page;
+namespace Ixocreate\Cms\Action\Page;
 
-use KiwiSuite\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

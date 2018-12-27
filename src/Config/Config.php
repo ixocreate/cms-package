@@ -1,7 +1,7 @@
 <?php
-namespace KiwiSuite\Cms\Config;
+namespace Ixocreate\Cms\Config;
 
-use KiwiSuite\Contract\Application\SerializableServiceInterface;
+use Ixocreate\Contract\Application\SerializableServiceInterface;
 use Zend\Diactoros\Uri;
 
 final class Config implements SerializableServiceInterface

@@ -1,6 +1,6 @@
 # IXOCREATE cms
 
-[![Build Status](https://travis-ci.org/ixocreate/cms.svg?branch=master)](https://travis-ci.org/ixocreate/cms)
+[![Build Status](https://travis-ci.com/ixocreate/cms.svg?branch=master)](https://travis-ci.com/ixocreate/cms)
 [![Coverage Status](https://coveralls.io/repos/github/ixocreate/cms/badge.svg?branch=develop)](https://coveralls.io/github/ixocreate/cms?branch=develop)
 [![Packagist](https://img.shields.io/packagist/v/ixocreate/cms.svg)](https://packagist.org/packages/ixocreate/cms)
 [![Packagist Pre Release](https://img.shields.io/packagist/vpre/ixocreate/cms.svg)](https://packagist.org/packages/ixocreate/cms)

@@ -12,8 +12,8 @@ final class Version20180601120527 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         $table = $schema->createTable('cms_navigation');
-        $table->addColumn('id', UuidType::class);
-        $table->addColumn('pageId', UuidType::class);
+        $table->addColumn('id', UuidType::servicename());
+        $table->addColumn('pageId', UuidType::servicename());
         $table->addColumn('navigation', Type::STRING)->setLength(255);
 
         $table->setPrimaryKey(["id"]);

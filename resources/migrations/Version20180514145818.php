@@ -14,12 +14,12 @@ final class Version20180514145818 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         $table = $schema->createTable('cms_page_version');
-        $table->addColumn('id', UuidType::class);
-        $table->addColumn('pageId', UuidType::class);
-        $table->addColumn('content', SchemaType::class);
-        $table->addColumn('createdBy', UuidType::class)->setNotnull(false);
-        $table->addColumn('approvedAt', DateTimeType::class)->setNotnull(false);
-        $table->addColumn('createdAt', DateTimeType::class);
+        $table->addColumn('id', UuidType::servicename());
+        $table->addColumn('pageId', UuidType::servicename());
+        $table->addColumn('content', SchemaType::servicename());
+        $table->addColumn('createdBy', UuidType::servicename())->setNotnull(false);
+        $table->addColumn('approvedAt', DateTimeType::servicename())->setNotnull(false);
+        $table->addColumn('createdAt', DateTimeType::servicename());
 
         $table->setPrimaryKey(["id"]);
         $table->addIndex(['pageId', 'approvedAt']);

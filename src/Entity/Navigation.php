@@ -9,14 +9,17 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
+use Ixocreate\Contract\Entity\DatabaseEntityInterface;
+use Ixocreate\Contract\Type\TypeInterface;
 use Ixocreate\Entity\Entity\Definition;
 use Ixocreate\Entity\Entity\DefinitionCollection;
 use Ixocreate\Entity\Entity\EntityInterface;
 use Ixocreate\Entity\Entity\EntityTrait;
 use Ixocreate\CommonTypes\Entity\UuidType;
-use Ixocreate\Entity\Type\TypeInterface;
 
-final class Navigation implements EntityInterface
+final class Navigation implements EntityInterface, DatabaseEntityInterface
 {
     use EntityTrait;
 
@@ -48,5 +51,14 @@ final class Navigation implements EntityInterface
             new Definition('pageId', UuidType::class, false, true),
             new Definition('navigation', TypeInterface::TYPE_STRING, false, true),
         ]);
+    }
+
+    public static function loadMetadata(ClassMetadataBuilder $builder)
+    {
+        $builder->setTable('cms_navigation');
+
+        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
+        $builder->createField('pageId', UuidType::class)->nullable(false)->build();
+        $builder->createField('navigation', Type::STRING)->nullable(false)->build();
     }
 }

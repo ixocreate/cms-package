@@ -9,14 +9,17 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
+use Ixocreate\Contract\Entity\DatabaseEntityInterface;
+use Ixocreate\Contract\Type\TypeInterface;
 use Ixocreate\Database\Tree\NodeInterface;
 use Ixocreate\Entity\Entity\Definition;
 use Ixocreate\Entity\Entity\DefinitionCollection;
 use Ixocreate\Entity\Entity\EntityTrait;
 use Ixocreate\CommonTypes\Entity\UuidType;
-use Ixocreate\Entity\Type\TypeInterface;
 
-final class Sitemap implements NodeInterface
+final class Sitemap implements NodeInterface, DatabaseEntityInterface
 {
     use EntityTrait;
 
@@ -102,5 +105,17 @@ final class Sitemap implements NodeInterface
     public function idName(): string
     {
         return 'id';
+    }
+
+    public static function loadMetadata(ClassMetadataBuilder $builder)
+    {
+        $builder->setTable('cms_sitemap');
+
+        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
+        $builder->createField('nestedLeft', Type::INTEGER)->nullable(true)->build();
+        $builder->createField('nestedRight', Type::INTEGER)->nullable(true)->build();
+        $builder->createField('parentId', UuidType::class)->nullable(true)->build();
+        $builder->createField('pageType', Type::STRING)->nullable(false)->build();
+        $builder->createField('handle', Type::STRING)->nullable(true)->build();
     }
 }

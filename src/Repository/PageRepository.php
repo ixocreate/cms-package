@@ -13,8 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Metadata\PageMetadata;
-use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Database\Repository\AbstractRepository;
@@ -46,11 +44,9 @@ final class PageRepository extends AbstractRepository
         return Page::class;
     }
 
-    public function loadMetadata(ClassMetadataBuilder $builder): void
-    {
-        $metadata = (new PageMetadata($builder));
-    }
-
+    /**
+     * @return array
+     */
     public function fetchTree(): array
     {
         $queryBuilder = $this->createSelectQueryBuilder('p');
@@ -75,6 +71,10 @@ final class PageRepository extends AbstractRepository
         return $tree;
     }
 
+    /**
+     * @param Sitemap $sitemap
+     * @return array
+     */
     public function fetchDirectSiblingsOf(Sitemap $sitemap): array
     {
         $sitemapIds = [];
@@ -102,6 +102,10 @@ final class PageRepository extends AbstractRepository
         return \array_values($this->getFlatResult($queryBuilder->getQuery()->getResult()));
     }
 
+    /**
+     * @param array $queryResult
+     * @return array
+     */
     private function getFlatResult(array $queryResult): array
     {
         $flat = [];

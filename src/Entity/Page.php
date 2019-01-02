@@ -9,15 +9,18 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\CommonTypes\Entity\DateTimeType;
+use Ixocreate\Contract\Entity\DatabaseEntityInterface;
+use Ixocreate\Contract\Type\TypeInterface;
 use Ixocreate\Entity\Entity\Definition;
 use Ixocreate\Entity\Entity\DefinitionCollection;
 use Ixocreate\Entity\Entity\EntityInterface;
 use Ixocreate\Entity\Entity\EntityTrait;
 use Ixocreate\CommonTypes\Entity\UuidType;
-use Ixocreate\Entity\Type\TypeInterface;
 
-final class Page implements EntityInterface
+final class Page implements EntityInterface, DatabaseEntityInterface
 {
     use EntityTrait;
 
@@ -130,5 +133,22 @@ final class Page implements EntityInterface
             new Definition('createdAt', DateTimeType::class, false, true),
             new Definition('releasedAt', DateTimeType::class, false, true),
         ]);
+    }
+
+    public static function loadMetadata(ClassMetadataBuilder $builder)
+    {
+        $builder->setTable('cms_page');
+
+        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
+        $builder->createField('sitemapId', UuidType::class)->nullable(false)->build();
+        $builder->createField('locale', Type::STRING)->nullable(false)->build();
+        $builder->createField('name', Type::STRING)->nullable(false)->build();
+        $builder->createField('slug', Type::STRING)->nullable(true)->build();
+        $builder->createField('publishedFrom', DateTimeType::class)->nullable(true)->build();
+        $builder->createField('publishedUntil', DateTimeType::class)->nullable(true)->build();
+        $builder->createField('status', Type::STRING)->nullable(false)->build();
+        $builder->createField('updatedAt', DateTimeType::class)->nullable(false)->build();
+        $builder->createField('createdAt', DateTimeType::class)->nullable(false)->build();
+        $builder->createField('releasedAt', DateTimeType::class)->nullable(false)->build();
     }
 }

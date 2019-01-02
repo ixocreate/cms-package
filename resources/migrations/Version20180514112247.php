@@ -12,8 +12,8 @@ final class Version20180514112247 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         $table = $schema->createTable('cms_sitemap');
-        $table->addColumn('id', UuidType::servicename());
-        $table->addColumn('parentId', UuidType::servicename())->setNotnull(false);
+        $table->addColumn('id', UuidType::serviceName());
+        $table->addColumn('parentId', UuidType::serviceName())->setNotnull(false);
         $table->addColumn('nestedLeft', Type::INTEGER)->setNotnull(false);
         $table->addColumn('nestedRight', Type::INTEGER)->setNotnull(false);
         $table->addColumn('pageType', Type::STRING)->setLength(255);

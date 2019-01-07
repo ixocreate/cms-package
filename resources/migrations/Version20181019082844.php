@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace IxocreateMigration;
 
@@ -11,7 +12,7 @@ use Ixocreate\CommonTypes\Entity\DateTimeType;
  */
 final class Version20181019082844 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $table = $schema->getTable('cms_page');
         $table->addColumn('releasedAt', DateTimeType::serviceName())->setNotnull(false);
@@ -19,7 +20,7 @@ final class Version20181019082844 extends AbstractMigration
         $table->addIndex(['releasedAt']);
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $table = $schema->getTable('cms_page');
         $table->dropColumn('releasedAt');

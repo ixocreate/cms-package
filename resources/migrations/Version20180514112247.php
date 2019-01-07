@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace IxocreateMigration;
 
@@ -9,7 +10,7 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class Version20180514112247 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $table = $schema->createTable('cms_sitemap');
         $table->addColumn('id', UuidType::serviceName());
@@ -23,7 +24,7 @@ final class Version20180514112247 extends AbstractMigration
         $table->addUniqueIndex(["handle"]);
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $schema->dropTable("cms_sitemap");
     }

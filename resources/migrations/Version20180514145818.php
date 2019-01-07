@@ -1,9 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace IxocreateMigration;
 
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
 use Ixocreate\CommonTypes\Entity\DateTimeType;
 use Ixocreate\CommonTypes\Entity\SchemaType;
@@ -11,7 +11,7 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 
 final class Version20180514145818 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $table = $schema->createTable('cms_page_version');
         $table->addColumn('id', UuidType::serviceName());
@@ -26,7 +26,7 @@ final class Version20180514145818 extends AbstractMigration
         $table->addIndex(['pageId', 'createdAt']);
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $schema->dropTable("cms_page_version");
     }

@@ -111,7 +111,7 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
     {
         $builder->setTable('cms_sitemap');
 
-        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
+        $builder->createField('id', UuidType::serviceName())->makePrimaryKey()->build();
         $builder->createField('nestedLeft', Type::INTEGER)->nullable(true)->build();
         $builder->createField('nestedRight', Type::INTEGER)->nullable(true)->build();
         $builder->createField('parentId', UuidType::class)->nullable(true)->build();

@@ -81,11 +81,11 @@ final class PageVersion implements EntityInterface, DatabaseEntityInterface
     {
         $builder->setTable('cms_page_version');
 
-        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
-        $builder->createField('pageId', UuidType::class)->nullable(false)->build();
-        $builder->createField('content', SchemaType::class)->nullable(true)->build();
-        $builder->createField('createdBy', UuidType::class)->nullable(false)->build();
-        $builder->createField('approvedAt', DateTimeType::class)->nullable(true)->build();
-        $builder->createField('createdAt', DateTimeType::class)->nullable(false)->build();
+        $builder->createField('id', UuidType::serviceName())->makePrimaryKey()->build();
+        $builder->createField('pageId', UuidType::serviceName())->nullable(false)->build();
+        $builder->createField('content', SchemaType::serviceName())->nullable(true)->build();
+        $builder->createField('createdBy', UuidType::serviceName())->nullable(false)->build();
+        $builder->createField('approvedAt', DateTimeType::serviceName())->nullable(true)->build();
+        $builder->createField('createdAt', DateTimeType::serviceName())->nullable(false)->build();
     }
 }

@@ -57,8 +57,8 @@ final class Navigation implements EntityInterface, DatabaseEntityInterface
     {
         $builder->setTable('cms_navigation');
 
-        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
-        $builder->createField('pageId', UuidType::class)->nullable(false)->build();
+        $builder->createField('id', UuidType::serviceName())->makePrimaryKey()->build();
+        $builder->createField('pageId', UuidType::serviceName())->nullable(false)->build();
         $builder->createField('navigation', Type::STRING)->nullable(false)->build();
     }
 }

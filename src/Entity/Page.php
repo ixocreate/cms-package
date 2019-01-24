@@ -139,16 +139,16 @@ final class Page implements EntityInterface, DatabaseEntityInterface
     {
         $builder->setTable('cms_page');
 
-        $builder->createField('id', UuidType::class)->makePrimaryKey()->build();
-        $builder->createField('sitemapId', UuidType::class)->nullable(false)->build();
+        $builder->createField('id', UuidType::serviceName())->makePrimaryKey()->build();
+        $builder->createField('sitemapId', UuidType::serviceName())->nullable(false)->build();
         $builder->createField('locale', Type::STRING)->nullable(false)->build();
         $builder->createField('name', Type::STRING)->nullable(false)->build();
         $builder->createField('slug', Type::STRING)->nullable(true)->build();
-        $builder->createField('publishedFrom', DateTimeType::class)->nullable(true)->build();
-        $builder->createField('publishedUntil', DateTimeType::class)->nullable(true)->build();
+        $builder->createField('publishedFrom', DateTimeType::serviceName())->nullable(true)->build();
+        $builder->createField('publishedUntil', DateTimeType::serviceName())->nullable(true)->build();
         $builder->createField('status', Type::STRING)->nullable(false)->build();
-        $builder->createField('updatedAt', DateTimeType::class)->nullable(false)->build();
-        $builder->createField('createdAt', DateTimeType::class)->nullable(false)->build();
-        $builder->createField('releasedAt', DateTimeType::class)->nullable(false)->build();
+        $builder->createField('updatedAt', DateTimeType::serviceName())->nullable(false)->build();
+        $builder->createField('createdAt', DateTimeType::serviceName())->nullable(false)->build();
+        $builder->createField('releasedAt', DateTimeType::serviceName())->nullable(false)->build();
     }
 }

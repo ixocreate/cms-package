@@ -106,7 +106,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
             ]);
         }
 
-        if (!empty($this->dataValue('navigation'))) {
+        if ($this->dataValue('navigation') !== null) {
             $queryBuilder = $this->navigationRepository->createQueryBuilder();
             $queryBuilder->delete(Navigation::class, "nav")
                 ->where("nav.pageId = :pageId")
@@ -170,7 +170,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
         $newData['slug'] = $this->dataValue('slug', false);
         $newData['navigation'] = null;
 
-        if (!empty($this->dataValue('navigation'))) {
+        if (\is_array($this->dataValue('navigation'))) {
             $newData['navigation'] = [];
             $navItems = \array_map(function ($nav) {
                 return $nav['name'];
@@ -182,7 +182,6 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
                 }
             }
         }
-
 
         return $this->withData($newData);
     }

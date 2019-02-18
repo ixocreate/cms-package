@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\PageType;
 
+use Ixocreate\Contract\Schema\BuilderInterface;
 use Ixocreate\Contract\Schema\SchemaInterface;
 use Ixocreate\Contract\Schema\SchemaProviderInterface;
 use Ixocreate\Schema\Builder;
@@ -22,7 +23,7 @@ final class PageTypeSubManager extends SubManager implements SchemaProviderInter
      * @param array $options
      * @return SchemaInterface
      */
-    public function provideSchema($name, Builder $builder, $options = []): SchemaInterface
+    public function provideSchema($name, BuilderInterface $builder, $options = []): SchemaInterface
     {
         /** @var PageTypeInterface $pageType */
         $pageType = $this->get($name);

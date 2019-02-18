@@ -12,6 +12,7 @@ namespace Ixocreate\Cms\Config\Client\Provider;
 use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Contract\Admin\ClientConfigProviderInterface;
 use Ixocreate\Contract\Admin\RoleInterface;
+use Ixocreate\Contract\Admin\UserInterface;
 
 final class CmsProvider implements ClientConfigProviderInterface
 {
@@ -25,22 +26,22 @@ final class CmsProvider implements ClientConfigProviderInterface
         $this->adminConfig = $adminConfig;
     }
 
+    public static function serviceName(): string
+    {
+        return 'cms';
+    }
+
     /**
-     * @param RoleInterface|null $role
+     * @param UserInterface|null $user
      * @return array
      */
-    public function clientConfig(?RoleInterface $role = null): array
+    public function clientConfig(?UserInterface $user = null): array
     {
-        if (empty($role)) {
+        if (empty($user)) {
             return [];
         }
         return [
             'preview' => (string) $this->adminConfig->uri() . '/preview',
         ];
-    }
-
-    public static function serviceName(): string
-    {
-        return 'cms';
     }
 }

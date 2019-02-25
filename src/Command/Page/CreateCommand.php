@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
+use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
@@ -49,6 +50,10 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      * @var CommandBus
      */
     private $commandBus;
+    /**
+     * @var Connection
+     */
+    private $master;
 
     /**
      * CreateCommand constructor.
@@ -57,19 +62,22 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      * @param PageRepository $pageRepository
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
+     * @param Connection $master
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
         SitemapRepository $sitemapRepository,
         PageRepository $pageRepository,
         LocaleManager $localeManager,
-        CommandBus $commandBus
+        CommandBus $commandBus,
+        Connection $master
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->localeManager = $localeManager;
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
+        $this->master = $master;
     }
 
     /**
@@ -78,52 +86,54 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      */
     public function execute(): bool
     {
-        /** @var PageTypeInterface $pageType */
-        $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
+        $this->master->transactional(function() {
+            /** @var PageTypeInterface $pageType */
+            $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
 
-        $sitemap = new Sitemap([
-            'id' => $this->uuid(),
-            'pageType' => $pageType::serviceName(),
-        ]);
+            $sitemap = new Sitemap([
+                'id' => $this->uuid(),
+                'pageType' => $pageType::serviceName(),
+            ]);
 
-        if (!empty($pageType->handle())) {
-            $sitemap = $sitemap->with("handle", $pageType->handle());
-        }
+            if (!empty($pageType->handle())) {
+                $sitemap = $sitemap->with("handle", $pageType->handle());
+            }
 
-        if (empty($this->dataValue('parentSitemapId'))) {
-            $sitemap = $this->sitemapRepository->createRoot($sitemap);
-        } else {
-            /** @var Sitemap $parent */
-            $parent = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
-            $sitemap = $this->sitemapRepository->insertAsLastChild($sitemap, $parent);
-        }
+            if (empty($this->dataValue('parentSitemapId'))) {
+                $sitemap = $this->sitemapRepository->createRoot($sitemap);
+            } else {
+                /** @var Sitemap $parent */
+                $parent = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
+                $sitemap = $this->sitemapRepository->insertAsLastChild($sitemap, $parent);
+            }
 
-        $page = new Page([
-            'id' => $this->uuid(),
-            'sitemapId' => $sitemap->id(),
-            'locale' => $this->dataValue('locale'),
-            'name' => $this->dataValue('name'),
-            'status' => 'offline',
-            'updatedAt' => $this->createdAt(),
-            'createdAt' => $this->createdAt(),
-            'releasedAt' => $this->createdAt(),
-        ]);
+            $page = new Page([
+                'id' => $this->uuid(),
+                'sitemapId' => $sitemap->id(),
+                'locale' => $this->dataValue('locale'),
+                'name' => $this->dataValue('name'),
+                'status' => 'offline',
+                'updatedAt' => $this->createdAt(),
+                'createdAt' => $this->createdAt(),
+                'releasedAt' => $this->createdAt(),
+            ]);
 
-        /** @var Page $page */
-        $page = $this->pageRepository->save($page);
+            /** @var Page $page */
+            $page = $this->pageRepository->save($page);
 
-        $this->commandBus->command(SlugCommand::class, [
-            'name' => (string) $page->name(),
-            'pageId' => (string) $page->id(),
-        ]);
+            $this->commandBus->command(SlugCommand::class, [
+                'name' => (string) $page->name(),
+                'pageId' => (string) $page->id(),
+            ]);
 
-        $this->commandBus->command(CreateVersionCommand::class, [
-            'pageType' => $pageType::serviceName(),
-            'pageId' => (string) $page->id(),
-            'createdBy' => $this->dataValue('createdBy'),
-            'content' => [],
-            'approve' => true,
-        ]);
+            $this->commandBus->command(CreateVersionCommand::class, [
+                'pageType' => $pageType::serviceName(),
+                'pageId' => (string) $page->id(),
+                'createdBy' => $this->dataValue('createdBy'),
+                'content' => [],
+                'approve' => true,
+            ]);
+        });
 
         return true;
     }

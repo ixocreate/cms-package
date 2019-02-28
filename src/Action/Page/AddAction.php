@@ -49,6 +49,7 @@ class AddAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var Connection
      */
@@ -96,7 +97,7 @@ class AddAction implements MiddlewareInterface
             'releasedAt' => new \DateTime(),
         ]);
 
-        $this->master->transactional(function() use (&$page, $sitemap, $pageType, $request){
+        $this->master->transactional(function () use (&$page, $sitemap, $pageType, $request) {
             /** @var Page $page */
             $page = $this->pageRepository->save($page);
 

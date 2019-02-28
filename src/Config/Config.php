@@ -29,7 +29,7 @@ final class Config implements SerializableServiceInterface
     private $defaultBaseUrl;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $robotsNoIndex;
 

@@ -39,7 +39,7 @@ final class Configurator implements ConfiguratorInterface
     private $xmlSitemapSubManagerConfigurator;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $robotsNoIndex;
 
@@ -160,6 +160,4 @@ final class Configurator implements ConfiguratorInterface
 
         $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
     }
-
-
 }

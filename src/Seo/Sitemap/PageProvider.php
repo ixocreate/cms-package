@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Seo\Sitemap;
@@ -14,6 +20,7 @@ class PageProvider implements XmlSitemapProviderInterface
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var PageRoute
      */
@@ -63,7 +70,6 @@ class PageProvider implements XmlSitemapProviderInterface
 
         foreach ($pages as $page) {
             /** @var Page $page */
-
             $loc = $this->pageRoute->fromPage($page);
 
             $lastMod =  $page->updatedAt()->value();

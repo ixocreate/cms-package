@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Seo;
@@ -16,16 +22,24 @@ class GenerateSitemapCommand extends AbstractCommand
      */
     private $subManager;
 
+    /**
+     * GenerateSitemapCommand constructor.
+     * @param XmlSitemapProviderSubManager $subManager
+     */
     public function __construct(XmlSitemapProviderSubManager $subManager)
     {
         $this->subManager = $subManager;
     }
 
+    /**
+     * @return bool
+     * @throws \Exception
+     */
     public function execute(): bool
     {
         $dataSitemap = 'data/sitemap_temp/';
-        if (!is_dir($dataSitemap)) {
-            mkdir($dataSitemap, 0777, true);
+        if (!\is_dir($dataSitemap)) {
+            \mkdir($dataSitemap, 0777, true);
         }
 
 
@@ -39,58 +53,59 @@ class GenerateSitemapCommand extends AbstractCommand
             $provider->writeUrls($urlset);
 
             $savePath = $dataSitemap . $provider::serviceName() . '/';
-            if (!is_dir($savePath)){
-                mkdir($savePath);
+            if (!\is_dir($savePath)) {
+                \mkdir($savePath);
             }
 
             foreach ($urlset->getCollections() as $key => $collection) {
                 $driver = new XmlWriterDriver();
                 $collection->accept($driver);
 
-                $filename =  $provider::serviceName() . ($key + 1).".xml";
+                $filename =  $provider::serviceName() . ($key + 1) . ".xml";
                 $sitemaps[] = [
                     'provider' => $provider::serviceName(),
                     'createdAt' => (new \DateTime())->format('c'),
                     'filename' => $provider::serviceName() . '/' . $filename,
                 ];
 
-                file_put_contents($savePath . $filename, $driver->output());
+                \file_put_contents($savePath . $filename, $driver->output());
             }
         }
 
-        file_put_contents('data/sitemap_temp/sitemap.json', \json_encode($sitemaps));
+        \file_put_contents('data/sitemap_temp/sitemap.json', \json_encode($sitemaps));
 
-
-        rename('data/sitemap', 'data/sitemap_delet');
-        rename('data/sitemap_temp', 'data/sitemap');
-        $this->löscheSitemap('data/sitemap_delet');
+        \rename('data/sitemap', 'data/sitemap_del');
+        \rename('data/sitemap_temp', 'data/sitemap');
+        $this->deleteSitemap('data/sitemap_del');
 
         return true;
     }
 
+    /**
+     * @return string
+     */
     public static function serviceName(): string
     {
         return 'cms-sitemap-generate';
     }
 
-    public function löscheSitemap($dir)
+    /**
+     * @param $dir
+     */
+    private function deleteSitemap($dir)
     {
-        if (is_dir($dir)) {
-
-
-            $objects = scandir($dir);
+        if (\is_dir($dir)) {
+            $objects = \scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-
-
-                    if (is_dir($dir . "/" . $object)) {
-                        $this->löscheSitemap($dir . "/" . $object);
+                    if (\is_dir($dir . "/" . $object)) {
+                        $this->deleteSitemap($dir . "/" . $object);
                     } else {
-                        unlink($dir . "/" . $object);
+                        \unlink($dir . "/" . $object);
                     }
                 }
             }
-            rmdir($dir);
+            \rmdir($dir);
         }
     }
 }

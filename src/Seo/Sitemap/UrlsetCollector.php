@@ -1,10 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jjost
- * Date: 2019-02-26
- * Time: 13:02
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
  */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Seo\Sitemap;
@@ -37,10 +37,11 @@ final class UrlsetCollector
     public function add(Url $url)
     {
         if ($this->count === 0 || $this->count === self::LIMIT) {
-            $this->count = 0; $this->collections[] = new Urlset();
+            $this->count = 0;
+            $this->collections[] = new Urlset();
         }
 
-        $this->collections[count($this->collections) - 1]->add($url);
+        $this->collections[\count($this->collections) - 1]->add($url);
         $this->count++;
     }
 

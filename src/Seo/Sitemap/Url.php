@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Seo\Sitemap;
@@ -8,7 +14,7 @@ use DateTimeInterface;
 /**
  * Class Url
  * @package Ixocreate\Cms\Seo\Sitemap
- * 
+ *
  */
 class Url extends \Thepixeldeveloper\Sitemap\Url
 {

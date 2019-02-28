@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Seo;
@@ -30,7 +36,7 @@ class SitemapAction implements MiddlewareInterface
     {
         $uri = $request->getUri();
 
-        $requestPath = substr($uri->getPath(), 9);
+        $requestPath = \mb_substr($uri->getPath(), 9);
 
         $response = null;
         if ($requestPath === 'sitemap.xml') {

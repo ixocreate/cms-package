@@ -16,5 +16,4 @@ interface XmlSitemapProviderInterface extends NamedServiceInterface
     public function writeUrls(UrlsetCollector $urlset);
 
     public function writePingUrls(UrlsetCollector $urlset, \DateTime $fromDate);
-    
 }

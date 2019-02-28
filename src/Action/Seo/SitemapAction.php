@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Seo;
 
+use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -15,6 +16,16 @@ use Zend\Diactoros\Stream;
 
 class SitemapAction implements MiddlewareInterface
 {
+    /**
+     * @var ProjectUri
+     */
+    private $projectUri;
+
+    public function __construct(ProjectUri $projectUri)
+    {
+        $this->projectUri = $projectUri;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $uri = $request->getUri();
@@ -31,7 +42,8 @@ class SitemapAction implements MiddlewareInterface
 
             $sitemapIndex = new SitemapIndex();
             foreach ($sitemaps as $item) {
-                $sitemap = new Sitemap($item['filename']);
+                $loc = $this->projectUri->getMainUrl() . '/sitemap/' . $item['filename'];
+                $sitemap = new Sitemap($loc);
                 $sitemap->setLastMod(new \DateTime($item['createdAt']));
 
                 $sitemapIndex->add($sitemap);

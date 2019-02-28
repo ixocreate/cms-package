@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Admin;
+namespace Ixocreate\Cms;
 
 /** @var PipeConfigurator $pipe */
 use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Admin\Middleware\Api\AuthorizationGuardMiddleware;
 use Ixocreate\Admin\Middleware\Api\SessionDataMiddleware;
 use Ixocreate\Admin\Middleware\Api\UserMiddleware;
-use Ixocreate\Admin\Middleware\Api\XsrfProtectionMiddleware;
 use Ixocreate\ApplicationHttp\Pipe\GroupPipeConfigurator;
 use Ixocreate\ApplicationHttp\Pipe\PipeConfigurator;
 use Ixocreate\ApplicationHttp\Pipe\RouteConfigurator;
@@ -26,6 +25,8 @@ use Ixocreate\Cms\Action\Page\MoveAction;
 use Ixocreate\Cms\Action\Page\UpdateAction;
 use Ixocreate\Cms\Action\PageVersion\ReplaceAction;
 use Ixocreate\Cms\Action\Preview\PreviewAction;
+use Ixocreate\Cms\Action\Seo\RobotsAction;
+use Ixocreate\Cms\Action\Seo\SitemapAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
@@ -60,4 +61,5 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     });
 });
 
-
+$pipe->get('/sitemap/[{any:.*}]', SitemapAction::class, 'cms.seo.sitemap');
+$pipe->get('/robots.txt', RobotsAction::class, 'cms.seo.robots');

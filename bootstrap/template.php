@@ -8,3 +8,5 @@ use Ixocreate\Template\TemplateConfigurator;
 
 $template->addExtension(NavigationExtension::class);
 $template->addExtension(PageUrlExtension::class);
+
+$template->addDirectory('seo', __DIR__ . '/../templates/seo');

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow:<?php if ($noIndex == true): ?>/<?php endif; ?>
+
+<?php
+echo substr($sitemapUrl,0,-10). 'sitemap/sitemap.xml';
+?>

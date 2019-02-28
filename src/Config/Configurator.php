@@ -9,8 +9,12 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Config;
 
+use Ixocreate\Cms\Seo\Sitemap\PageProvider;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Contract\Application\ConfiguratorInterface;
 use Ixocreate\Contract\Application\ServiceRegistryInterface;
+use Ixocreate\ServiceManager\SubManager\SubManagerConfigurator;
 
 final class Configurator implements ConfiguratorInterface
 {
@@ -28,6 +32,30 @@ final class Configurator implements ConfiguratorInterface
      * @var array
      */
     private $navigation = [];
+
+    /**
+     * @var SubManagerConfigurator
+     */
+    private $xmlSitemapSubManagerConfigurator;
+
+    /**
+     * @var boolean
+     */
+    private $robotsNoIndex;
+
+    /**
+     * @var string
+     */
+    private $robotsTemplate;
+
+    /**
+     * Configurator constructor.
+     */
+    public function __construct()
+    {
+        $this->xmlSitemapSubManagerConfigurator = new SubManagerConfigurator(XmlSitemapProviderSubManager::class, XmlSitemapProviderInterface::class);
+        $this->addXmlSitemapProvider(PageProvider::class);
+    }
 
     /**
      * @param string $localizationUrlSchema
@@ -82,11 +110,56 @@ final class Configurator implements ConfiguratorInterface
     }
 
     /**
+     * @return bool
+     */
+    public function getRobotsNoIndex(): bool
+    {
+        return $this->robotsNoIndex;
+    }
+
+    /**
+     * @param bool $robotsNoIndex
+     */
+    public function setRobotsNoIndex(bool $robotsNoIndex): void
+    {
+        $this->robotsNoIndex = $robotsNoIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRobotsTemplate()
+    {
+        return $this->robotsTemplate;
+    }
+
+    /**
+     * @param string $robotsTemplate
+     */
+    public function setRobotsTemplate(string $robotsTemplate)
+    {
+        $this->robotsTemplate = $robotsTemplate;
+    }
+
+    /**
+     * @param string $name
+     * @param string|null $factory
+     */
+    public function addXmlSitemapProvider(string $name, ?string $factory = null)
+    {
+        $this->xmlSitemapSubManagerConfigurator->addService($name, $factory);
+    }
+
+    /**
      * @param ServiceRegistryInterface $serviceRegistry
      * @return void
      */
     public function registerService(ServiceRegistryInterface $serviceRegistry): void
     {
         $serviceRegistry->add(Config::class, new Config($this));
+
+        $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
     }
+
+
 }

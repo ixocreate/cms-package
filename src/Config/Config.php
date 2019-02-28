@@ -28,11 +28,23 @@ final class Config implements SerializableServiceInterface
      */
     private $defaultBaseUrl;
 
+    /**
+     * @var boolean
+     */
+    private $robotsNoIndex;
+
+    /**
+     * @var string
+     */
+    private $robotsTemplate;
+
     public function __construct(Configurator $configurator)
     {
         $this->localizationUrlSchema = $configurator->getLocalizationUrlSchema();
         $this->navigation = $configurator->getNavigation();
         $this->defaultBaseUrl = $configurator->getDefaultBaseUrl();
+        $this->robotsNoIndex = $configurator->getRobotsNoIndex();
+        $this->robotsTemplate = $configurator->getRobotsTemplate();
     }
 
     /**
@@ -54,6 +66,16 @@ final class Config implements SerializableServiceInterface
     public function defaultBaseUrl(): ?string
     {
         return $this->defaultBaseUrl;
+    }
+
+    public function robotsNoIndex(): bool
+    {
+        return $this->robotsNoIndex;
+    }
+
+    public function robotsTemplate(): string
+    {
+        return $this->robotsTemplate;
     }
 
     /**

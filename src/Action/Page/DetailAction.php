@@ -137,7 +137,7 @@ final class DetailAction implements MiddlewareInterface
         }, $navigation);
         $result['navigation'] = $navigation;
 
-        $result['schema'] = $item->pageType()->receiveSchema($this->schemaBuilder);
+        $result['schema'] = $item->pageType()->provideSchema('', $this->schemaBuilder);
 
         return new ApiSuccessResponse($result);
     }

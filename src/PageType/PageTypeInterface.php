@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\PageType;
 
-use Ixocreate\Contract\Schema\SchemaReceiverInterface;
+use Ixocreate\Contract\Schema\SchemaProviderInterface;
 use Ixocreate\Contract\ServiceManager\NamedServiceInterface;
 
-interface PageTypeInterface extends NamedServiceInterface, SchemaReceiverInterface
+interface PageTypeInterface extends NamedServiceInterface, SchemaProviderInterface
 {
     public function label(): string;
 
@@ -26,7 +26,7 @@ interface PageTypeInterface extends NamedServiceInterface, SchemaReceiverInterfa
 
     public function middleware(): ?array;
 
-    public function layout(): string;
+    public function template(): string;
 
     public function terminal(): bool;
 }

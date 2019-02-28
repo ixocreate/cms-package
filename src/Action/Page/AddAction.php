@@ -11,6 +11,7 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Entity\Page;
@@ -48,6 +49,10 @@ class AddAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+    /**
+     * @var Connection
+     */
+    private $master;
 
     /**
      * AddAction constructor.
@@ -55,17 +60,20 @@ class AddAction implements MiddlewareInterface
      * @param SitemapRepository $sitemapRepository
      * @param PageVersionRepository $pageVersionRepository
      * @param PageTypeSubManager $pageTypeSubManager
+     * @param Connection $master
      */
     public function __construct(
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         PageVersionRepository $pageVersionRepository,
-        PageTypeSubManager $pageTypeSubManager
+        PageTypeSubManager $pageTypeSubManager,
+        Connection $master
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->master = $master;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -88,11 +96,14 @@ class AddAction implements MiddlewareInterface
             'releasedAt' => new \DateTime(),
         ]);
 
-        /** @var Page $page */
-        $page = $this->pageRepository->save($page);
+        $this->master->transactional(function() use (&$page, $sitemap, $pageType, $request){
+            /** @var Page $page */
+            $page = $this->pageRepository->save($page);
 
-        $this->saveSlug($page, $sitemap);
-        $this->savePageVersion($page, $pageType, (string) $request->getAttribute(User::class, null)->id());
+            $this->saveSlug($page, $sitemap);
+            $this->savePageVersion($page, $pageType, (string) $request->getAttribute(User::class, null)->id());
+        });
+
 
 
         return new ApiSuccessResponse((string) $page->id());

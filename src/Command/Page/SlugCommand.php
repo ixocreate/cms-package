@@ -23,7 +23,6 @@ use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
 use Ixocreate\Contract\Validation\ViolationCollectorInterface;
-use Thepixeldeveloper\Sitemap\SitemapIndex;
 use Zend\Expressive\Router\Exception\RuntimeException;
 
 final class SlugCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface

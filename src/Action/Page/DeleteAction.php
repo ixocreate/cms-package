@@ -69,7 +69,7 @@ class DeleteAction implements MiddlewareInterface
 
         $pageRedirects = $this->oldRedirectRepository->findBy(['pageId' => $page->id()]);
 
-        foreach ($pageRedirects as $pageRedirect){
+        foreach ($pageRedirects as $pageRedirect) {
             $this->oldRedirectRepository->remove(($pageRedirect));
         }
 

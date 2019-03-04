@@ -114,46 +114,29 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
         } while ($found == true);
 
         try {
-            $oldUrl = $this->pageRoute->fromPage($page);
-            $redirect = new OldRedirect([
-                'oldUrl' => $oldUrl,
-                'pageId' => $page->id(),
-                'createdAt' => new \DateTime(),
-            ]);
-            $this->oldRedirectRepository->save($redirect);
-
-            $parentsite = $this->sitemapRepository->find($page);
+            $parentId = $this->sitemapRepository->find($page);
 
             $criteria = Criteria::create();
-            $criteria->where(Criteria::expr()->gt('nestedLeft', $parentsite->nestedLeft));
-            $criteria->andWhere(Criteria::expr()->lt('nestedRight', $parentsite->nestedRight));
+            $criteria->where(Criteria::expr()->gte('nestedLeft', $parentId->nestedLeft));
+            $criteria->andWhere(Criteria::expr()->lte('nestedRight', $parentId->nestedRight));
 
             $test = $this->sitemapRepository->matching($criteria);
 
-            $array = [];
-            foreach ($test as $item){
-                $array[] = $item->id();
+            foreach ($test as $item) {
                 $criteria = Criteria::create();
                 $criteria->where(Criteria::expr()->eq('id', $item->id()));
                 $oldPage = $this->pageRepository->find($item->id());
-                $oldUrltest = $this->pageRoute->fromPage($oldPage);
+                $oldUrl = $this->pageRoute->fromPage($oldPage);
                 $redirect = new OldRedirect([
-                    'oldUrl' => $oldUrltest,
+                    'oldUrl' => $oldUrl,
                     'pageId' => $item->id(),
                     'createdAt' => new \DateTime(),
                 ]);
                 $this->oldRedirectRepository->save($redirect);
             }
-
-
-
-
         } catch (RuntimeException $exception) {
-
         }
-
         $this->pageRepository->save($page->with("slug", $iterationName));
-
         return true;
     }
 

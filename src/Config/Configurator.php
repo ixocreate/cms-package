@@ -41,12 +41,12 @@ final class Configurator implements ConfiguratorInterface
     /**
      * @var bool
      */
-    private $robotsNoIndex;
+    private $robotsNoIndex = false;
 
     /**
      * @var string
      */
-    private $robotsTemplate;
+    private $robotsTemplate = 'seo::robotstxt';
 
     /**
      * Configurator constructor.
@@ -128,7 +128,7 @@ final class Configurator implements ConfiguratorInterface
     /**
      * @return string
      */
-    public function getRobotsTemplate()
+    public function getRobotsTemplate(): string
     {
         return $this->robotsTemplate;
     }

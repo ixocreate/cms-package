@@ -23,6 +23,7 @@ use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
 use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Thepixeldeveloper\Sitemap\SitemapIndex;
 use Zend\Expressive\Router\Exception\RuntimeException;
 
 final class SlugCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
@@ -113,31 +114,44 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
             $i++;
         } while ($found == true);
 
+        if ($this->dataValue('isChange') === true) {
+            $this->saveRedirectInfo($page);
+        }
+
+        $this->pageRepository->save($page->with("slug", $iterationName));
+        return true;
+    }
+
+    private function saveRedirectInfo(Page $page)
+    {
         try {
-            $parentId = $this->sitemapRepository->find($page);
+            $parentId = $this->sitemapRepository->find($page->sitemapId());
 
             $criteria = Criteria::create();
             $criteria->where(Criteria::expr()->gte('nestedLeft', $parentId->nestedLeft));
             $criteria->andWhere(Criteria::expr()->lte('nestedRight', $parentId->nestedRight));
 
-            $test = $this->sitemapRepository->matching($criteria);
+            $result = $this->sitemapRepository->matching($criteria);
 
-            foreach ($test as $item) {
-                $criteria = Criteria::create();
-                $criteria->where(Criteria::expr()->eq('id', $item->id()));
-                $oldPage = $this->pageRepository->find($item->id());
-                $oldUrl = $this->pageRoute->fromPage($oldPage);
+            $sitemapIds = [];
+            /** @var Sitemap $sitemap */
+            foreach ($result as $sitemap) {
+                $sitemapIds[] = $sitemap->id();
+            }
+
+            $pages = $this->pageRepository->findBy(['sitemapId' => $sitemapIds, 'locale' => $page->locale()]);
+            /** @var Page $pageItem */
+            foreach ($pages as $pageItem) {
+                $oldUrl = $this->pageRoute->fromPage($pageItem);
                 $redirect = new OldRedirect([
                     'oldUrl' => $oldUrl,
-                    'pageId' => $item->id(),
+                    'pageId' => $pageItem->id(),
                     'createdAt' => new \DateTime(),
                 ]);
                 $this->oldRedirectRepository->save($redirect);
             }
         } catch (RuntimeException $exception) {
         }
-        $this->pageRepository->save($page->with("slug", $iterationName));
-        return true;
     }
 
     public static function serviceName(): string
@@ -162,6 +176,7 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
         $newData = [];
         $newData['name'] = (new Slugify())->slugify((string) $this->dataValue('name', ''));
         $newData['pageId'] = $this->dataValue('pageId');
+        $newData['isChange'] = (bool) $this->dataValue('isChange', false);
 
         return $this->withData($newData);
     }

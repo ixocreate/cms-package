@@ -121,6 +121,33 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
                 'createdAt' => new \DateTime(),
             ]);
             $this->oldRedirectRepository->save($redirect);
+
+            $parentsite = $this->sitemapRepository->find($page);
+
+            $criteria = Criteria::create();
+            $criteria->where(Criteria::expr()->gt('nestedLeft', $parentsite->nestedLeft));
+            $criteria->andWhere(Criteria::expr()->lt('nestedRight', $parentsite->nestedRight));
+
+            $test = $this->sitemapRepository->matching($criteria);
+
+            $array = [];
+            foreach ($test as $item){
+                $array[] = $item->id();
+                $criteria = Criteria::create();
+                $criteria->where(Criteria::expr()->eq('id', $item->id()));
+                $oldPage = $this->pageRepository->find($item->id());
+                $oldUrltest = $this->pageRoute->fromPage($oldPage);
+                $redirect = new OldRedirect([
+                    'oldUrl' => $oldUrltest,
+                    'pageId' => $item->id(),
+                    'createdAt' => new \DateTime(),
+                ]);
+                $this->oldRedirectRepository->save($redirect);
+            }
+
+
+
+
         } catch (RuntimeException $exception) {
 
         }

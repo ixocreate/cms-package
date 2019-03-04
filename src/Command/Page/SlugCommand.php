@@ -11,10 +11,13 @@ namespace Ixocreate\Cms\Command\Page;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\Criteria;
+use Ixocreate\Cms\Entity\OldRedirect;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
@@ -34,16 +37,30 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
     private $sitemapRepository;
 
     /**
+     * @var OldRedirectRepository
+     */
+    private $oldRedirectRepository;
+
+    /**
+     * @var PageRoute
+     */
+    private $pageRoute;
+
+    /**
      * SlugCommand constructor.
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
      */
     public function __construct(
         PageRepository $pageRepository,
-        SitemapRepository $sitemapRepository
+        SitemapRepository $sitemapRepository,
+        OldRedirectRepository $oldRedirectRepository,
+        PageRoute $pageRoute
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
+        $this->oldRedirectRepository = $oldRedirectRepository;
+        $this->pageRoute = $pageRoute;
     }
 
     /**
@@ -89,14 +106,19 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
             $criteria->andWhere(Criteria::expr()->neq("id", $page->id()));
             $criteria->andWhere(Criteria::expr()->eq("slug", $iterationName));
             $criteria->setMaxResults(1);
-
+            
             $result = $this->pageRepository->matching($criteria);
             $found = ($result->count() > 0);
             $i++;
         } while ($found == true);
-
+        $oldUrl = $this->pageRoute->fromPage($page);
+        $redirect = new OldRedirect([
+            'oldUrl' => $oldUrl,
+            'pageId' => $page->id(),
+            'createdAt' => new \DateTime(),
+        ]);
+        $this->oldRedirectRepository->save($redirect);
         $this->pageRepository->save($page->with("slug", $iterationName));
-
         return true;
     }
 

@@ -27,6 +27,7 @@ use Ixocreate\Cms\Action\PageVersion\ReplaceAction;
 use Ixocreate\Cms\Action\Preview\PreviewAction;
 use Ixocreate\Cms\Action\Seo\RobotsAction;
 use Ixocreate\Cms\Action\Seo\SitemapAction;
+use Ixocreate\Cms\Middleware\OldUrlRedirectMiddleware;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {

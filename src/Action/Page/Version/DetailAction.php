@@ -64,7 +64,6 @@ final class DetailAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $versionId = $request->getAttribute("id");
-
         $pageId = $request->getAttribute("pageId");
         $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
             $pages = $item->pages();

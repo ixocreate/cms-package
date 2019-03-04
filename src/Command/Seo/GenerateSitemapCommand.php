@@ -32,8 +32,8 @@ class GenerateSitemapCommand extends AbstractCommand
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     * @return bool
      */
     public function execute(): bool
     {

@@ -106,7 +106,7 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
             $criteria->andWhere(Criteria::expr()->neq("id", $page->id()));
             $criteria->andWhere(Criteria::expr()->eq("slug", $iterationName));
             $criteria->setMaxResults(1);
-            
+
             $result = $this->pageRepository->matching($criteria);
             $found = ($result->count() > 0);
             $i++;

@@ -1,14 +1,18 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
-
 
 use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\ProjectUri\ProjectUri;
-use mysql_xdevapi\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -49,7 +53,7 @@ class OldUrlRedirectMiddleware implements MiddlewareInterface
     {
         $oldUri = $request->getUri();
         $oldPage = $this->oldRedirectRepository->findOneBy(['oldUrl' => $oldUri]);
-        if (empty($oldPage)){
+        if (empty($oldPage)) {
             return $handler->handle($request);
         }
         $url = $this->pageRepository->findOneBy(['id' => $oldPage->pageId]);

@@ -23,6 +23,7 @@ use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
 use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Zend\Expressive\Router\Exception\RuntimeException;
 
 final class SlugCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {
@@ -111,14 +112,21 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
             $found = ($result->count() > 0);
             $i++;
         } while ($found == true);
-        $oldUrl = $this->pageRoute->fromPage($page);
-        $redirect = new OldRedirect([
-            'oldUrl' => $oldUrl,
-            'pageId' => $page->id(),
-            'createdAt' => new \DateTime(),
-        ]);
-        $this->oldRedirectRepository->save($redirect);
+
+        try {
+            $oldUrl = $this->pageRoute->fromPage($page);
+            $redirect = new OldRedirect([
+                'oldUrl' => $oldUrl,
+                'pageId' => $page->id(),
+                'createdAt' => new \DateTime(),
+            ]);
+            $this->oldRedirectRepository->save($redirect);
+        } catch (RuntimeException $exception) {
+
+        }
+
         $this->pageRepository->save($page->with("slug", $iterationName));
+
         return true;
     }
 

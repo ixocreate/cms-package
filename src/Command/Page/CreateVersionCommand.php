@@ -98,16 +98,19 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
             $queryBuilder->getQuery()->execute();
         }
 
-        $content = Type::create(
-            $this->dataValue('content'),
-            SchemaType::class,
-            [
-                'provider' => [
-                    'class' => PageTypeSubManager::class,
-                    'name' => $pageType::serviceName(),
-                ],
-            ]
-        );
+        $content = $this->dataValue('content');
+        if (! ($content instanceof SchemaType)) {
+            $content = Type::create(
+                $this->dataValue('content'),
+                SchemaType::class,
+                [
+                    'provider' => [
+                        'class' => PageTypeSubManager::class,
+                        'name' => $pageType::serviceName(),
+                    ],
+                ]
+            );
+        }
 
         $pageVersion = new PageVersion([
             'id' => $this->uuid(),

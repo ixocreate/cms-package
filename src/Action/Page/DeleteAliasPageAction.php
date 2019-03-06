@@ -32,7 +32,7 @@ class DeleteAliasPageAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $slug = $request->getParsedBody();
-        if (!is_string($slug['url'])){
+        if (!\is_string($slug['url'])) {
             return new ApiErrorResponse("Invalid Url");
         }
 

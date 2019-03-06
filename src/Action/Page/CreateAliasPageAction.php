@@ -34,14 +34,14 @@ class CreateAliasPageAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $slug = $request->getParsedBody();
-        if (!Uuid::isValid($slug['urlId'])){
+        if (!Uuid::isValid($slug['urlId'])) {
             return new ApiErrorResponse("Invalid Uuid");
         }
-        if (!is_string($slug['url'])){
+        if (!\is_string($slug['url'])) {
             return new ApiErrorResponse("Invalid Id");
         }
 
-        if ($this->oldRedirectRepository->findOneBy(['oldUrl' => $slug['url']])){
+        if ($this->oldRedirectRepository->findOneBy(['oldUrl' => $slug['url']])) {
             $pageVersion = $this->oldRedirectRepository->findOneBy(['oldUrl' => $slug['url']]);
             $this->oldRedirectRepository->remove($pageVersion);
         }
@@ -53,7 +53,7 @@ class CreateAliasPageAction implements MiddlewareInterface
         ]);
 
         $this->oldRedirectRepository->save($redirect);
-        
+
         return new ApiSuccessResponse();
     }
 }

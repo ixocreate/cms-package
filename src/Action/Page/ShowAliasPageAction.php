@@ -32,8 +32,7 @@ class ShowAliasPageAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-
-        if (!Uuid::isValid($request->getAttribute("id" ))){
+        if (!Uuid::isValid($request->getAttribute("id"))) {
             return new ApiErrorResponse("Invalid Uuid");
         }
         $id = $request->getAttribute("id");

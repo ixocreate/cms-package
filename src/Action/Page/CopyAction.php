@@ -52,8 +52,8 @@ class CopyAction implements MiddlewareInterface
         SitemapRepository $sitemapRepository,
         PageTypeSubManager $pageTypeSubManager,
         PageRepository $pageRepository,
-        CommandBus $commandBus)
-    {
+        CommandBus $commandBus
+    ) {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->pageRepository = $pageRepository;
@@ -71,7 +71,7 @@ class CopyAction implements MiddlewareInterface
         $sitemap = $this->sitemapRepository->find($originalPage->sitemapId());
         $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-        if (empty($data['name'])){
+        if (empty($data['name'])) {
             return new ApiErrorResponse("invalid_data", ['new name is reqired for copy a page'], 400);
         }
         if ($pageType->handle() !== null) {
@@ -79,14 +79,14 @@ class CopyAction implements MiddlewareInterface
         }
 
 
-        if (!empty($data['parentSitemapId'])){
+        if (!empty($data['parentSitemapId'])) {
             $parentPage = $this->pageRepository->find($data['parentSitemapId']);
             $parentSitemap = $this->sitemapRepository->find($parentPage->sitemapId());
             /** @var  $parentPageType */
             $parentPageType = $this->pageTypeSubManager->get($parentSitemap->pageType());
             $allowedChildren = $parentPageType->allowedChildren();
             $parentPageTypeName = $parentSitemap->pageType();
-            if(in_array($parentPageTypeName ,$allowedChildren)){
+            if (\in_array($parentPageTypeName, $allowedChildren)) {
                 return new ApiErrorResponse("invalid_data", ['not allowed to copy the pageType to the location', 400]);
             }
         }

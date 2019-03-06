@@ -11,7 +11,6 @@ namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
@@ -126,9 +125,9 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
                 $sitemap = $this->sitemapRepository->createRoot($sitemap);
             } elseif ($parent == null && $sibling !== null && $pageType->isRoot()) {
                 $sitemap = $this->sitemapRepository->insertAsPreviousSibling($sitemap, $sibling);
-            } elseif ($parent !== null && $sibling == null){
+            } elseif ($parent !== null && $sibling == null) {
                 $sitemap = $this->sitemapRepository->insertAsFirstChild($sitemap, $parent);
-            } elseif ($parent !== null && $sibling !== null){
+            } elseif ($parent !== null && $sibling !== null) {
                 $sitemap = $this->sitemapRepository->insertAsNextSibling($sitemap, $sibling);
             }
             $page = new Page([
@@ -150,12 +149,12 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
                 'pageId' => (string) $page->id(),
             ]);
 
-                $criteria = Criteria::create();
-                $criteria->where(Criteria::expr()->eq('pageId', $this->dataValue('idFromOriginal')));
-                $criteria->orderBy(['createdAt' => 'DESC']);
-                $criteria->setMaxResults(1);
-                $result = $this->pageVersionRepository->matching($criteria);
-                $content = $result->get(0)->content();
+            $criteria = Criteria::create();
+            $criteria->where(Criteria::expr()->eq('pageId', $this->dataValue('idFromOriginal')));
+            $criteria->orderBy(['createdAt' => 'DESC']);
+            $criteria->setMaxResults(1);
+            $result = $this->pageVersionRepository->matching($criteria);
+            $content = $result->get(0)->content();
 
             $this->commandBus->command(CreateVersionCommand::class, [
                 'pageType' => $pageType::serviceName(),
@@ -176,8 +175,6 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-
-
         if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
             $violationCollector->add("name", "invalid_name");
         }

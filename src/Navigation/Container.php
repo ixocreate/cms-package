@@ -11,6 +11,7 @@ namespace Ixocreate\Cms\Navigation;
 
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\NavigationRepository;
 
 final class Container implements \Iterator
@@ -158,7 +159,20 @@ final class Container implements \Iterator
 
     public function withActiveState(Page $page): Container
     {
-        return new Container($this->navigationRepository, $this->recursiveActiveState($this->children(), $page));
+        $sitemap = null;
+        /** @var Item $item */
+        foreach ($this->asFlat() as $item) {
+            if ($item->page()->id() === $page->id()) {
+                $sitemap = $item->sitemap();
+                break;
+            }
+        }
+
+        if (empty($sitemap)) {
+            return $this;
+        }
+
+        return new Container($this->navigationRepository, $this->recursiveActiveState($this->children(), $sitemap));
     }
 
     /**
@@ -166,25 +180,23 @@ final class Container implements \Iterator
      * @param Page $page
      * @return Item[]
      */
-    private function recursiveActiveState(array $items, Page $page): array
+    private function recursiveActiveState(array $items, Sitemap $sitemap): array
     {
         $collection = [];
         foreach ($items as $item) {
-            if ((string)$page->id() === (string) $item->page()->id()) {
-                $collection[] = new Item($item->page(), $item->sitemap(), $item->level(), $item->children(), true);
+            $children = $this->recursiveActiveState($item->children(), $sitemap);
+
+            if ((string)$sitemap->id() === (string) $item->sitemap()->id()) {
+                $collection[] = new Item($item->page(), $item->sitemap(), $item->level(), $children, true);
                 continue;
             }
 
-            $children = $this->recursiveActiveState($item->children(), $page);
-
-            foreach ($children as $childItem) {
-                if ($childItem->isActive() === true) {
-                    $collection[] = new Item($item->page(), $item->sitemap(), $item->level(), $item->children(), true);
-                    continue 2;
-                }
+            if ($sitemap->nestedLeft() > $item->sitemap()->nestedLeft() && $sitemap->nestedRight() < $item->sitemap()->nestedRight()) {
+                $collection[] = new Item($item->page(), $item->sitemap(), $item->level(), $children, true);
+                continue;
             }
 
-            $collection[] = $item;
+            $collection[] = new Item($item->page(), $item->sitemap(), $item->level(), $children, false);
         }
 
         return $collection;

@@ -34,7 +34,7 @@ final class ItemFactory
      */
     private $pageVersionCacheable;
     /**
-     * @var SearchSubManager
+     * @var SubManagerInterface
      */
     private $searchSubManager;
 
@@ -45,7 +45,7 @@ final class ItemFactory
      * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
-     * @param SearchSubManager $searchSubManager
+     * @param SubManagerInterface $searchSubManager
      */
     public function __construct(
         CacheableInterface $pageCacheable,
@@ -53,7 +53,7 @@ final class ItemFactory
         CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
         SubManagerInterface $pageTypeSubManager,
-        SearchSubManager $searchSubManager
+        SubManagerInterface $searchSubManager
     ) {
 
         $this->pageCacheable = $pageCacheable;

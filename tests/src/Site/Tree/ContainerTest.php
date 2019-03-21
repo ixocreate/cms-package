@@ -8,7 +8,21 @@ use Ixocreate\Cms\Site\Structure\Structure;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
+use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
+use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
+use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
+use Ixocreate\Cms\Site\Tree\Search\MaxLevelSearch;
+use Ixocreate\Cms\Site\Tree\Search\MinLevelSearch;
+use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
+use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
+use Ixocreate\Cms\Site\Tree\SearchInterface;
+use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\Contract\Cache\CacheableInterface;
+use Ixocreate\Contract\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\ServiceManager\ServiceManager;
+use Ixocreate\ServiceManager\ServiceManagerConfig;
+use Ixocreate\ServiceManager\ServiceManagerConfigurator;
+use Ixocreate\ServiceManager\ServiceManagerSetup;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -104,14 +118,31 @@ class ContainerTest extends TestCase
 
     private function getDefaultContainer(): Container
     {
+        $serviceManagerConfigurator = new ServiceManagerConfigurator();
+        $serviceManagerConfigurator->addService(ActiveSearch::class);
+        $serviceManagerConfigurator->addService(CallableSearch::class);
+        $serviceManagerConfigurator->addService(HandleSearch::class);
+        $serviceManagerConfigurator->addService(MaxLevelSearch::class);
+        $serviceManagerConfigurator->addService(MinLevelSearch::class);
+        $serviceManagerConfigurator->addService(NavigationSearch::class);
+        $serviceManagerConfigurator->addService(OnlineSearch::class);
+
+        $searchSubManager = new SearchSubManager(
+            new ServiceManager(new ServiceManagerConfig(new ServiceManagerConfigurator()), new ServiceManagerSetup()),
+            $serviceManagerConfigurator->getServiceManagerConfig(),
+            SearchInterface::class
+        );
+
         $itemFactory = new ItemFactory(
             $this->createMock(CacheableInterface::class),
             $this->createMock(CacheableInterface::class),
             $this->createMock(CacheableInterface::class),
-            new CacheManager($this->createMock(\Psr\Container\ContainerInterface::class))
+            new CacheManager($this->createMock(\Psr\Container\ContainerInterface::class)),
+            $this->createMock(SubManagerInterface::class),
+            $searchSubManager
         );
 
-        return new Container($this->generateStructure()->structure(), $itemFactory);
+        return new Container($this->generateStructure()->structure(), $searchSubManager, $itemFactory);
     }
 
     /**

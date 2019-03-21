@@ -68,7 +68,7 @@ class Item implements ContainerInterface
      * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
-     * @param SearchSubManager $searchSubManager
+     * @param SubManagerInterface $searchSubManager
      */
     public function __construct(
         StructureItem $structureItem,
@@ -78,7 +78,7 @@ class Item implements ContainerInterface
         CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
         SubManagerInterface $pageTypeSubManager,
-        SearchSubManager $searchSubManager
+        SubManagerInterface $searchSubManager
     ) {
         $this->structureItem = clone $structureItem;
         $this->itemFactory = $itemFactory;

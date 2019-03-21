@@ -76,47 +76,23 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
         /** @var Sitemap $sitemap */
         $sitemap = $this->sitemapRepository->find($page->sitemapId());
 
-        $criteria = Criteria::create();
-        if (empty($sitemap->parentId())) {
-            $criteria->where(Criteria::expr()->isNull("parentId"));
-        } else {
-            $criteria->where(Criteria::expr()->eq("parentId", $sitemap->parentId()));
-        }
-        $result = $this->sitemapRepository->matching($criteria);
-        $sitemapIds = [];
-        /** @var Sitemap $item */
-        foreach ($result as $item) {
-            $sitemapIds[] = $item->id();
-        }
-
         $i = 0;
-
         $iterationName = $this->dataValue("name");
         do {
             if ($i > 0) {
                 $iterationName .= "-" . $i;
             }
-
             if ($iterationName === $page->slug()) {
                 return true;
             }
-
-            $criteria = Criteria::create();
-            $criteria->where(Criteria::expr()->in('sitemapId', $sitemapIds));
-            $criteria->andWhere(Criteria::expr()->eq("locale", $page->locale()));
-            $criteria->andWhere(Criteria::expr()->neq("id", $page->id()));
-            $criteria->andWhere(Criteria::expr()->eq("slug", $iterationName));
-            $criteria->setMaxResults(1);
-
-            $result = $this->pageRepository->matching($criteria);
-            $found = ($result->count() > 0);
+            $sParentId = (!empty($sitemap->parentId())) ? (string) $sitemap->parentId() : null;
+            $found = $this->pageRepository->slugExists($sParentId, (string) $this->dataValue("pageId"), $iterationName, $page->locale());
             $i++;
         } while ($found == true);
 
         if ($this->dataValue('isChange') === true) {
             $this->saveRedirectInfo($page);
         }
-
         $this->pageRepository->save($page->with("slug", $iterationName));
         return true;
     }

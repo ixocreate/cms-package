@@ -153,4 +153,14 @@ final class PageRepository extends AbstractRepository
 
         return $flat;
     }
+
+    public function slugExists(?string $sParentId, string $pId, string $pSlug, string $pLocale): bool
+    {
+        $query = $this->getEntityManager()->createQuery('SELECT COUNT (p.id) FROM ' . Page::class .' p JOIN '. Sitemap::class .' s WITH p.sitemapId = s.id 
+        WHERE s.parentId = :parentId AND p.id != :id AND p.slug = :slug AND p.locale = :locale');
+        $query->setParameters(array('parentId' => $sParentId, 'id' => $pId, 'slug'=> $pSlug, 'locale' => $pLocale));
+        $result = $query->getResult();
+
+        return $result[0][1] > 0;
+    }
 }

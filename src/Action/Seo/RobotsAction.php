@@ -47,7 +47,7 @@ class RobotsAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $sitemapUrl = $this->projectUri->getMainUrl() . '/sitemap/sitemap.xml';
+        $sitemapUrl = $this->projectUri->getMainUri() . '/sitemap/sitemap.xml';
 
         return new TemplateResponse(
             $this->config->robotsTemplate(),

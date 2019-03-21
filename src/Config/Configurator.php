@@ -21,16 +21,6 @@ use Ixocreate\ServiceManager\SubManager\SubManagerConfigurator;
 final class Configurator implements ConfiguratorInterface
 {
     /**
-     * @var string
-     */
-    private $localizationUrlSchema = '%MAIN_URL%/%LANG%';
-
-    /**
-     * @var string|null
-     */
-    private $defaultBaseUrl = '%MAIN_URL%';
-
-    /**
      * @var array
      */
     private $navigation = [];
@@ -66,22 +56,6 @@ final class Configurator implements ConfiguratorInterface
     }
 
     /**
-     * @param string $localizationUrlSchema
-     */
-    public function setLocalizationUrlSchema(string $localizationUrlSchema): void
-    {
-        $this->localizationUrlSchema = $localizationUrlSchema;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocalizationUrlSchema(): string
-    {
-        return $this->localizationUrlSchema;
-    }
-
-    /**
      * @param string $name
      * @param string $label
      */
@@ -99,22 +73,6 @@ final class Configurator implements ConfiguratorInterface
     public function getNavigation(): array
     {
         return \array_values($this->navigation);
-    }
-
-    /**
-     * @param string $defaultBaseUrl
-     */
-    public function setDefaultBaseUrl(?string $defaultBaseUrl): void
-    {
-        $this->defaultBaseUrl = $defaultBaseUrl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultBaseUrl(): ?string
-    {
-        return $this->defaultBaseUrl;
     }
 
     /**

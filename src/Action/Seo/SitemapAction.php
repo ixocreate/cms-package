@@ -48,7 +48,7 @@ class SitemapAction implements MiddlewareInterface
 
             $sitemapIndex = new SitemapIndex();
             foreach ($sitemaps as $item) {
-                $loc = $this->projectUri->getMainUrl() . '/sitemap/' . $item['filename'];
+                $loc = $this->projectUri->getMainUri() . '/sitemap/' . $item['filename'];
                 $sitemap = new Sitemap($loc);
                 $sitemap->setLastMod(new \DateTime($item['createdAt']));
 

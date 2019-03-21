@@ -125,9 +125,14 @@ class Container implements ContainerInterface
         $items = [];
         /** @var Item $item */
         foreach ($this as $item) {
-            if ($this->searchSubManager->get($filter)->search($item, $params) !== true) {
+            try {
+                if ($this->searchSubManager->get($filter)->search($item, $params) !== true) {
+                    continue;
+                }
+            } catch (\Exception $exception) {
                 continue;
             }
+
 
             $children = $item->filter($filter, $params);
 
@@ -177,8 +182,11 @@ class Container implements ContainerInterface
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if ($this->searchSubManager->get($filter)->search($item, $params) === true) {
-                $items[] = $item->structureItem();
+            try {
+                if ($this->searchSubManager->get($filter)->search($item, $params) === true) {
+                    $items[] = $item->structureItem();
+                }
+            } catch (\Exception $exception) {
             }
         }
 
@@ -226,8 +234,11 @@ class Container implements ContainerInterface
 
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if ($this->searchSubManager->get($filter)->search($item, $params) === true) {
-                return $this->itemFactory->create($item->structureItem());
+            try {
+                if ($this->searchSubManager->get($filter)->search($item, $params) === true) {
+                    return $this->itemFactory->create($item->structureItem());
+                }
+            } catch (\Exception $exception) {
             }
         }
 

@@ -23,6 +23,7 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
+
     /**
      * @var CacheManager
      */

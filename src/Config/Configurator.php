@@ -40,8 +40,6 @@ final class Configurator implements ConfiguratorInterface
      */
     private $xmlSitemapSubManagerConfigurator;
 
-
-
     /**
      * @var bool
      */

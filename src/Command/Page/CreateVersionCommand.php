@@ -54,10 +54,12 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
      * @var EventDispatcher
      */
     private $eventDispatcher;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var PageVersionCacheable
      */

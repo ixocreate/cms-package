@@ -1,10 +1,16 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\PageContentCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Site\Structure\StructureItem;
@@ -17,22 +23,27 @@ final class ItemFactory
      * @var PageCacheable
      */
     private $pageCacheable;
+
     /**
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var CacheableInterface
      */
     private $pageVersionCacheable;
+
     /**
      * @var SubManagerInterface
      */
@@ -55,7 +66,6 @@ final class ItemFactory
         SubManagerInterface $pageTypeSubManager,
         SubManagerInterface $searchSubManager
     ) {
-
         $this->pageCacheable = $pageCacheable;
         $this->sitemapCacheable = $sitemapCacheable;
         $this->cacheManager = $cacheManager;
@@ -63,7 +73,6 @@ final class ItemFactory
         $this->pageVersionCacheable = $pageVersionCacheable;
         $this->searchSubManager = $searchSubManager;
     }
-
 
     public function create(StructureItem $structureItem): Item
     {

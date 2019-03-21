@@ -9,13 +9,11 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
-use Doctrine\Common\Collections\Criteria;
 use Ixocreate\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
-use Ixocreate\Cms\Repository\PageVersionRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -27,10 +25,12 @@ final class LoadPageContentMiddleware implements MiddlewareInterface
      * @var PageVersionCacheable
      */
     private $pageVersionCacheable;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var NotFoundHandler
      */

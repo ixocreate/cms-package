@@ -1,7 +1,13 @@
 <?php
-declare(strict_types=1);
-namespace Ixocreate\Cms\Site\Tree;
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
 
+declare(strict_types=1);
+
+namespace Ixocreate\Cms\Site\Tree;
 
 use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
 use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
@@ -16,10 +22,12 @@ class Container implements ContainerInterface
      * @var \ArrayIterator
      */
     private $iterator;
+
     /**
      * @var ItemFactory
      */
     private $itemFactory;
+
     /**
      * @var SearchSubManager
      */
@@ -75,7 +83,7 @@ class Container implements ContainerInterface
      */
     public function hasChildren()
     {
-        return ($this->count() > 0);
+        return $this->count() > 0;
     }
 
     /**
@@ -109,7 +117,7 @@ class Container implements ContainerInterface
      */
     public function filter($filter, array $params = []): ContainerInterface
     {
-        if (is_callable($filter)) {
+        if (\is_callable($filter)) {
             $params['callable'] = $filter;
             $filter = CallableSearch::class;
         }
@@ -160,7 +168,7 @@ class Container implements ContainerInterface
      */
     public function where($filter, array $params = []): ContainerInterface
     {
-        if (is_callable($filter)) {
+        if (\is_callable($filter)) {
             $params['callable'] = $filter;
             $filter = CallableSearch::class;
         }
@@ -209,7 +217,7 @@ class Container implements ContainerInterface
      */
     public function find($filter, array $params = []): ?Item
     {
-        if (is_callable($filter)) {
+        if (\is_callable($filter)) {
             $params['callable'] = $filter;
             $filter = CallableSearch::class;
         }
@@ -241,8 +249,8 @@ class Container implements ContainerInterface
      */
     public function sort(callable $callable): ContainerInterface
     {
-        $array = iterator_to_array($this);
-        uasort($array, $callable);
+        $array = \iterator_to_array($this);
+        \uasort($array, $callable);
 
         $items = [];
         /** @var Item $item */
@@ -256,7 +264,6 @@ class Container implements ContainerInterface
             }
 
             $items[] = $item->structureItem()->withChildrenInfo($enabledStructureItems);
-
         }
 
         return new Container($items, $this->searchSubManager, $this->itemFactory);
@@ -274,7 +281,7 @@ class Container implements ContainerInterface
         }
 
         $array = $this->iterator->getArrayCopy();
-        $array = array_slice($array, $offset, $limit);
+        $array = \array_slice($array, $offset, $limit);
 
         return new Container($array, $this->searchSubManager, $this->itemFactory);
     }
@@ -282,7 +289,7 @@ class Container implements ContainerInterface
     public function __debugInfo()
     {
         return [
-            'items' => $this->iterator->getArrayCopy()
+            'items' => $this->iterator->getArrayCopy(),
         ];
     }
 }

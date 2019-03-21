@@ -31,6 +31,7 @@ class MoveAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var CacheInterface
      */

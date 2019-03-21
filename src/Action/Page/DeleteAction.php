@@ -43,6 +43,7 @@ class DeleteAction implements MiddlewareInterface
      * @var OldRedirectRepository
      */
     private $oldRedirectRepository;
+
     /**
      * @var CacheInterface
      */

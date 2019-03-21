@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace IxocreateTest\Site\Tree;
@@ -109,9 +115,9 @@ class ContainerTest extends TestCase
                         'children' => [
 
                         ],
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
         return new Structure($tree);
     }
@@ -156,11 +162,11 @@ class ContainerTest extends TestCase
             "d3a88fab-1b31-45e1-ad1f-b5a4fecb01c8",
             "58b99ef4-47dd-4333-802d-cb30b21d4412",
             "2b110284-d3c0-49e0-8d0a-9364463f0f81",
-            "0426274a-3e58-4fe6-9b0b-b7c2b881f01d"
+            "0426274a-3e58-4fe6-9b0b-b7c2b881f01d",
         ];
         $container = $this->getDefaultContainer()
-            ->filter(function (Item $item) use ($filterIds){
-                return in_array($item->structureItem()->sitemapId(), $filterIds);
+            ->filter(function (Item $item) use ($filterIds) {
+                return \in_array($item->structureItem()->sitemapId(), $filterIds);
             })
             ->flatten();
         $selectedItems = [];
@@ -168,8 +174,8 @@ class ContainerTest extends TestCase
         foreach ($container as $item) {
             $selectedItems[] = $item->structureItem()->sitemapId();
         }
-        $this->assertSame($filterIds, array_intersect($filterIds, $selectedItems));
-        $this->assertSame([], array_diff($filterIds, $selectedItems));
+        $this->assertSame($filterIds, \array_intersect($filterIds, $selectedItems));
+        $this->assertSame([], \array_diff($filterIds, $selectedItems));
     }
 
     /**
@@ -192,8 +198,8 @@ class ContainerTest extends TestCase
         foreach ($container as $item) {
             $selectedItems[] = $item->structureItem()->sitemapId();
         }
-        $this->assertSame($filterIds, array_intersect($filterIds, $selectedItems));
-        $this->assertSame([], array_diff($filterIds, $selectedItems));
+        $this->assertSame($filterIds, \array_intersect($filterIds, $selectedItems));
+        $this->assertSame([], \array_diff($filterIds, $selectedItems));
 
 
         $filterIds = [
@@ -207,8 +213,8 @@ class ContainerTest extends TestCase
         foreach ($container as $item) {
             $selectedItems[] = $item->structureItem()->sitemapId();
         }
-        $this->assertSame($filterIds, array_intersect($filterIds, $selectedItems));
-        $this->assertSame([], array_diff($filterIds, $selectedItems));
+        $this->assertSame($filterIds, \array_intersect($filterIds, $selectedItems));
+        $this->assertSame([], \array_diff($filterIds, $selectedItems));
     }
 
     /**
@@ -230,8 +236,8 @@ class ContainerTest extends TestCase
         foreach ($container as $item) {
             $selectedItems[] = $item->structureItem()->sitemapId();
         }
-        $this->assertSame($filterIds, array_intersect($filterIds, $selectedItems));
-        $this->assertSame([], array_diff($filterIds, $selectedItems));
+        $this->assertSame($filterIds, \array_intersect($filterIds, $selectedItems));
+        $this->assertSame([], \array_diff($filterIds, $selectedItems));
 
         $filterIds = [
             "031117f8-9795-4e10-ace0-3a57f5d2f166",
@@ -246,7 +252,7 @@ class ContainerTest extends TestCase
         foreach ($container as $item) {
             $selectedItems[] = $item->structureItem()->sitemapId();
         }
-        $this->assertSame($filterIds, array_intersect($filterIds, $selectedItems));
-        $this->assertSame([], array_diff($filterIds, $selectedItems));
+        $this->assertSame($filterIds, \array_intersect($filterIds, $selectedItems));
+        $this->assertSame([], \array_diff($filterIds, $selectedItems));
     }
 }

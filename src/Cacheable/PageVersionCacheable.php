@@ -1,14 +1,18 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Cacheable;
 
 use Doctrine\Common\Collections\Criteria;
-use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\CommonTypes\Entity\SchemaType;
 use Ixocreate\CommonTypes\Entity\UuidType;
 use Ixocreate\Contract\Cache\CacheableInterface;
-use Ixocreate\Entity\Type\Type;
 
 final class PageVersionCacheable implements CacheableInterface
 {
@@ -28,7 +32,6 @@ final class PageVersionCacheable implements CacheableInterface
      */
     public function __construct(PageVersionRepository $pageVersionRepository)
     {
-
         $this->pageVersionRepository = $pageVersionRepository;
     }
 

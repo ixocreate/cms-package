@@ -1,5 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cms\Repository\SitemapRepository;
@@ -24,7 +31,6 @@ final class SitemapCacheable implements CacheableInterface
      */
     public function __construct(SitemapRepository $sitemapRepository)
     {
-
         $this->sitemapRepository = $sitemapRepository;
     }
 
@@ -35,7 +41,6 @@ final class SitemapCacheable implements CacheableInterface
 
         return $cacheable;
     }
-
 
     /**
      * @return mixed

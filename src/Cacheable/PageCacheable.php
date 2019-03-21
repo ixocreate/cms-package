@@ -1,5 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cms\Repository\PageRepository;
@@ -24,7 +31,6 @@ final class PageCacheable implements CacheableInterface
      */
     public function __construct(PageRepository $pageRepository)
     {
-
         $this->pageRepository = $pageRepository;
     }
 
@@ -35,7 +41,6 @@ final class PageCacheable implements CacheableInterface
 
         return $cacheable;
     }
-
 
     /**
      * @return mixed

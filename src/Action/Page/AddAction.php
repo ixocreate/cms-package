@@ -55,6 +55,7 @@ class AddAction implements MiddlewareInterface
      * @var Connection
      */
     private $master;
+
     /**
      * @var CacheInterface
      */

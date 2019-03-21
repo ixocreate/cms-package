@@ -46,14 +46,17 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
      * @var NavigationRepository
      */
     private $navigationRepository;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var PageCacheable
      */
     private $pageCacheable;
+
     /**
      * @var StructureCacheable
      */
@@ -88,8 +91,8 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
     }
 
     /**
-     * @return bool
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return bool
      */
     public function execute(): bool
     {

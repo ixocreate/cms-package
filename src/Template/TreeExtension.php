@@ -28,7 +28,6 @@ final class TreeExtension implements ExtensionInterface
         $this->container = $container;
     }
 
-
     /**
      * @return string
      */

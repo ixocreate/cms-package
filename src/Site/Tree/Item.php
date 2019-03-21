@@ -1,10 +1,16 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\PageContentCacheable;
 use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Entity\Page;
@@ -30,30 +36,37 @@ class Item implements ContainerInterface
      * @var ContainerInterface
      */
     private $container;
+
     /**
      * @var ItemFactory
      */
     private $itemFactory;
+
     /**
      * @var PageCacheable
      */
     private $pageCacheable;
+
     /**
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var PageVersionCacheable
      */
     private $pageVersionCacheable;
+
     /**
      * @var SearchSubManager
      */
@@ -120,13 +133,13 @@ class Item implements ContainerInterface
 
     /**
      * @param string $locale
-     * @return Page
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return Page
      */
     public function page(string $locale): Page
     {
         if (!\array_key_exists($locale, $this->structureItem()->pages())) {
-            throw new \Exception(sprintf("Page with locale '%s' does not exists", $locale));
+            throw new \Exception(\sprintf("Page with locale '%s' does not exists", $locale));
         }
 
         return $this->cacheManager->fetch(
@@ -145,13 +158,13 @@ class Item implements ContainerInterface
 
     /**
      * @param string $locale
-     * @return SchemaType
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return SchemaType
      */
     public function pageContent(string $locale): SchemaType
     {
         if (!\array_key_exists($locale, $this->structureItem()->pages())) {
-            throw new \Exception(sprintf("Page with locale '%s' does not exists", $locale));
+            throw new \Exception(\sprintf("Page with locale '%s' does not exists", $locale));
         }
 
         $pageVersion = $this->cacheManager->fetch(

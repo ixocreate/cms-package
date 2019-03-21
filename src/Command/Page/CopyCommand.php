@@ -63,6 +63,7 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var CacheInterface
      */

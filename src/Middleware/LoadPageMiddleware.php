@@ -13,7 +13,6 @@ use Ixocreate\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,10 +31,12 @@ final class LoadPageMiddleware implements MiddlewareInterface
      * @var NotFoundHandler
      */
     private $notFoundHandler;
+
     /**
      * @var PageCacheable
      */
     private $pageCacheable;
+
     /**
      * @var CacheManager
      */

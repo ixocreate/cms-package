@@ -138,7 +138,6 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 'pageId' => (string) $page->id(),
             ]);
 
-
             $this->commandBus->command(CreateVersionCommand::class, [
                 'pageType' => $pageType::serviceName(),
                 'pageId' => (string) $page->id(),

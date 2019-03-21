@@ -13,6 +13,7 @@ use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Command\Page\CopyCommand;
+use Ixocreate\Cms\PageType\HandlePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
@@ -74,7 +75,7 @@ class CopyAction implements MiddlewareInterface
         if (empty($data['name'])) {
             return new ApiErrorResponse("invalid_data", ['new name is reqired for copy a page'], 400);
         }
-        if ($pageType->handle() !== null) {
+        if (\is_subclass_of($pageType, HandlePageTypeInterface::class)) {
             return new ApiErrorResponse("invalid_data", ['not allowed to copy a handlePage'], 400);
         }
 

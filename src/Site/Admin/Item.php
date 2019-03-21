@@ -14,6 +14,8 @@ use Ixocreate\Cms\Loader\PageLoaderInterface;
 use Ixocreate\Cms\Loader\SitemapLoaderInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\StructureItem;
 use RecursiveIterator;
@@ -236,7 +238,7 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
 
     public function childrenAllowed(): bool
     {
-        return !empty($this->pageTypeSubManager->allowedChildPageTypes($this->sitemapLoader->receiveHandles(), $this->pageType()::serviceName()));
+        return !empty($this->pageTypeSubManager->allowedPageTypes($this->sitemapLoader->receiveHandles(), $this->pageType()::serviceName()));
     }
 
     /**
@@ -260,12 +262,11 @@ final class Item implements \JsonSerializable, \RecursiveIterator, \Countable
             'handle' => $this->handle(),
             'childrenAllowed' => $this->childrenAllowed(),
             'pageType' => [
-                'handle' => $this->pageType()->handle(),
                 'label' => $this->pageType()->label(),
                 'allowedChildren' => $this->pageType()->allowedChildren(),
-                'isRoot' => $this->pageType()->isRoot(),
+                'isRoot' => $this->pageType() instanceof RootPageTypeInterface,
                 'name' => $this->pageType()::serviceName(),
-                'terminal' => $this->pageType()->terminal(),
+                'terminal' => $this->pageType() instanceof TerminalPageTypeInterface,
             ],
             'children' => $this->children(),
         ];

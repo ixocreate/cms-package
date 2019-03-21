@@ -16,17 +16,7 @@ interface PageTypeInterface extends NamedServiceInterface, SchemaProviderInterfa
 {
     public function label(): string;
 
-    public function routing(): string;
-
-    public function handle(): ?string;
-
-    public function isRoot(): ?bool;
-
     public function allowedChildren(): ?array;
 
-    public function middleware(): ?array;
-
     public function template(): string;
-
-    public function terminal(): bool;
 }

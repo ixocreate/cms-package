@@ -15,6 +15,7 @@ use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Database\Repository\AbstractRepository;
 
 final class PageRepository extends AbstractRepository
@@ -142,10 +143,9 @@ final class PageRepository extends AbstractRepository
                 'sitemap' => $sitemap,
                 'pageType' => [
                     "name" => $pageType::serviceName(),
-                    "handle" => $pageType->handle(),
                     "label" => $pageType->label(),
                     "allowedChildren" => $pageType->allowedChildren(),
-                    "isRoot" => $pageType->isRoot(),
+                    "isRoot" => \is_subclass_of($pageType, RootPageTypeInterface::class),
                 ],
                 'children' => [],
             ];

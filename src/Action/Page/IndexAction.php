@@ -12,6 +12,7 @@ namespace Ixocreate\Cms\Action\Page;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
 use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
@@ -36,10 +37,16 @@ class IndexAction implements MiddlewareInterface
      */
     private $databaseSitemapLoader;
 
+    /**
+     * IndexAction constructor.
+     * @param Builder $builder
+     * @param PageTypeSubManager $pageTypeSubManager
+     * @param DatabaseSitemapLoader $databaseSitemapLoader
+     */
     public function __construct(
         Builder $builder,
-        DatabaseSitemapLoader $databaseSitemapLoader,
-        PageTypeSubManager $pageTypeSubManager
+        PageTypeSubManager $pageTypeSubManager,
+        DatabaseSitemapLoader $databaseSitemapLoader
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->builder = $builder;
@@ -53,9 +60,9 @@ class IndexAction implements MiddlewareInterface
                 if (empty($item->parent())) {
                     return true;
                 }
-                return !($item->parent()->pageType()->terminal());
+                return !(\is_subclass_of($item->parent()->pageType(), TerminalPageTypeInterface::class));
             }),
-            'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedChildPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
+            'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
         ]);
     }
 }

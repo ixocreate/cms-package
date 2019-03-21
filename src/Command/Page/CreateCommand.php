@@ -12,6 +12,7 @@ namespace Ixocreate\Cms\Command\Page;
 use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\HandlePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
@@ -105,8 +106,8 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 'pageType' => $pageType::serviceName(),
             ]);
 
-            if (!empty($pageType->handle())) {
-                $sitemap = $sitemap->with("handle", $pageType->handle());
+            if (\is_subclass_of($pageType, HandlePageTypeInterface::class)) {
+                $sitemap = $sitemap->with("handle", $pageType::serviceName());
             }
 
             if (empty($this->dataValue('parentSitemapId'))) {
@@ -176,7 +177,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
             }
         }
 
-        if (!$this->localeManager->has($this->dataValue("locale"))) {
+        if (!$this->localeManager->has((string) $this->dataValue("locale"))) {
             $violationCollector->add("locale", "invalid_locale");
         }
     }

@@ -5,10 +5,10 @@ namespace Ixocreate\Cms\Site\Tree;
 interface ContainerInterface extends \RecursiveIterator, \Countable
 {
     /**
-     * @param callable $callable
+     * @param string|callable $filter
      * @return ContainerInterface
      */
-    public function filter(callable $callable): self;
+    public function filter($filter, array $params = []): self;
 
     /**
      * @param int $level
@@ -23,10 +23,10 @@ interface ContainerInterface extends \RecursiveIterator, \Countable
     public function withNavigation(string $navigation): self;
 
     /**
-     * @param callable $callable
+     * @param string|callable $filter
      * @return ContainerInterface
      */
-    public function where(callable $callable): self;
+    public function where($filter, array $params = []): self;
 
     /**
      * @param int $level
@@ -40,10 +40,10 @@ interface ContainerInterface extends \RecursiveIterator, \Countable
     public function flatten(): self;
 
     /**
-     * @param callable $callable
+     * @param string|callable $filter
      * @return Item|null
      */
-    public function find(callable $callable): ?Item;
+    public function find($filter, array $params = []): ?Item;
 
     /**
      * @param string $handle

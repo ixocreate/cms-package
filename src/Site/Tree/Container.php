@@ -3,6 +3,11 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Site\Tree;
 
 
+use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
+use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
+use Ixocreate\Cms\Site\Tree\Search\MaxLevelSearch;
+use Ixocreate\Cms\Site\Tree\Search\MinLevelSearch;
+use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
 use RecursiveIteratorIterator;
 
 class Container implements ContainerInterface
@@ -15,16 +20,22 @@ class Container implements ContainerInterface
      * @var ItemFactory
      */
     private $itemFactory;
+    /**
+     * @var SearchSubManager
+     */
+    private $searchSubManager;
 
     /**
      * Container constructor.
      * @param $structureItems
+     * @param SearchSubManager $searchSubManager
      * @param ItemFactory $itemFactory
      */
-    public function __construct($structureItems, ItemFactory $itemFactory)
+    public function __construct($structureItems, SearchSubManager $searchSubManager, ItemFactory $itemFactory)
     {
         $this->iterator = new \ArrayIterator($structureItems);
         $this->itemFactory = $itemFactory;
+        $this->searchSubManager = $searchSubManager;
     }
 
     /**
@@ -92,19 +103,25 @@ class Container implements ContainerInterface
     }
 
     /**
-     * @param callable $callable
+     * @param callable|string $filter
+     * @param array $params
      * @return ContainerInterface
      */
-    public function filter(callable $callable): ContainerInterface
+    public function filter($filter, array $params = []): ContainerInterface
     {
+        if (is_callable($filter)) {
+            $params['callable'] = $filter;
+            $filter = CallableSearch::class;
+        }
+
         $items = [];
         /** @var Item $item */
         foreach ($this as $item) {
-            if ($callable($item) !== true) {
+            if ($this->searchSubManager->get($filter)->search($item, $params) !== true) {
                 continue;
             }
 
-            $children = $item->filter($callable);
+            $children = $item->filter($filter, $params);
 
             $enabledStructureItems = [];
             /** @var Item $child */
@@ -115,7 +132,7 @@ class Container implements ContainerInterface
             $items[] = $item->structureItem()->withChildrenInfo($enabledStructureItems);
         }
 
-        return new Container($items, $this->itemFactory);
+        return new Container($items, $this->searchSubManager, $this->itemFactory);
     }
 
     /**
@@ -124,9 +141,7 @@ class Container implements ContainerInterface
      */
     public function withMaxLevel(int $level): ContainerInterface
     {
-        return $this->filter(function (Item $item) use ($level){
-            return $item->level() <= $level;
-        });
+        return $this->filter(MaxLevelSearch::class, ['level' => $level]);
     }
 
     /**
@@ -135,27 +150,31 @@ class Container implements ContainerInterface
      */
     public function withNavigation(string $navigation): ContainerInterface
     {
-        return $this->filter(function (Item $item) use ($navigation) {
-            return \in_array($navigation, $item->navigation());
-        });
+        return $this->filter(NavigationSearch::class, ['navigation' => $navigation]);
     }
 
     /**
-     * @param callable $callable
+     * @param callable|string $filter
+     * @param array $params
      * @return ContainerInterface
      */
-    public function where(callable $callable): ContainerInterface
+    public function where($filter, array $params = []): ContainerInterface
     {
+        if (is_callable($filter)) {
+            $params['callable'] = $filter;
+            $filter = CallableSearch::class;
+        }
+
         $items = [];
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if ($callable($item) === true) {
+            if ($this->searchSubManager->get($filter)->search($item, $params) === true) {
                 $items[] = $item->structureItem();
             }
         }
 
-        return new Container($items, $this->itemFactory);
+        return new Container($items, $this->searchSubManager, $this->itemFactory);
     }
 
     /**
@@ -164,9 +183,7 @@ class Container implements ContainerInterface
      */
     public function withMinLevel(int $level): ContainerInterface
     {
-        return $this->where(function (Item $item) use ($level){
-           return $item->level() === $level;
-        });
+        return $this->where(MinLevelSearch::class, ['level' => $level]);
     }
 
     /**
@@ -182,20 +199,26 @@ class Container implements ContainerInterface
             $items[] = $item->structureItem()->withChildrenInfo([]);
         }
 
-        return new Container($items, $this->itemFactory);
+        return new Container($items, $this->searchSubManager, $this->itemFactory);
     }
 
     /**
-     * @param callable $callable
+     * @param callable|string $filter
+     * @param array $params
      * @return Item|null
      */
-    public function find(callable $callable): ?Item
+    public function find($filter, array $params = []): ?Item
     {
+        if (is_callable($filter)) {
+            $params['callable'] = $filter;
+            $filter = CallableSearch::class;
+        }
+
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
 
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if ($callable($item) === true) {
+            if ($this->searchSubManager->get($filter)->search($item, $params) === true) {
                 return $this->itemFactory->create($item->structureItem());
             }
         }
@@ -209,9 +232,7 @@ class Container implements ContainerInterface
      */
     public function findByHandle(string $handle): ?Item
     {
-        return $this->find(function (Item $item) use ($handle) {
-            return $item->handle() === $handle;
-        });
+        return $this->find(HandleSearch::class, ['handle' => $handle]);
     }
 
     /**
@@ -238,7 +259,24 @@ class Container implements ContainerInterface
 
         }
 
-        return new Container($items, $this->itemFactory);
+        return new Container($items, $this->searchSubManager, $this->itemFactory);
+    }
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return ContainerInterface
+     */
+    public function paginate(int $limit, int $offset = 0): ContainerInterface
+    {
+        if ($offset > $this->count()) {
+            return new Container([], $this->searchSubManager, $this->itemFactory);
+        }
+
+        $array = $this->iterator->getArrayCopy();
+        $array = array_slice($array, $offset, $limit);
+
+        return new Container($array, $this->searchSubManager, $this->itemFactory);
     }
 
     public function __debugInfo()

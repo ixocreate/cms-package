@@ -17,12 +17,14 @@ use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
+use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\ServiceManager\ServiceManagerConfigurator;
 
 /** @var ServiceManagerConfigurator $serviceManager */
 $serviceManager->addSubManager(PageTypeSubManager::class);
 $serviceManager->addSubManager(BlockSubManager::class);
 $serviceManager->addSubManager(XmlSitemapProviderSubManager::class);
+$serviceManager->addSubManager(SearchSubManager::class);
 
 $serviceManager->addFactory(CmsRouter::class, CmsRouterFactory::class);
 $serviceManager->addFactory(PageRoute::class);

@@ -54,6 +54,10 @@ class Item implements ContainerInterface
      * @var PageVersionCacheable
      */
     private $pageVersionCacheable;
+    /**
+     * @var SearchSubManager
+     */
+    private $searchSubManager;
 
     /**
      * Item constructor.
@@ -64,6 +68,7 @@ class Item implements ContainerInterface
      * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
+     * @param SearchSubManager $searchSubManager
      */
     public function __construct(
         StructureItem $structureItem,
@@ -72,7 +77,8 @@ class Item implements ContainerInterface
         CacheableInterface $sitemapCacheable,
         CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
-        SubManagerInterface $pageTypeSubManager
+        SubManagerInterface $pageTypeSubManager,
+        SearchSubManager $searchSubManager
     ) {
         $this->structureItem = clone $structureItem;
         $this->itemFactory = $itemFactory;
@@ -81,8 +87,9 @@ class Item implements ContainerInterface
         $this->pageVersionCacheable = $pageVersionCacheable;
         $this->cacheManager = $cacheManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->searchSubManager = $searchSubManager;
 
-        $this->container = new Container($this->structureItem->children(), $this->itemFactory);
+        $this->container = new Container($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
     }
 
     public function count()
@@ -100,7 +107,7 @@ class Item implements ContainerInterface
      */
     public function below(): ContainerInterface
     {
-        return new Container($this->structureItem->children(), $this->itemFactory);
+        return new Container($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
     }
 
     /**
@@ -196,12 +203,13 @@ class Item implements ContainerInterface
     }
 
     /**
-     * @param callable $callable
+     * @param callable|string $filter
+     * @param array $params
      * @return ContainerInterface
      */
-    public function filter(callable $callable): ContainerInterface
+    public function filter($filter, array $params = []): ContainerInterface
     {
-        return $this->container->filter($callable);
+        return $this->container->filter($filter, $params);
     }
 
     /**
@@ -223,12 +231,13 @@ class Item implements ContainerInterface
     }
 
     /**
-     * @param callable $callable
+     * @param callable|string $filter
+     * @param array $params
      * @return ContainerInterface
      */
-    public function where(callable $callable): ContainerInterface
+    public function where($filter, array $params = []): ContainerInterface
     {
-        return $this->container->where($callable);
+        return $this->container->where($filter, $params);
     }
 
     /**
@@ -249,12 +258,13 @@ class Item implements ContainerInterface
     }
 
     /**
-     * @param callable $callable
+     * @param callable|string $filter
+     * @param array $params
      * @return Item|null
      */
-    public function find(callable $callable): ?Item
+    public function find($filter, array $params = []): ?Item
     {
-        return $this->container->find($callable);
+        return $this->container->find($filter, $params);
     }
 
     /**

@@ -2,10 +2,17 @@
 declare(strict_types=1);
 namespace Ixocreate\Cms\Site\Tree;
 
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\PageContentCacheable;
+use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Site\Structure\StructureItem;
+use Ixocreate\Contract\Cache\CacheableInterface;
+use Ixocreate\Contract\ServiceManager\SubManager\SubManagerInterface;
 use RecursiveIterator;
 
 class Item implements ContainerInterface
@@ -23,21 +30,55 @@ class Item implements ContainerInterface
      * @var ItemFactory
      */
     private $itemFactory;
+    /**
+     * @var PageCacheable
+     */
+    private $pageCacheable;
+    /**
+     * @var SitemapCacheable
+     */
+    private $sitemapCacheable;
+    /**
+     * @var PageContentCacheable
+     */
+    private $pageContentCacheable;
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
 
     /**
      * Item constructor.
      * @param StructureItem $structureItem
      * @param ItemFactory $itemFactory
+     * @param CacheableInterface $pageCacheable
+     * @param CacheableInterface $sitemapCacheable
+     * @param CacheableInterface $pageContentCacheable
+     * @param CacheManager $cacheManager
+     * @param SubManagerInterface $pageTypeSubManager
      */
     public function __construct(
         StructureItem $structureItem,
-        ItemFactory $itemFactory
+        ItemFactory $itemFactory,
+        CacheableInterface $pageCacheable,
+        CacheableInterface $sitemapCacheable,
+        CacheableInterface $pageContentCacheable,
+        CacheManager $cacheManager,
+        SubManagerInterface $pageTypeSubManager
     ) {
         $this->structureItem = clone $structureItem;
         $this->itemFactory = $itemFactory;
+        $this->pageCacheable = $pageCacheable;
+        $this->sitemapCacheable = $sitemapCacheable;
+        $this->pageContentCacheable = $pageContentCacheable;
+        $this->cacheManager = $cacheManager;
+        $this->pageTypeSubManager = $pageTypeSubManager;
 
         $this->container = new Container($this->structureItem->children(), $this->itemFactory);
-
     }
 
     public function count()
@@ -63,22 +104,49 @@ class Item implements ContainerInterface
      */
     public function pageType(): PageTypeInterface
     {
-
+        return $this->pageTypeSubManager->get($this->sitemap()->pageType());
     }
 
+    /**
+     * @param string $locale
+     * @return Page
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function page(string $locale): Page
     {
+        if (!\array_key_exists($locale, $this->structureItem()->pages())) {
+            throw new \Exception(sprintf("Page with locale '%s' does not exists", $locale));
+        }
 
+        return $this->cacheManager->fetch(
+            $this->pageCacheable
+                ->withPageId($this->structureItem()->pages()[$locale])
+        );
     }
 
     public function sitemap(): Sitemap
     {
-
+        return $this->cacheManager->fetch(
+            $this->sitemapCacheable
+                ->withSitemapId($this->structureItem()->sitemapId())
+        );
     }
 
+    /**
+     * @param string $locale
+     * @return mixed
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function pageContent(string $locale)
     {
+        if (!\array_key_exists($locale, $this->structureItem()->pages())) {
+            throw new \Exception(sprintf("Page with locale '%s' does not exists", $locale));
+        }
 
+        return $this->cacheManager->fetch(
+            $this->pageContentCacheable
+                ->withPageId($this->structureItem()->pages()[$locale])
+        );
     }
 
     public function level(): int
@@ -94,6 +162,27 @@ class Item implements ContainerInterface
     public function navigation(): array
     {
         return $this->structureItem()->navigation();
+    }
+
+    /**
+     * @param Sitemap|null $currentSitemap
+     * @return bool
+     */
+    public function isActive(?Sitemap $currentSitemap = null): bool
+    {
+        if (empty($currentSitemap)) {
+            return false;
+        }
+
+        if ((string) $this->sitemap()->id() === (string) $currentSitemap->id()) {
+            return true;
+        }
+
+        if ($currentSitemap->nestedLeft() > $this->sitemap()->nestedLeft() && $currentSitemap->nestedRight() < $this->sitemap()->nestedRight()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

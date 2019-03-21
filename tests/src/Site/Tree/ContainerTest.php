@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace IxocreateTest\Site\Tree;
 
+use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Site\Structure\Structure;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
+use Ixocreate\Contract\Cache\CacheableInterface;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -102,7 +104,12 @@ class ContainerTest extends TestCase
 
     private function getDefaultContainer(): Container
     {
-        $itemFactory = new ItemFactory();
+        $itemFactory = new ItemFactory(
+            $this->createMock(CacheableInterface::class),
+            $this->createMock(CacheableInterface::class),
+            $this->createMock(CacheableInterface::class),
+            new CacheManager($this->createMock(\Psr\Container\ContainerInterface::class))
+        );
 
         return new Container($this->generateStructure()->structure(), $itemFactory);
     }

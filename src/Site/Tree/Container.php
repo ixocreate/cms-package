@@ -19,6 +19,7 @@ class Container implements ContainerInterface
     /**
      * Container constructor.
      * @param $structureItems
+     * @param ItemFactory $itemFactory
      */
     public function __construct($structureItems, ItemFactory $itemFactory)
     {

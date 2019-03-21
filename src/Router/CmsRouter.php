@@ -11,12 +11,17 @@ namespace Ixocreate\Cms\Router;
 
 use Ixocreate\ApplicationHttp\Request\RequestWrapperInterface;
 use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Middleware\NotFoundMiddleware;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Zend\Diactoros\Uri;
 use Zend\Expressive\Router\Exception;
-use Zend\Expressive\Router\FastRouteRouter;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
@@ -24,9 +29,9 @@ use Zend\Expressive\Router\RouterInterface;
 final class CmsRouter implements RouterInterface
 {
     /**
-     * @var FastRouteRouter[]
+     * @var RouteCollection
      */
-    private $routers;
+    private $routes;
 
     /**
      * @var Config
@@ -45,26 +50,17 @@ final class CmsRouter implements RouterInterface
 
     /**
      * CmsRouter constructor.
-     * @param array $routers
+     * @param array $routes
      * @param Config $config
      * @param LocaleManager $localeManager
      * @param ProjectUri $projectUri
      */
-    public function __construct(array $routers, Config $config, LocaleManager $localeManager, ProjectUri $projectUri)
+    public function __construct(RouteCollection $routes, Config $config, LocaleManager $localeManager, ProjectUri $projectUri)
     {
-        $this->routers = $routers;
+        $this->routes = $routes;
         $this->config = $config;
         $this->localeManager = $localeManager;
         $this->projectUri = $projectUri;
-    }
-
-    private function getLocaleRouter(string $locale): FastRouteRouter
-    {
-        if (!\array_key_exists($locale, $this->routers)) {
-            throw new \Exception(\sprintf("invalid locale %s", $locale));
-        }
-
-        return $this->routers[$locale];
     }
 
     /**
@@ -85,50 +81,36 @@ final class CmsRouter implements RouterInterface
      */
     public function match(Request $request): RouteResult
     {
-        foreach (\array_keys($this->routers) as $locale) {
-            $requestUri = $request->getUri();
-            if ($request instanceof RequestWrapperInterface) {
-                $requestUri = $request->rootRequest()->getUri();
-            }
-            $localizationUri = $this->getLocalizationBaseUrl($locale);
+        $context = new RequestContext(
+            '',
+            $request->getMethod(),
+            $request->getUri()->getHost(),
+            $request->getUri()->getScheme()
+        );
 
-            if (\mb_stripos((string) $requestUri, (string) $localizationUri) === false) {
-                continue;
-            }
+        $matcher = new UrlMatcher($this->routes, $context);
 
-            $path = \mb_substr($requestUri->getPath(), \mb_strlen($localizationUri->getPath()));
-
-            return $this->getLocaleRouter($locale)->match($request->withUri($requestUri->withPath($path)));
+        try {
+            $routeMatch = $matcher->match($request->getUri()->getPath());
+        } catch (ResourceNotFoundException $e) {
+            return RouteResult::fromRouteFailure(Route::HTTP_METHOD_ANY);
         }
+        //var_dump($routeMatch);die();
 
-        if ($this->config->defaultBaseUrl() !== null) {
-            $requestUri = $request->getUri();
-            if ($request instanceof RequestWrapperInterface) {
-                $requestUri = $request->rootRequest()->getUri();
-            }
+        $route = new Route($this->routes->get($routeMatch['_route'])->getPath(), $routeMatch['middleware'], Route::HTTP_METHOD_ANY, $routeMatch['_route']);
+        $route->setOptions(['pageId' => $routeMatch['pageId']]);
+        unset($routeMatch['_route']);
+        unset($routeMatch['middleware']);
 
-            if (\rtrim((string) $requestUri, '/') === \rtrim((string) $this->getDefaultBaseUrl(), '/')) {
-                $defaultLocale = $this->localeManager->defaultLocale();
-                return $this->getLocaleRouter($defaultLocale)->match($request->withUri($requestUri->withPath("/")));
-            }
-        }
-
-        return RouteResult::fromRouteFailure(Route::HTTP_METHOD_ANY);
+        return RouteResult::fromRoute($route, $routeMatch);
     }
 
     /**
-     * Generate a URI from the named route.
-     *
-     * Takes the named route and any substitutions, and attempts to generate a
-     * URI from it. Additional router-dependent options may be passed.
-     *
-     * The URI generated MUST NOT be escaped. If you wish to escape any part of
-     * the URI, this should be performed afterwards; consider passing the URI
-     * to league/uri to encode it.
-     *
-     * @see https://github.com/auraphp/Aura.Router/blob/3.x/docs/generating-paths.md
-     * @see https://docs.zendframework.com/zend-router/routing/
-     * @throws Exception\RuntimeException if unable to generate the given URI
+     * @param string $name
+     * @param array $substitutions
+     * @param array $options
+     * @return string
+     * @throws \Exception
      */
     public function generateUri(string $name, array $substitutions = [], array $options = []): string
     {
@@ -136,41 +118,16 @@ final class CmsRouter implements RouterInterface
             throw new \Exception("Invalid locale");
         }
         $locale = $options['locale'];
-        $path = $this->getLocaleRouter($locale)->generateUri($name, $substitutions, $options);
 
-        $uri = $this->getLocalizationBaseUrl($locale, true);
-        $uri = $uri->withPath(\rtrim($uri->getPath(), '/') . $path);
+        $context = new RequestContext('');
 
-        return (string) $uri;
-    }
+        $generator = new UrlGenerator($this->routes, $context);
 
-    /**
-     * @param string $locale
-     * @return Uri
-     */
-    private function getLocalizationBaseUrl(string $locale): Uri
-    {
-        $uriString = \strtr(
-            $this->config->localizationUrlSchema(),
-            [
-                '%MAIN_URL%' => \rtrim((string) $this->projectUri->getMainUrl(), '/'),
-                '%LANG%' => \Locale::getPrimaryLanguage($locale),
-                '%REGION%' => \Locale::getRegion($locale),
-            ]
-        );
+        $path = $generator->generate($name, $substitutions);
 
-        return new Uri($uriString);
-    }
+        //$uri = $this->getLocalizationBaseUrl($locale);
+        //$uri = $uri->withPath(\rtrim($uri->getPath(), '/') . $path);
 
-    private function getDefaultBaseUrl(): Uri
-    {
-        $uriString = \strtr(
-            $this->config->defaultBaseUrl(),
-            [
-                '%MAIN_URL%' => \rtrim((string) $this->projectUri->getMainUrl(), '/'),
-            ]
-        );
-
-        return new Uri($uriString);
+        return (string) $path;
     }
 }

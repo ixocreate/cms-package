@@ -74,10 +74,11 @@ class GenerateSitemapCommand extends AbstractCommand
 
         \file_put_contents('data/sitemap_temp/sitemap.json', \json_encode($sitemaps));
 
-        \rename('data/sitemap', 'data/sitemap_del');
+        if (\is_dir('data/sitemap')) {
+            \rename('data/sitemap', 'data/sitemap_del');
+            $this->deleteSitemap('data/sitemap_del');
+        }
         \rename('data/sitemap_temp', 'data/sitemap');
-        $this->deleteSitemap('data/sitemap_del');
-
         return true;
     }
 

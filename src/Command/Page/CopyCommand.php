@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
@@ -24,7 +26,7 @@ use Ixocreate\Contract\Validation\ValidatableInterface;
 use Ixocreate\Contract\Validation\ViolationCollectorInterface;
 use Ixocreate\Intl\LocaleManager;
 
-final class CreateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class CopyCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageTypeSubManager
@@ -57,6 +59,11 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
     private $master;
 
     /**
+     * @var PageVersionRepository
+     */
+    private $pageVersionRepository;
+
+    /**
      * CreateCommand constructor.
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
@@ -71,7 +78,8 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         PageRepository $pageRepository,
         LocaleManager $localeManager,
         CommandBus $commandBus,
-        Connection $master
+        Connection $master,
+        PageVersionRepository $pageVersionRepository
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -79,6 +87,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->master = $master;
+        $this->pageVersionRepository = $pageVersionRepository;
     }
 
     /**
@@ -88,30 +97,43 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
     public function execute(): bool
     {
         $this->master->transactional(function () {
-            /** @var PageTypeInterface $pageType */
-            $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
+            /** @var Page $page */
+            $originalPage = $this->pageRepository->find($this->dataValue('idFromOriginal'));
+            /** @var Sitemap $sitemap */
+            $sitemap = $this->sitemapRepository->find($originalPage->sitemapId());
 
+            /** @var PageTypeInterface $pageTypeName */
+            $pageTypeName = $sitemap->pageType();
+            $locale = $originalPage->locale();
+
+            $pageType = $this->pageTypeSubManager->get($pageTypeName);
             $sitemap = new Sitemap([
                 'id' => $this->uuid(),
-                'pageType' => $pageType::serviceName(),
+                'pageType' => $pageTypeName,
             ]);
 
             if (!empty($pageType->handle())) {
                 $sitemap = $sitemap->with("handle", $pageType->handle());
             }
 
-            if (empty($this->dataValue('parentSitemapId'))) {
-                $sitemap = $this->sitemapRepository->createRoot($sitemap);
-            } else {
-                /** @var Sitemap $parent */
-                $parent = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
-                $sitemap = $this->sitemapRepository->insertAsLastChild($sitemap, $parent);
-            }
+            /** @var  $parent */
+            $parent = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
+            /** @var  $sibling */
+            $sibling = $this->sitemapRepository->find($this->dataValue('siblingSitemapId'));
 
+            if ($parent == null && $sibling == null && $pageType->isRoot()) {
+                $sitemap = $this->sitemapRepository->createRoot($sitemap);
+            } elseif ($parent == null && $sibling !== null && $pageType->isRoot()) {
+                $sitemap = $this->sitemapRepository->insertAsPreviousSibling($sitemap, $sibling);
+            } elseif ($parent !== null && $sibling == null) {
+                $sitemap = $this->sitemapRepository->insertAsFirstChild($sitemap, $parent);
+            } elseif ($parent !== null && $sibling !== null) {
+                $sitemap = $this->sitemapRepository->insertAsNextSibling($sitemap, $sibling);
+            }
             $page = new Page([
                 'id' => $this->uuid(),
                 'sitemapId' => $sitemap->id(),
-                'locale' => $this->dataValue('locale'),
+                'locale' => $locale,
                 'name' => $this->dataValue('name'),
                 'status' => 'offline',
                 'updatedAt' => $this->createdAt(),
@@ -127,12 +149,18 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 'pageId' => (string) $page->id(),
             ]);
 
+            $criteria = Criteria::create();
+            $criteria->where(Criteria::expr()->eq('pageId', $this->dataValue('idFromOriginal')));
+            $criteria->orderBy(['createdAt' => 'DESC']);
+            $criteria->setMaxResults(1);
+            $result = $this->pageVersionRepository->matching($criteria);
+            $content = $result->get(0)->content();
 
             $this->commandBus->command(CreateVersionCommand::class, [
                 'pageType' => $pageType::serviceName(),
                 'pageId' => (string) $page->id(),
                 'createdBy' => $this->dataValue('createdBy'),
-                'content' => [],
+                'content' => $content,
                 'approve' => true,
             ]);
         });
@@ -147,10 +175,6 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-        if (!$this->pageTypeSubManager->has($this->dataValue('pageType'))) {
-            $violationCollector->add("pageType", "invalid_pageType");
-        }
-
         if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
             $violationCollector->add("name", "invalid_name");
         }
@@ -165,18 +189,13 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 }
             }
         }
-
-        if (!$this->localeManager->has($this->dataValue("locale"))) {
-            $violationCollector->add("locale", "invalid_locale");
-        }
     }
 
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['pageType'] = (string) $this->dataValue('pageType');
         $newData['parentSitemapId'] = $this->dataValue('parentSitemapId');
-        $newData['locale'] = (string) $this->dataValue('locale');
+        $newData['siblingSitemapId'] = $this->dataValue('siblingSitemapId');
         $newData['name'] = (string) $this->dataValue('name');
         $newData['createdBy'] = (string) $this->dataValue('createdBy');
         $newData['idFromOriginal'] = (string) $this->dataValue('idFromOriginal');

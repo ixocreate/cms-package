@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Middleware;
 
 use Ixocreate\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Intl\LocaleManager;
@@ -22,11 +24,6 @@ use Zend\Expressive\Router\RouteResult;
 final class LoadPageMiddleware implements MiddlewareInterface
 {
     /**
-     * @var PageRepository
-     */
-    private $pageRepository;
-
-    /**
      * @var LocaleManager
      */
     private $localeManager;
@@ -35,12 +32,28 @@ final class LoadPageMiddleware implements MiddlewareInterface
      * @var NotFoundHandler
      */
     private $notFoundHandler;
+    /**
+     * @var PageCacheable
+     */
+    private $pageCacheable;
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
 
-    public function __construct(PageRepository $pageRepository, LocaleManager $localeManager, NotFoundHandler $notFoundHandler)
+    /**
+     * LoadPageMiddleware constructor.
+     * @param PageCacheable $pageCacheable
+     * @param CacheManager $cacheManager
+     * @param LocaleManager $localeManager
+     * @param NotFoundHandler $notFoundHandler
+     */
+    public function __construct(PageCacheable $pageCacheable, CacheManager $cacheManager, LocaleManager $localeManager, NotFoundHandler $notFoundHandler)
     {
-        $this->pageRepository = $pageRepository;
         $this->localeManager = $localeManager;
         $this->notFoundHandler = $notFoundHandler;
+        $this->pageCacheable = $pageCacheable;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -54,16 +67,19 @@ final class LoadPageMiddleware implements MiddlewareInterface
 
         $pageId = $routeResult->getMatchedRoute()->getOptions()['pageId'];
 
+        $cacheable = $this->pageCacheable->withPageId($pageId);
         /** @var Page $page */
-        $page = $this->pageRepository->find($pageId);
+        $page = $this->cacheManager->fetch($cacheable);
+
+        if (!($page instanceof Page)) {
+            return $this->notFoundHandler->process($request, $handler);
+        }
 
         if (!$page->isOnline()) {
             return $this->notFoundHandler->process($request, $handler);
         }
 
         $this->localeManager->acceptLocale($page->locale());
-
-        //TODO check page
 
         $request = $request->withPage($page);
 

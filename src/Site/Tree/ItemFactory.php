@@ -22,10 +22,6 @@ final class ItemFactory
      */
     private $sitemapCacheable;
     /**
-     * @var PageContentCacheable
-     */
-    private $pageContentCacheable;
-    /**
      * @var CacheManager
      */
     private $cacheManager;
@@ -33,28 +29,32 @@ final class ItemFactory
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+    /**
+     * @var CacheableInterface
+     */
+    private $pageVersionCacheable;
 
     /**
      * ItemFactory constructor.
      * @param CacheableInterface $pageCacheable
      * @param CacheableInterface $sitemapCacheable
-     * @param CacheableInterface $pageContentCacheable
+     * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
      */
     public function __construct(
         CacheableInterface $pageCacheable,
         CacheableInterface $sitemapCacheable,
-        CacheableInterface $pageContentCacheable,
+        CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
         SubManagerInterface $pageTypeSubManager
     ) {
 
         $this->pageCacheable = $pageCacheable;
         $this->sitemapCacheable = $sitemapCacheable;
-        $this->pageContentCacheable = $pageContentCacheable;
         $this->cacheManager = $cacheManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->pageVersionCacheable = $pageVersionCacheable;
     }
 
 
@@ -65,7 +65,7 @@ final class ItemFactory
             $this,
             $this->pageCacheable,
             $this->sitemapCacheable,
-            $this->pageContentCacheable,
+            $this->pageVersionCacheable,
             $this->cacheManager,
             $this->pageTypeSubManager
         );

@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -19,13 +20,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class LoadSitemapMiddleware implements MiddlewareInterface
 {
     /**
-     * @var SitemapRepository
+     * @var SitemapCacheable
      */
-    private $sitemapRepository;
+    private $sitemapCacheable;
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
 
-    public function __construct(SitemapRepository $sitemapRepository)
+    /**
+     * LoadSitemapMiddleware constructor.
+     * @param SitemapCacheable $sitemapCacheable
+     * @param CacheManager $cacheManager
+     */
+    public function __construct(SitemapCacheable $sitemapCacheable, CacheManager $cacheManager)
     {
-        $this->sitemapRepository = $sitemapRepository;
+        $this->sitemapCacheable = $sitemapCacheable;
+        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -37,7 +48,9 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
         /** @var Page $page */
         $page = $request->getPage();
 
-        $sitemap = $this->sitemapRepository->find($page->sitemapId());
+        $cacheable = $this->sitemapCacheable->withSitemapId((string) $page->sitemapId());
+
+        $sitemap = $this->cacheManager->fetch($cacheable);
 
         $request = $request->withSitemap($sitemap);
 

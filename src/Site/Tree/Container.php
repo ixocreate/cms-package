@@ -240,4 +240,11 @@ class Container implements ContainerInterface
 
         return new Container($items, $this->itemFactory);
     }
+
+    public function __debugInfo()
+    {
+        return [
+            'items' => $this->iterator->getArrayCopy()
+        ];
+    }
 }

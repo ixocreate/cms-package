@@ -10,6 +10,9 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Middleware;
 
 use Doctrine\Common\Collections\Criteria;
+use Ixocreate\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageVersionRepository;
@@ -21,13 +24,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class LoadPageContentMiddleware implements MiddlewareInterface
 {
     /**
-     * @var PageVersionRepository
+     * @var PageVersionCacheable
      */
-    private $pageVersionRepository;
+    private $pageVersionCacheable;
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+    /**
+     * @var NotFoundHandler
+     */
+    private $notFoundHandler;
 
-    public function __construct(PageVersionRepository $pageVersionRepository)
+    public function __construct(PageVersionCacheable $pageVersionCacheable, CacheManager $cacheManager, NotFoundHandler $notFoundHandler)
     {
-        $this->pageVersionRepository = $pageVersionRepository;
+        $this->pageVersionCacheable = $pageVersionCacheable;
+        $this->cacheManager = $cacheManager;
+        $this->notFoundHandler = $notFoundHandler;
     }
 
     /**
@@ -39,15 +52,13 @@ final class LoadPageContentMiddleware implements MiddlewareInterface
         /** @var Page $page */
         $page = $request->getPage();
 
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('pageId', $page->id()));
-        $criteria->andWhere(Criteria::expr()->neq('approvedAt', null));
-        $criteria->orderBy(['approvedAt' => 'DESC']);
-        $criteria->setMaxResults(1);
+        $cacheable = $this->pageVersionCacheable->withPageId((string) $page->id());
+        $pageVersion = $this->cacheManager->fetch($cacheable);
 
-        $pageVersion = $this->pageVersionRepository->matching($criteria);
-        /** @var PageVersion $pageVersion */
-        $pageVersion = $pageVersion->current();
+        if (!($pageVersion instanceof PageVersion)) {
+            return $this->notFoundHandler->process($request, $handler);
+        }
+
 
         $request = $request->withPageVersion($pageVersion);
 

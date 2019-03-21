@@ -5,14 +5,18 @@ namespace Ixocreate\Cms\Site\Tree;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\PageContentCacheable;
+use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Site\Structure\StructureItem;
+use Ixocreate\CommonTypes\Entity\SchemaType;
 use Ixocreate\Contract\Cache\CacheableInterface;
 use Ixocreate\Contract\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\Entity\Type\Type;
 use RecursiveIterator;
 
 class Item implements ContainerInterface
@@ -39,10 +43,6 @@ class Item implements ContainerInterface
      */
     private $sitemapCacheable;
     /**
-     * @var PageContentCacheable
-     */
-    private $pageContentCacheable;
-    /**
      * @var CacheManager
      */
     private $cacheManager;
@@ -50,6 +50,10 @@ class Item implements ContainerInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+    /**
+     * @var PageVersionCacheable
+     */
+    private $pageVersionCacheable;
 
     /**
      * Item constructor.
@@ -57,7 +61,7 @@ class Item implements ContainerInterface
      * @param ItemFactory $itemFactory
      * @param CacheableInterface $pageCacheable
      * @param CacheableInterface $sitemapCacheable
-     * @param CacheableInterface $pageContentCacheable
+     * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
      */
@@ -66,7 +70,7 @@ class Item implements ContainerInterface
         ItemFactory $itemFactory,
         CacheableInterface $pageCacheable,
         CacheableInterface $sitemapCacheable,
-        CacheableInterface $pageContentCacheable,
+        CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
         SubManagerInterface $pageTypeSubManager
     ) {
@@ -74,7 +78,7 @@ class Item implements ContainerInterface
         $this->itemFactory = $itemFactory;
         $this->pageCacheable = $pageCacheable;
         $this->sitemapCacheable = $sitemapCacheable;
-        $this->pageContentCacheable = $pageContentCacheable;
+        $this->pageVersionCacheable = $pageVersionCacheable;
         $this->cacheManager = $cacheManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
 
@@ -134,19 +138,25 @@ class Item implements ContainerInterface
 
     /**
      * @param string $locale
-     * @return mixed
+     * @return SchemaType
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function pageContent(string $locale)
+    public function pageContent(string $locale): SchemaType
     {
         if (!\array_key_exists($locale, $this->structureItem()->pages())) {
             throw new \Exception(sprintf("Page with locale '%s' does not exists", $locale));
         }
 
-        return $this->cacheManager->fetch(
-            $this->pageContentCacheable
+        $pageVersion = $this->cacheManager->fetch(
+            $this->pageVersionCacheable
                 ->withPageId($this->structureItem()->pages()[$locale])
         );
+
+        if (!($pageVersion instanceof PageVersion)) {
+            return Type::create([], SchemaType::serviceName());
+        }
+
+        return $pageVersion->content();
     }
 
     public function level(): int

@@ -14,6 +14,7 @@ use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Contract\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -30,15 +31,22 @@ class MoveAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
 
     /**
      * SortAction constructor.
      * @param SitemapRepository $sitemapRepository
+     * @param PageTypeSubManager $pageTypeSubManager
+     * @param CacheInterface $cms
      */
-    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager)
+    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, CacheInterface $cms)
     {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->cache = $cms;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -83,6 +91,8 @@ class MoveAction implements MiddlewareInterface
             $sibling = $sibling[0];
             $this->sitemapRepository->moveAsPreviousSibling($sitemap, $sibling);
         }
+
+        $this->cache->clear();
 
         return new ApiSuccessResponse();
     }

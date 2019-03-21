@@ -74,7 +74,7 @@ final class Package implements PackageInterface
      */
     public function getConfigDirectory(): ?string
     {
-        return null;
+        return  __DIR__ . '/../config';
     }
 
     /**

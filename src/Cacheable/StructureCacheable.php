@@ -26,7 +26,7 @@ final class StructureCacheable implements CacheableInterface
      */
     public function uncachedResult()
     {
-        return $this->structureBuilder->build();
+        return $this->structureBuilder->build()->structure();
     }
 
     /**

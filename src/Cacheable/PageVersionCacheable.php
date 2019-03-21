@@ -10,13 +10,8 @@ use Ixocreate\CommonTypes\Entity\UuidType;
 use Ixocreate\Contract\Cache\CacheableInterface;
 use Ixocreate\Entity\Type\Type;
 
-final class PageContentCacheable implements CacheableInterface
+final class PageVersionCacheable implements CacheableInterface
 {
-    /**
-     * @var PageRepository
-     */
-    private $pageRepository;
-
     /**
      * @var UuidType|string
      */
@@ -37,14 +32,13 @@ final class PageContentCacheable implements CacheableInterface
         $this->pageVersionRepository = $pageVersionRepository;
     }
 
-    public function withPageId($pageId): PageContentCacheable
+    public function withPageId($pageId): PageVersionCacheable
     {
         $cacheable = clone $this;
         $cacheable->pageId = $pageId;
 
         return $cacheable;
     }
-
 
     /**
      * @return mixed
@@ -59,10 +53,10 @@ final class PageContentCacheable implements CacheableInterface
         $pageVersion = $this->pageVersionRepository->matching($criteria);
 
         if ($pageVersion->count() > 0) {
-            return $pageVersion->current()->content();
+            return $pageVersion->current();
         }
 
-        return Type::create([], SchemaType::serviceName());
+        return null;
     }
 
     /**
@@ -78,7 +72,7 @@ final class PageContentCacheable implements CacheableInterface
      */
     public function cacheKey(): string
     {
-        return 'pageContent.' . (string) $this->pageId;
+        return 'pageVersion.' . (string) $this->pageId;
     }
 
     /**

@@ -16,6 +16,7 @@ use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Contract\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -42,13 +43,18 @@ class DeleteAction implements MiddlewareInterface
      * @var OldRedirectRepository
      */
     private $oldRedirectRepository;
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
 
-    public function __construct(PageRepository $pageRepository, PageVersionRepository $pageVersionRepository, SitemapRepository $sitemapRepository, OldRedirectRepository $oldRedirectRepository)
+    public function __construct(PageRepository $pageRepository, PageVersionRepository $pageVersionRepository, SitemapRepository $sitemapRepository, OldRedirectRepository $oldRedirectRepository, CacheInterface $cms)
     {
         $this->pageRepository = $pageRepository;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->oldRedirectRepository = $oldRedirectRepository;
+        $this->cache = $cms;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -79,6 +85,8 @@ class DeleteAction implements MiddlewareInterface
             $sitemap = $this->sitemapRepository->find($page->sitemapId());
             $this->sitemapRepository->remove($sitemap);
         }
+
+        $this->cache->clear();
 
         return new ApiSuccessResponse();
     }

@@ -11,11 +11,12 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Cms\Router\Factory\CmsRouterFactory;
 use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Seo\Sitemap\PageProvider;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Cms\Site\Tree\Container;
+use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
 use Ixocreate\ServiceManager\ServiceManagerConfigurator;
 
 /** @var ServiceManagerConfigurator $serviceManager */
@@ -25,6 +26,7 @@ $serviceManager->addSubManager(XmlSitemapProviderSubManager::class);
 
 $serviceManager->addFactory(CmsRouter::class, CmsRouterFactory::class);
 $serviceManager->addFactory(PageRoute::class);
+$serviceManager->addFactory(Container::class, ContainerFactory::class);
 
 $serviceManager->addService(DatabasePageLoader::class, DatabasePageLoaderFactory::class);
 $serviceManager->addService(DatabaseSitemapLoader::class, DatabaseSitemapLoaderFactory::class);

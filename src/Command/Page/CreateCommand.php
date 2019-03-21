@@ -18,6 +18,7 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
+use Ixocreate\Contract\Cache\CacheInterface;
 use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
@@ -57,6 +58,11 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
     private $master;
 
     /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    /**
      * CreateCommand constructor.
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
@@ -64,6 +70,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
      * @param Connection $master
+     * @param CacheInterface $cms
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -71,7 +78,8 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         PageRepository $pageRepository,
         LocaleManager $localeManager,
         CommandBus $commandBus,
-        Connection $master
+        Connection $master,
+        CacheInterface $cms
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -79,6 +87,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->master = $master;
+        $this->cache = $cms;
     }
 
     /**
@@ -121,6 +130,8 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
 
             /** @var Page $page */
             $page = $this->pageRepository->save($page);
+
+            $this->cache->clear();
 
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string) $page->name(),

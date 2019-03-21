@@ -63,7 +63,7 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
         }
 
         $result = $this->sitemapRepository->findAll();
-        $this->collection = new EntityCollection($result, 'id');
+        $this->collection = new EntityCollection($result, "id");
     }
 
     public function receiveHandles(): array
@@ -75,7 +75,7 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
 
             $this->handles = $this->collection->filter(function (Sitemap $sitemap) {
                 return !empty($sitemap->handle());
-            })->parts('handle');
+            })->extract('handle')->toArray();
         }
 
         return $this->handles;

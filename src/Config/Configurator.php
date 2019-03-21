@@ -12,6 +12,8 @@ namespace Ixocreate\Cms\Config;
 use Ixocreate\Cms\Seo\Sitemap\PageProvider;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\Cms\Site\Tree\SearchInterface;
+use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\Contract\Application\ConfiguratorInterface;
 use Ixocreate\Contract\Application\ServiceRegistryInterface;
 use Ixocreate\ServiceManager\SubManager\SubManagerConfigurator;
@@ -49,11 +51,17 @@ final class Configurator implements ConfiguratorInterface
     private $robotsTemplate = 'seo::robotstxt';
 
     /**
+     * @var SubManagerConfigurator
+     */
+    private $treeSearchSubManagerConfigurator;
+
+    /**
      * Configurator constructor.
      */
     public function __construct()
     {
         $this->xmlSitemapSubManagerConfigurator = new SubManagerConfigurator(XmlSitemapProviderSubManager::class, XmlSitemapProviderInterface::class);
+        $this->treeSearchSubManagerConfigurator = new SubManagerConfigurator(SearchSubManager::class, SearchInterface::class);
         $this->addXmlSitemapProvider(PageProvider::class);
     }
 
@@ -151,6 +159,15 @@ final class Configurator implements ConfiguratorInterface
     }
 
     /**
+     * @param string $name
+     * @param string|null $factory
+     */
+    public function addTreeSearchable(string $name, ?string $factory = null): void
+    {
+        $this->treeSearchSubManagerConfigurator->addService($name, $factory);
+    }
+
+    /**
      * @param ServiceRegistryInterface $serviceRegistry
      * @return void
      */
@@ -159,5 +176,6 @@ final class Configurator implements ConfiguratorInterface
         $serviceRegistry->add(Config::class, new Config($this));
 
         $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
+        $this->treeSearchSubManagerConfigurator->registerService($serviceRegistry);
     }
 }

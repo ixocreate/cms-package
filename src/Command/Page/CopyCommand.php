@@ -20,6 +20,7 @@ use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
+use Ixocreate\Contract\Cache\CacheInterface;
 use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
@@ -64,6 +65,11 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
     private $pageVersionRepository;
 
     /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    /**
      * CreateCommand constructor.
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
@@ -71,6 +77,8 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
      * @param Connection $master
+     * @param PageVersionRepository $pageVersionRepository
+     * @param CacheInterface $cms
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -79,7 +87,8 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
         LocaleManager $localeManager,
         CommandBus $commandBus,
         Connection $master,
-        PageVersionRepository $pageVersionRepository
+        PageVersionRepository $pageVersionRepository,
+        CacheInterface $cms
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -88,6 +97,7 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
         $this->commandBus = $commandBus;
         $this->master = $master;
         $this->pageVersionRepository = $pageVersionRepository;
+        $this->cache = $cms;
     }
 
     /**
@@ -148,6 +158,8 @@ final class CopyCommand extends AbstractCommand implements CommandInterface, Val
                 'name' => (string) $page->name(),
                 'pageId' => (string) $page->id(),
             ]);
+
+            $this->cache->clear();
 
             $criteria = Criteria::create();
             $criteria->where(Criteria::expr()->eq('pageId', $this->dataValue('idFromOriginal')));

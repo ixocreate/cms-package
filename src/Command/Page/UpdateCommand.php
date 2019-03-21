@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
@@ -45,26 +48,50 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
     private $navigationRepository;
 
     /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+
+    /**
+     * @var PageCacheable
+     */
+    private $pageCacheable;
+
+    /**
+     * @var StructureCacheable
+     */
+    private $structureCacheable;
+
+    /**
      * CreateCommand constructor.
      * @param PageRepository $pageRepository
      * @param CommandBus $commandBus
      * @param Config $config
      * @param NavigationRepository $navigationRepository
+     * @param CacheManager $cacheManager
+     * @param PageCacheable $pageCacheable
+     * @param StructureCacheable $structureCacheable
      */
     public function __construct(
         PageRepository $pageRepository,
         CommandBus $commandBus,
         Config $config,
-        NavigationRepository $navigationRepository
+        NavigationRepository $navigationRepository,
+        CacheManager $cacheManager,
+        PageCacheable $pageCacheable,
+        StructureCacheable $structureCacheable
     ) {
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->config = $config;
         $this->navigationRepository = $navigationRepository;
+        $this->cacheManager = $cacheManager;
+        $this->pageCacheable = $pageCacheable;
+        $this->structureCacheable = $structureCacheable;
     }
 
     /**
-     * @throws \Exception
+     * @throws \Psr\Cache\InvalidArgumentException
      * @return bool
      */
     public function execute(): bool
@@ -123,11 +150,15 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
 
                 $this->navigationRepository->save($navigationEntity);
             }
+
+            $this->cacheManager->fetch($this->structureCacheable, true);
         }
 
         if ($updated === true) {
             $page = $page->with('updatedAt', new \DateTime());
             $this->pageRepository->save($page);
+
+            $this->cacheManager->fetch($this->pageCacheable->withPageId((string) $page->id()), true);
         }
 
         return true;

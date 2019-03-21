@@ -22,6 +22,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Contract\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -56,25 +57,33 @@ class AddAction implements MiddlewareInterface
     private $master;
 
     /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    /**
      * AddAction constructor.
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
      * @param PageVersionRepository $pageVersionRepository
      * @param PageTypeSubManager $pageTypeSubManager
      * @param Connection $master
+     * @param CacheInterface $cms
      */
     public function __construct(
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         PageVersionRepository $pageVersionRepository,
         PageTypeSubManager $pageTypeSubManager,
-        Connection $master
+        Connection $master,
+        CacheInterface $cms
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->master = $master;
+        $this->cache = $cms;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -100,6 +109,8 @@ class AddAction implements MiddlewareInterface
         $this->master->transactional(function () use (&$page, $sitemap, $pageType, $request) {
             /** @var Page $page */
             $page = $this->pageRepository->save($page);
+
+            $this->cache->clear();
 
             $this->saveSlug($page, $sitemap);
             $this->savePageVersion($page, $pageType, (string) $request->getAttribute(User::class, null)->id());

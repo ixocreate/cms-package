@@ -15,6 +15,7 @@ use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
@@ -39,6 +40,7 @@ final class ContainerFactory implements FactoryInterface
         $structureCacheable = $container->get(CacheableSubManager::class)->get(StructureCacheable::class);
         $pageTypeSubManager = $container->get(PageTypeSubManager::class);
         $searchSubManager = $container->get(SearchSubManager::class);
+        $pageRoute = $container->get(PageRoute::class);
 
         $itemFactory = new ItemFactory(
             $pageCacheable,
@@ -46,7 +48,8 @@ final class ContainerFactory implements FactoryInterface
             $pageVersionCacheable,
             $cachemanager,
             $pageTypeSubManager,
-            $searchSubManager
+            $searchSubManager,
+            $pageRoute
         );
 
         return new Container(

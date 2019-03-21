@@ -18,6 +18,7 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\CommonTypes\Entity\SchemaType;
 use Ixocreate\Contract\Cache\CacheableInterface;
@@ -71,6 +72,10 @@ class Item implements ContainerInterface
      * @var SearchSubManager
      */
     private $searchSubManager;
+    /**
+     * @var PageRoute
+     */
+    private $pageRoute;
 
     /**
      * Item constructor.
@@ -82,6 +87,7 @@ class Item implements ContainerInterface
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
      * @param SubManagerInterface $searchSubManager
+     * @param PageRoute $pageRoute
      */
     public function __construct(
         StructureItem $structureItem,
@@ -91,7 +97,8 @@ class Item implements ContainerInterface
         CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
         SubManagerInterface $pageTypeSubManager,
-        SubManagerInterface $searchSubManager
+        SubManagerInterface $searchSubManager,
+        PageRoute $pageRoute
     ) {
         $this->structureItem = clone $structureItem;
         $this->itemFactory = $itemFactory;
@@ -101,8 +108,10 @@ class Item implements ContainerInterface
         $this->cacheManager = $cacheManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->searchSubManager = $searchSubManager;
+        $this->pageRoute = $pageRoute;
 
         $this->container = new Container($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
+
     }
 
     public function count()
@@ -146,6 +155,23 @@ class Item implements ContainerInterface
             $this->pageCacheable
                 ->withPageId($this->structureItem()->pages()[$locale])
         );
+    }
+
+    /**
+     * @param string $locale
+     * @param array $params
+     * @return string
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function pageUrl(string $locale, array $params = []): string
+    {
+        try {
+            return $this->pageRoute->fromPage($this->page($locale, $params));
+        } catch (\Exception $exception) {
+
+        }
+
+        return "";
     }
 
     public function sitemap(): Sitemap

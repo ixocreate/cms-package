@@ -15,7 +15,8 @@
         "symfony/options-resolver": "^4.1",
         "ixocreate/contract": "dev-develop",
         "ixocreate/common-types": "dev-develop",
-        "ixocreate/cache": "dev-develop"
+        "ixocreate/cache": "dev-develop",
+        "thepixeldeveloper/sitemap": "^5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0",

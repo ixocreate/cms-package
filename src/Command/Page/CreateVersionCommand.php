@@ -104,8 +104,8 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
             [
                 'provider' => [
                     'class' => PageTypeSubManager::class,
-                    'name' => $pageType::serviceName()
-                ]
+                    'name' => $pageType::serviceName(),
+                ],
             ]
         );
 

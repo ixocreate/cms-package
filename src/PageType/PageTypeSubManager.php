@@ -12,14 +12,13 @@ namespace Ixocreate\Cms\PageType;
 use Ixocreate\Contract\Schema\BuilderInterface;
 use Ixocreate\Contract\Schema\SchemaInterface;
 use Ixocreate\Contract\Schema\SchemaProviderInterface;
-use Ixocreate\Schema\Builder;
 use Ixocreate\ServiceManager\SubManager\SubManager;
 
 final class PageTypeSubManager extends SubManager implements SchemaProviderInterface
 {
     /**
      * @param $name
-     * @param Builder $builder
+     * @param BuilderInterface $builder
      * @param array $options
      * @return SchemaInterface
      */
@@ -28,7 +27,7 @@ final class PageTypeSubManager extends SubManager implements SchemaProviderInter
         /** @var PageTypeInterface $pageType */
         $pageType = $this->get($name);
 
-        return $pageType->receiveSchema($builder);
+        return $pageType->provideSchema($name, $builder);
     }
 
     /**

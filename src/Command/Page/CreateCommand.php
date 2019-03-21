@@ -50,6 +50,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      * @var CommandBus
      */
     private $commandBus;
+
     /**
      * @var Connection
      */
@@ -86,7 +87,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
      */
     public function execute(): bool
     {
-        $this->master->transactional(function() {
+        $this->master->transactional(function () {
             /** @var PageTypeInterface $pageType */
             $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
 

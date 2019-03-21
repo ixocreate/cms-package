@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Frontend;
 
+use Ixocreate\Cms\Request\CmsRequest;
 use Ixocreate\Template\TemplateResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,8 +19,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class RenderAction implements MiddlewareInterface
 {
     /**
-     * Process an incoming server request and return a response, optionally delegating
-     * response creation to a handler.
+     * @param CmsRequest $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -35,7 +37,7 @@ final class RenderAction implements MiddlewareInterface
         );
 
         return new TemplateResponse(
-            $request->getPageType()->layout(),
+            $request->getPageType()->template(),
             $request->getTemplateAttributes(),
             $globalTemplateVars
         );

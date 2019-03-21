@@ -28,11 +28,27 @@ final class Config implements SerializableServiceInterface
      */
     private $defaultBaseUrl;
 
+    /**
+     * @var bool
+     */
+    private $robotsNoIndex;
+
+    /**
+     * @var string
+     */
+    private $robotsTemplate;
+
+    /**
+     * Config constructor.
+     * @param Configurator $configurator
+     */
     public function __construct(Configurator $configurator)
     {
         $this->localizationUrlSchema = $configurator->getLocalizationUrlSchema();
         $this->navigation = $configurator->getNavigation();
         $this->defaultBaseUrl = $configurator->getDefaultBaseUrl();
+        $this->robotsNoIndex = $configurator->getRobotsNoIndex();
+        $this->robotsTemplate = $configurator->getRobotsTemplate();
     }
 
     /**
@@ -51,9 +67,28 @@ final class Config implements SerializableServiceInterface
         return $this->navigation;
     }
 
+    /**
+     * @return string|null
+     */
     public function defaultBaseUrl(): ?string
     {
         return $this->defaultBaseUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function robotsNoIndex(): bool
+    {
+        return $this->robotsNoIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function robotsTemplate(): string
+    {
+        return $this->robotsTemplate;
     }
 
     /**
@@ -63,8 +98,10 @@ final class Config implements SerializableServiceInterface
     {
         return \serialize([
             'localizationUrlSchema' => $this->localizationUrlSchema,
-            'defaultBaseUrl' => $this->defaultBaseUrl,
             'navigation' => $this->navigation,
+            'defaultBaseUrl' => $this->defaultBaseUrl,
+            'robotsNoIndex' => $this->robotsNoIndex,
+            'robotsTemplate' => $this->robotsTemplate,
         ]);
     }
 
@@ -75,8 +112,10 @@ final class Config implements SerializableServiceInterface
     {
         $unserialized = \unserialize($serialized);
 
+        $this->localizationUrlSchema = $unserialized['localizationUrlSchema'];
         $this->navigation = $unserialized['navigation'];
         $this->defaultBaseUrl = $unserialized['defaultBaseUrl'];
-        $this->localizationUrlSchema = $unserialized['localizationUrlSchema'];
+        $this->robotsNoIndex = $unserialized['robotsNoIndex'];
+        $this->robotsTemplate = $unserialized['robotsTemplate'];
     }
 }

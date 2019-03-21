@@ -12,6 +12,7 @@ namespace Ixocreate\Cms\Middleware\Factory;
 use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
 use Ixocreate\Cms\Middleware\CmsMiddleware;
 use Ixocreate\Cms\Middleware\DefaultLocaleMiddleware;
+use Ixocreate\Cms\Middleware\OldUrlRedirectMiddleware;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Contract\ServiceManager\FactoryInterface;
 use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
@@ -37,6 +38,7 @@ final class CmsMiddlewareFactory implements FactoryInterface
         $middlewarePipe->pipe($middlewareFactory->lazy(DefaultLocaleMiddleware::class));
         $middlewarePipe->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
         $middlewarePipe->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
+        $middlewarePipe->pipe($middlewareFactory->lazy(OldUrlRedirectMiddleware::class));
 
         return new CmsMiddleware($middlewarePipe);
     }

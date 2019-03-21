@@ -103,6 +103,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string) $this->dataValue('slug'),
                 'pageId' => (string) $page->id(),
+                'isChange' => true,
             ]);
         }
 

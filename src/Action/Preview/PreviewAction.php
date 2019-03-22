@@ -14,6 +14,7 @@ use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
 use Ixocreate\Cms\Action\Frontend\RenderAction;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\PageType\MiddlewarePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageVersionRepository;
@@ -104,10 +105,14 @@ final class PreviewAction implements MiddlewareInterface
             ->withPageType($item->pageType())
             ->withPageVersion($pageVersion);
 
-        $middleware = $item->pageType()->middleware();
-        if (empty($middleware)) {
-            $middleware = [];
+        $middleware = [];
+        if ($item->pageType() instanceof MiddlewarePageTypeInterface) {
+            $middleware = $item->pageType()->middleware();
+            if (empty($middleware)) {
+                $middleware = [];
+            }
         }
+
         $middleware[] = RenderAction::class;
 
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($this->middlewareSubManager));

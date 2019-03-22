@@ -35,7 +35,7 @@ final class CmsMiddlewareFactory implements FactoryInterface
         $middlewarePipe = new MiddlewarePipe();
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
-        $middlewarePipe->pipe($middlewareFactory->lazy(DefaultLocaleMiddleware::class));
+        //$middlewarePipe->pipe($middlewareFactory->lazy(DefaultLocaleMiddleware::class));
         $middlewarePipe->pipe(new RouteMiddleware($container->get(CmsRouter::class)));
         $middlewarePipe->pipe($middlewareFactory->lazy(DispatchMiddleware::class));
         $middlewarePipe->pipe($middlewareFactory->lazy(OldUrlRedirectMiddleware::class));

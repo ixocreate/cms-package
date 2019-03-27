@@ -137,7 +137,7 @@ final class CmsRouterFactory implements FactoryInterface
      */
     private function parseTree(array $tree, &$routes, string $locale, $lang, $region, string $path = '', ?UriInterface $uri = null): void
     {
-        $middleware = [
+        $defaultMiddleware = [
             LoadPageMiddleware::class,
             LoadSitemapMiddleware::class,
             LoadPageTypeMiddleware::class,
@@ -152,9 +152,10 @@ final class CmsRouterFactory implements FactoryInterface
             /** @var PageTypeInterface $pageType */
             $pageType = $this->pageTypeSubManager->get($item['sitemap']->pageType());
 
-
             if ($pageType instanceof MiddlewarePageTypeInterface) {
-                $middleware = \array_merge($middleware, \array_values($pageType->middleware()));
+                $middleware = \array_merge($defaultMiddleware, \array_values($pageType->middleware()));
+            } else {
+                $middleware = $defaultMiddleware;
             }
 
             $middleware[] = RenderAction::class;

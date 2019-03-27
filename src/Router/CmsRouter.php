@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
-use Ixocreate\ApplicationHttp\Request\RequestWrapperInterface;
 use Ixocreate\Cms\Config\Config;
-use Ixocreate\Cms\Middleware\NotFoundMiddleware;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -21,7 +19,6 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Zend\Diactoros\Uri;
-use Zend\Expressive\Router\Exception;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
@@ -99,8 +96,8 @@ final class CmsRouter implements RouterInterface
 
         $route = new Route($this->routes->get($routeMatch['_route'])->getPath(), $routeMatch['middleware'], Route::HTTP_METHOD_ANY, $routeMatch['_route']);
         $route->setOptions(['pageId' => $routeMatch['pageId']]);
-        unset($routeMatch['_route']);
-        unset($routeMatch['middleware']);
+        unset($routeMatch['_route'], $routeMatch['middleware']);
+
 
         return RouteResult::fromRoute($route, $routeMatch);
     }
@@ -109,8 +106,8 @@ final class CmsRouter implements RouterInterface
      * @param string $name
      * @param array $substitutions
      * @param array $options
-     * @return string
      * @throws \Exception
+     * @return string
      */
     public function generateUri(string $name, array $substitutions = [], array $options = []): string
     {

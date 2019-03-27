@@ -101,7 +101,6 @@ final class CmsRouterFactory implements FactoryInterface
             $routes = \array_reverse($routes);
 
             foreach ($routes as $item) {
-
                 $routeObj = new Route($item['path']);
                 if (!empty($item['uri'])) {
                     $routeObj->setHost($item['uri']->getHost());
@@ -121,7 +120,7 @@ final class CmsRouterFactory implements FactoryInterface
             }
 
             foreach ($routeCollection->all() as $route) {
-              //  var_dump($route);
+                //  var_dump($route);
             }
         }
 
@@ -134,6 +133,8 @@ final class CmsRouterFactory implements FactoryInterface
      * @param string $locale
      * @param string $path
      * @param null|UriInterface $uri
+     * @param mixed $lang
+     * @param mixed $region
      */
     private function parseTree(array $tree, &$routes, string $locale, $lang, $region, string $path = '', ?UriInterface $uri = null): void
     {

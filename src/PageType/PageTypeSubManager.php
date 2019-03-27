@@ -47,7 +47,6 @@ final class PageTypeSubManager extends SubManager implements SchemaProviderInter
             $allowedChildren = $pageType->allowedChildren();
         } else {
             foreach ($namedServices as $serviceName => $className) {
-
                 if (!\is_subclass_of($className, RootPageTypeInterface::class)) {
                     continue;
                 }
@@ -64,7 +63,6 @@ final class PageTypeSubManager extends SubManager implements SchemaProviderInter
 
 
         foreach ($allowedChildren as $childPageType) {
-
             $className = $namedServices[$childPageType];
 
             if (\is_subclass_of($className, HandlePageTypeInterface::class) &&

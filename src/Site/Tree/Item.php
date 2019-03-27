@@ -72,6 +72,7 @@ class Item implements ContainerInterface
      * @var SearchSubManager
      */
     private $searchSubManager;
+
     /**
      * @var PageRoute
      */
@@ -111,7 +112,6 @@ class Item implements ContainerInterface
         $this->pageRoute = $pageRoute;
 
         $this->container = new Container($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
-
     }
 
     public function count()
@@ -160,15 +160,14 @@ class Item implements ContainerInterface
     /**
      * @param string $locale
      * @param array $params
-     * @return string
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return string
      */
     public function pageUrl(string $locale, array $params = []): string
     {
         try {
             return $this->pageRoute->fromPage($this->page($locale, $params));
         } catch (\Exception $exception) {
-
         }
 
         return "";

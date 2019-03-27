@@ -49,6 +49,7 @@ final class ItemFactory
      * @var SubManagerInterface
      */
     private $searchSubManager;
+
     /**
      * @var PageRoute
      */

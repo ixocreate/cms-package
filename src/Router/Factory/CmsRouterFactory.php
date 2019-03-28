@@ -163,8 +163,7 @@ final class CmsRouterFactory implements FactoryInterface
 
             if ($pageType instanceof RoutingAwareInterface) {
                 $routing = \ltrim($pageType->routing(), '/');
-
-                if (\preg_match('/\${URI:([a-z0-9-_]*)}/i', $routing, $matches) !== false) {
+                if (!empty(\preg_match('/\${URI:([a-z0-9-_]*)}/i', $routing, $matches))) {
                     $uri = $this->projectUri->getAlternativeUri($matches[1]);
                     $routing = \preg_replace('/\${URI:([a-z0-9-_]*)}/i', '', $routing);
                 }

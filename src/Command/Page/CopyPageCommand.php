@@ -194,7 +194,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['fromPageId'] = (string) $this->dataValue('fromSitemapId', '');
+        $newData['fromPageId'] = (string) $this->dataValue('fromPageId', '');
         $newData['toSitemapId'] = (string) $this->dataValue('toSitemapId', '');
         $newData['locale'] = (string) $this->dataValue('locale', '');
         $newData['toPageId'] = (string) $this->dataValue('toPageId', '');

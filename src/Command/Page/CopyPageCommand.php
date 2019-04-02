@@ -129,7 +129,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                 $toSitemap = $this->sitemapRepository->find($this->dataValue('toSitemapId'));
 
                 $toPage = new Page([
-                    'id' => Uuid::uuid4(),
+                    'id' => $this->uuid(),
                     'sitemapId' => $toSitemap->id(),
                     'locale' => $this->dataValue('locale'),
                     'name' => (!empty($this->dataValue('name'))) ? $this->dataValue('name') : $fromPage->name(),

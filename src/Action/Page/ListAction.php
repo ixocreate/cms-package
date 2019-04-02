@@ -25,12 +25,16 @@ class ListAction implements MiddlewareInterface
      */
     private $builder;
 
-    public function __construct(
-        Builder $builder
-    ) {
+    public function __construct(Builder $builder)
+    {
         $this->builder = $builder;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (!\array_key_exists('locale', $request->getQueryParams())) {
@@ -52,6 +56,11 @@ class ListAction implements MiddlewareInterface
         return new ApiSuccessResponse($result);
     }
 
+    /**
+     * @param Item $item
+     * @param string $locale
+     * @return string
+     */
     private function receiveName(Item $item, string $locale): string
     {
         $name = "";

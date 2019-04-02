@@ -39,6 +39,19 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
     }
 
     /**
+     *
+     */
+    private function init(): void
+    {
+        if ($this->collection instanceof EntityCollection) {
+            return;
+        }
+
+        $result = $this->sitemapRepository->findAll();
+        $this->collection = new EntityCollection($result, 'id');
+    }
+
+    /**
      * @param string $sitemapId
      * @return Sitemap|null
      */
@@ -51,19 +64,6 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
         }
 
         return $this->collection->get($sitemapId);
-    }
-
-    /**
-     *
-     */
-    private function init(): void
-    {
-        if ($this->collection instanceof EntityCollection) {
-            return;
-        }
-
-        $result = $this->sitemapRepository->findAll();
-        $this->collection = new EntityCollection($result, "id");
     }
 
     public function receiveHandles(): array

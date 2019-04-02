@@ -13,8 +13,7 @@ use Ixocreate\ApplicationHttp\Pipe\PipeConfigurator;
 use Ixocreate\ApplicationHttp\Pipe\RouteConfigurator;
 use Ixocreate\Cms\Action\Page\AddAction;
 use Ixocreate\Cms\Action\Page\AvailablePageTypesAction;
-use Ixocreate\Cms\Action\Page\CopyPageAction;
-use Ixocreate\Cms\Action\Page\CopySitemapAction;
+use Ixocreate\Cms\Action\Page\CopyAction as CopyPageAction;
 use Ixocreate\Cms\Action\Page\CreateAction;
 use Ixocreate\Cms\Action\Page\CreateAliasPageAction;
 use Ixocreate\Cms\Action\Page\DeleteAction;
@@ -30,6 +29,7 @@ use Ixocreate\Cms\Action\Seo\RobotsAction;
 use Ixocreate\Cms\Action\Seo\SitemapAction;
 use Ixocreate\Cms\Action\Sitemap\IndexAction;
 use Ixocreate\Cms\Action\Sitemap\MoveAction;
+use Ixocreate\Cms\Action\Sitemap\CopyAction as SitemapCopyAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
     $pipe->segment('/api')( function(PipeConfigurator $pipe) {
@@ -56,7 +56,7 @@ $pipe->segmentPipe(AdminConfig::class)(function(PipeConfigurator $pipe) {
 
             $group->get('/sitemap/index', IndexAction::class, 'admin.api.sitemap.index');
             $group->post('/sitemap/move', MoveAction::class, "admin.api.sitemap.move");
-            $group->post('/sitemap/copy', CopySitemapAction::class, "admin.api.sitemap.copy");
+            $group->post('/sitemap/copy', SitemapCopyAction::class, "admin.api.sitemap.copy");
 
             /* deprecated */
             $group->post('/page/move', MoveAction::class, "admin.api.page.move");

@@ -198,15 +198,29 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
             $violationCollector->add('fromSitemapId', 'invalid_fromSitemapId');
         }
 
-        if (!empty($this->dataValue('parentSitemapId'))) {
-            if (!\is_string($this->dataValue('parentSitemapId'))) {
-                $violationCollector->add('parentSitemapId', 'invalid_parentSitemapId');
+        if (!empty($this->dataValue('parentId'))) {
+            if (!\is_string($this->dataValue('parentId'))) {
+                $violationCollector->add('parentId', 'invalid_parentId');
             } else {
-                $sitemap = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
+                $sitemap = $this->sitemapRepository->find($this->dataValue('parentId'));
                 if (empty($sitemap)) {
-                    $violationCollector->add('parentSitemapId', 'invalid_parentSitemapId');
+                    $violationCollector->add('parentId', 'invalid_parentId');
                 }
             }
+        }
+
+        if (!empty($this->dataValue('prevSiblingId'))) {
+            if (!\is_string($this->dataValue('prevSiblingId'))) {
+                $violationCollector->add('prevSiblingId', 'invalid_prevSiblingId');
+            } else {
+                $sitemap = $this->sitemapRepository->find($this->dataValue('prevSiblingId'));
+                if (empty($sitemap)) {
+                    $violationCollector->add('prevSiblingId', 'invalid_prevSiblingId');
+                }
+            }
+        }
+        if (empty($this->dataValue('parentId')) && empty($this->dataValue('prevSiblingId'))) {
+            $violationCollector->add('invalid_data', 'invalid_data');
         }
 
         if (!empty($this->dataValue('locales'))) {

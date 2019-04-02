@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Action\Page;
+namespace Ixocreate\Cms\Action\Sitemap;
 
 use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Command\Page\CopyPageCommand;
+use Ixocreate\Cms\Command\Page\CopySitemapCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,7 +27,7 @@ class CopyAction implements MiddlewareInterface
     private $commandBus;
 
     /**
-     * CopyPageAction constructor.
+     * CopySitemapAction constructor.
      * @param CommandBus $commandBus
      */
     public function __construct(CommandBus $commandBus)
@@ -42,9 +42,9 @@ class CopyAction implements MiddlewareInterface
             return new ApiErrorResponse("invalid_data", [], 400);
         }
 
-        $data['createdBy'] = (string) $request->getAttribute(User::class)->id();
+        $data['createdBy'] = (string)$request->getAttribute(User::class)->id();
 
-        $result = $this->commandBus->command(CopyPageCommand::class, $data);
+        $result = $this->commandBus->command(CopySitemapCommand::class, $data);
         if ($result->isSuccessful()) {
             return new ApiSuccessResponse((string) $result->command()->uuid());
         }

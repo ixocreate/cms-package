@@ -52,7 +52,7 @@ final class CreateAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $pageId = $request->getAttribute("pageId");
+        $pageId = $request->getAttribute('id');
         /** @var Item $item */
         $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
             $pages = $item->pages();

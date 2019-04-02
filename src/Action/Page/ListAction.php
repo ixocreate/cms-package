@@ -46,7 +46,7 @@ class ListAction implements MiddlewareInterface
         }
         $locale = $request->getQueryParams()['locale'];
         $pageType = null;
-        if (empty($request->getQueryParams()['pageType'])) {
+        if (!empty($request->getQueryParams()['pageType'])) {
             $pageType = $request->getQueryParams()['pageType'];
         }
 
@@ -54,7 +54,7 @@ class ListAction implements MiddlewareInterface
         $iterator = new \RecursiveIteratorIterator($this->builder->build(), \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType() === $pageType)) {
+            if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
                 $result[] = [
                     'id' => $item->pages()[$locale]['page']->id(),
                     'name' => $this->receiveName($item, $locale),

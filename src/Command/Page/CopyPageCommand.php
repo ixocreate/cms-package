@@ -132,7 +132,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                     'id' => Uuid::uuid4(),
                     'sitemapId' => $toSitemap->id(),
                     'locale' => $this->dataValue('locale'),
-                    'name' => $this->dataValue('name'),
+                    'name' => (!empty($this->dataValue('name'))) ? $this->dataValue('name') : $fromPage->name(),
                     'status' => 'offline',
                     'createdAt' => $this->createdAt(),
                     'updatedAt' => $this->createdAt(),
@@ -198,6 +198,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
         $newData['toSitemapId'] = (string) $this->dataValue('toSitemapId', '');
         $newData['locale'] = (string) $this->dataValue('locale', '');
         $newData['toPageId'] = (string) $this->dataValue('toPageId', '');
+        $newData['name'] = (string) $this->dataValue('name', '');
         $newData['createdBy'] = (string) $this->dataValue('createdBy', '');
 
         return $this->withData($newData);

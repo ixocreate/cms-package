@@ -196,8 +196,8 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
         $newData = [];
         $newData['fromPageId'] = (string) $this->dataValue('fromSitemapId', '');
         $newData['toSitemapId'] = (string) $this->dataValue('toSitemapId', '');
-        $newData['toPageId'] = (string) $this->dataValue('toPageId', '');
         $newData['locale'] = (string) $this->dataValue('locale', '');
+        $newData['toPageId'] = (string) $this->dataValue('toPageId', '');
         $newData['createdBy'] = (string) $this->dataValue('createdBy', '');
 
         return $this->withData($newData);

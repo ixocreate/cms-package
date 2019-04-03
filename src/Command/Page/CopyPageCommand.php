@@ -71,6 +71,16 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
     private $cache;
 
     /**
+     * @var Page
+     */
+    private $toPage;
+
+    /**
+     * @var Sitemap
+     */
+    private $toSitemap;
+
+    /**
      * CreateCommand constructor.
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
@@ -125,12 +135,11 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
 
             if (!empty($this->dataValue('toSitemapId'))) {
 
-                /** @var Sitemap $toSitemap */
-                $toSitemap = $this->sitemapRepository->find($this->dataValue('toSitemapId'));
+                $this->toSitemap = $this->sitemapRepository->find($this->dataValue('toSitemapId'));
 
-                $toPage = new Page([
+                $this->toPage = new Page([
                     'id' => $this->uuid(),
-                    'sitemapId' => $toSitemap->id(),
+                    'sitemapId' => $this->toSitemap->id(),
                     'locale' => $this->dataValue('locale'),
                     'name' => (!empty($this->dataValue('name'))) ? $this->dataValue('name') : $fromPage->name(),
                     'status' => 'offline',
@@ -139,20 +148,17 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                     'releasedAt' => $this->createdAt(),
                 ]);
 
-                $this->pageRepository->save($toPage);
+                $this->pageRepository->save($this->toPage);
 
                 $this->commandBus->command(SlugCommand::class, [
-                    'name' => (string) $toPage->name(),
-                    'pageId' => (string) $toPage->id(),
+                    'name' => (string) $this->toPage->name(),
+                    'pageId' => (string) $this->toPage->id(),
                 ]);
-            }
+            } else if (!empty($this->dataValue('toPageId'))) {
 
-            if (!empty($this->dataValue('toPageId'))) {
+                $this->toPage = $this->pageRepository->find($this->dataValue('toPageId'));
 
-                $toPage = $this->pageRepository->find($this->dataValue('toPageId'));
-
-                /** @var Sitemap $toSitemap */
-                $toSitemap = $this->sitemapRepository->find($fromPage->sitemapId());
+                $this->toSitemap = $this->sitemapRepository->find($fromPage->sitemapId());
             }
             $this->cache->clear();
 
@@ -164,7 +170,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
 
             $this->commandBus->command(CreateVersionCommand::class, [
                 'pageType' => $pageType::serviceName(),
-                'pageId' => (string) $toPage->id(),
+                'pageId' => (string) $this->toPage->id(),
                 'content' => $pageVersion->content(),
                 'approve' => true,
                 'createdBy' => $this->dataValue('createdBy'),
@@ -173,6 +179,16 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
         });
 
         return true;
+    }
+
+    public function toPage(): ?Page
+    {
+        return $this->toPage;
+    }
+
+    public function toSitemap(): ?Sitemap
+    {
+        return $this->toSitemap;
     }
 
     public static function serviceName(): string

@@ -25,24 +25,36 @@ class ListAction implements MiddlewareInterface
      */
     private $builder;
 
-    public function __construct(
-        Builder $builder
-    ) {
+    /**
+     * ListAction constructor.
+     * @param Builder $builder
+     */
+    public function __construct(Builder $builder)
+    {
         $this->builder = $builder;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (!\array_key_exists('locale', $request->getQueryParams())) {
-            return new ApiErrorResponse("invalid locale");
+            return new ApiErrorResponse('invalid locale');
         }
         $locale = $request->getQueryParams()['locale'];
-        $result = [];
+        $pageType = null;
+        if (!empty($request->getQueryParams()['pageType'])) {
+            $pageType = $request->getQueryParams()['pageType'];
+        }
 
+        $result = [];
         $iterator = new \RecursiveIteratorIterator($this->builder->build(), \RecursiveIteratorIterator::SELF_FIRST);
         /** @var Item $item */
         foreach ($iterator as $item) {
-            if (\array_key_exists($locale, $item->pages())) {
+            if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
                 $result[] = [
                     'id' => $item->pages()[$locale]['page']->id(),
                     'name' => $this->receiveName($item, $locale),
@@ -52,15 +64,20 @@ class ListAction implements MiddlewareInterface
         return new ApiSuccessResponse($result);
     }
 
+    /**
+     * @param Item $item
+     * @param string $locale
+     * @return string
+     */
     private function receiveName(Item $item, string $locale): string
     {
-        $name = "";
+        $name = '';
         if (!empty($item->parent())) {
             $name = $this->receiveName($item->parent(), $locale) . ' / ';
         }
 
         if (!\array_key_exists($locale, $item->pages())) {
-            return " --- ";
+            return ' --- ';
         }
 
         return $name . $item->pages()[$locale]['page']->name();

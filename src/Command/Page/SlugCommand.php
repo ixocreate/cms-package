@@ -100,11 +100,12 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
     private function saveRedirectInfo(Page $page)
     {
         try {
-            $parentId = $this->sitemapRepository->find($page->sitemapId());
+            /** @var Sitemap $sitemap */
+            $sitemap = $this->sitemapRepository->find($page->sitemapId());
 
             $criteria = Criteria::create();
-            $criteria->where(Criteria::expr()->gte('nestedLeft', $parentId->nestedLeft));
-            $criteria->andWhere(Criteria::expr()->lte('nestedRight', $parentId->nestedRight));
+            $criteria->where(Criteria::expr()->gte('nestedLeft', $sitemap->nestedLeft()));
+            $criteria->andWhere(Criteria::expr()->lte('nestedRight', $sitemap->nestedRight()));
 
             $result = $this->sitemapRepository->matching($criteria);
 

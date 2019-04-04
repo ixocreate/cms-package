@@ -26,7 +26,6 @@ use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
 use Ixocreate\Contract\Validation\ViolationCollectorInterface;
 use Ixocreate\Intl\LocaleManager;
-use Ramsey\Uuid\Uuid;
 
 final class CopyPageCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {
@@ -119,11 +118,22 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
     {
         $this->master->transactional(function () {
 
-            /** @var Page $fromPage */
-            $fromPage = $this->pageRepository->find($this->dataValue('fromPageId'));
+            if (!empty($this->dataValue('fromSitemapId'))) {
+                /** @var Sitemap $fromSitemap */
+                $fromSitemap = $this->sitemapRepository->find($this->dataValue('fromSitemapId'));
 
-            /** @var Sitemap $fromSitemap */
-            $fromSitemap = $this->sitemapRepository->find($fromPage->sitemapId());
+                /** @var Page $fromPage */
+                $fromPage = $this->pageRepository->findOneBy([
+                    'sitemapId' => (string) $fromSitemap,
+                    'locale' => $this->dataValue('fromLocale')
+                ]);
+            } else if (!empty($this->dataValue('fromPageId'))) {
+                /** @var Page $fromPage */
+                $fromPage = $this->pageRepository->find($this->dataValue('fromPageId'));
+
+                /** @var Sitemap $fromSitemap */
+                $fromSitemap = $this->sitemapRepository->find($fromPage->sitemapId());
+            }
 
             /** @var PageTypeInterface $pageTypeName */
             $pageTypeName = $fromSitemap->pageType();
@@ -175,7 +185,6 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                 'approve' => true,
                 'createdBy' => $this->dataValue('createdBy'),
             ]);
-
         });
 
         return true;
@@ -198,8 +207,32 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-        if (empty($this->dataValue('fromPageId')) || !\is_string($this->dataValue('fromPageId'))) {
-            $violationCollector->add('fromPageId', 'invalid_fromPageId');
+        if (!empty($this->dataValue('fromPageId')) && \is_string($this->dataValue('fromPageId'))) {
+            /** @var Page $fromPage */
+            $fromPage = $this->pageRepository->find($this->dataValue('fromPageId'));
+            if ($fromPage === null) {
+                $violationCollector->add('fromPageId', 'invalid_fromPageId');
+            }
+        }
+
+        if (!empty($this->dataValue('fromSitemapId')) && \is_string($this->dataValue('fromSitemapId'))) {
+            /** @var Sitemap $fromSitemap */
+            $fromSitemap = $this->sitemapRepository->find($this->dataValue('fromSitemapId'));
+            if ($fromSitemap === null) {
+                $violationCollector->add('fromSitemapId', 'invalid_fromSitemapId');
+            }
+        }
+
+        if (!empty($this->dataValue('fromSitemapId')) && empty($this->dataValue('fromLocale'))) {
+            $violationCollector->add('fromLocale', 'required_fromLocale');
+        }
+
+        if (empty($this->dataValue('fromSitemapId')) && empty($this->dataValue('fromPageId'))) {
+            $violationCollector->add('fromPageId', 'invalid_parameters', 'either fromSitemapId or fromPageId are required');
+        }
+
+        if (!empty($this->dataValue('fromSitemapId')) && !empty($this->dataValue('fromPageId'))) {
+            $violationCollector->add('fromPageId', 'invalid_parameters', 'only fromSitemapId or fromPageId are allowed');
         }
 
         if (empty($this->dataValue('createdBy')) || !\is_string($this->dataValue('createdBy'))) {
@@ -210,10 +243,14 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
     public function filter(): FilterableInterface
     {
         $newData = [];
+        $newData['fromSitemapId'] = (string) $this->dataValue('fromSitemapId', '');
+        $newData['fromLocale'] = (string) $this->dataValue('fromLocale', '');
         $newData['fromPageId'] = (string) $this->dataValue('fromPageId', '');
+
         $newData['toSitemapId'] = (string) $this->dataValue('toSitemapId', '');
-        $newData['locale'] = (string) $this->dataValue('locale', '');
+        $newData['toLocale'] = (string) $this->dataValue('toLocale', '');
         $newData['toPageId'] = (string) $this->dataValue('toPageId', '');
+
         $newData['name'] = (string) $this->dataValue('name', '');
         $newData['createdBy'] = (string) $this->dataValue('createdBy', '');
 

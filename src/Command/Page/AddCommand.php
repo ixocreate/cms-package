@@ -9,24 +9,24 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
-use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\HandlePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Contract\Cache\CacheInterface;
 use Ixocreate\Contract\CommandBus\CommandInterface;
 use Ixocreate\Contract\Filter\FilterableInterface;
 use Ixocreate\Contract\Validation\ValidatableInterface;
 use Ixocreate\Contract\Validation\ViolationCollectorInterface;
 use Ixocreate\Intl\LocaleManager;
+use Doctrine\DBAL\Driver\Connection;
+use Ixocreate\Contract\Cache\CacheInterface;
+use Ramsey\Uuid\Uuid;
 
-final class CreateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class AddCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageTypeSubManager
@@ -92,45 +92,30 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
     }
 
     /**
-     * @throws \Exception
      * @return bool
      */
     public function execute(): bool
     {
         $this->master->transactional(function () {
+            /** @var Sitemap $sitemap */
+            $sitemap = $this->sitemapRepository->find($this->dataValue('sitemapId'));
             /** @var PageTypeInterface $pageType */
-            $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
-
-            $sitemap = new Sitemap([
-                'id' => $this->uuid(),
-                'pageType' => $pageType::serviceName(),
-            ]);
-
-            if (\is_subclass_of($pageType, HandlePageTypeInterface::class)) {
-                $sitemap = $sitemap->with("handle", $pageType::serviceName());
-            }
-
-            if (empty($this->dataValue('parentSitemapId'))) {
-                $sitemap = $this->sitemapRepository->createRoot($sitemap);
-            } else {
-                /** @var Sitemap $parent */
-                $parent = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
-                $sitemap = $this->sitemapRepository->insertAsLastChild($sitemap, $parent);
-            }
+            $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
             $page = new Page([
                 'id' => $this->uuid(),
-                'sitemapId' => $sitemap->id(),
+                'sitemapId' => $this->dataValue('sitemapId'),
                 'locale' => $this->dataValue('locale'),
                 'name' => $this->dataValue('name'),
                 'status' => (!empty($this->dataValue('status')))? $this->dataValue('status'):'offline',
-                'updatedAt' => $this->createdAt(),
-                'createdAt' => $this->createdAt(),
-                'releasedAt' => $this->createdAt(),
+                'updatedAt' => new \DateTime(),
+                'createdAt' => new \DateTime(),
+                'releasedAt' => new \DateTime(),
             ]);
 
             /** @var Page $page */
             $page = $this->pageRepository->save($page);
+
 
             $this->cache->clear();
 
@@ -147,54 +132,50 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 'approve' => true,
             ]);
         });
-
         return true;
-    }
-
-    public static function serviceName(): string
-    {
-        return 'cms.page-create';
-    }
-
-    public function validate(ViolationCollectorInterface $violationCollector): void
-    {
-        if (!$this->pageTypeSubManager->has($this->dataValue('pageType'))) {
-            $violationCollector->add("pageType", "invalid_pageType");
-        }
-
-        if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
-            $violationCollector->add("name", "invalid_name");
-        }
-
-        if (!empty($this->dataValue("parentSitemapId"))) {
-            if (!\is_string($this->dataValue("parentSitemapId"))) {
-                $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
-            } else {
-                $sitemap = $this->sitemapRepository->find($this->dataValue("parentSitemapId"));
-                if (empty($sitemap)) {
-                    $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
-                }
-            }
-        }
-
-        if (!$this->localeManager->has((string) $this->dataValue("locale"))) {
-            $violationCollector->add("locale", "invalid_locale");
-        }
-
     }
 
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['pageType'] = (string) $this->dataValue('pageType');
-        $newData['parentSitemapId'] = $this->dataValue('parentSitemapId');
-        $newData['locale'] = (string) $this->dataValue('locale');
-        $newData['name'] = (string) $this->dataValue('name');
+        $newData['sitemapId'] = (string) $this->dataValue('sitemapId');
+        $newData['locale'] = (string)$this->dataValue('locale');
+        $newData['name'] = (string)$this->dataValue('name');
         $newData['createdBy'] = (string) $this->dataValue('createdBy');
-        $newData['idFromOriginal'] = (string) $this->dataValue('idFromOriginal');
         $newData['content'] = $this->dataValue('content');
         $newData['status'] = $this->dataValue('status');
 
         return $this->withData($newData);
+    }
+
+    public static function serviceName(): string
+    {
+        return 'cms.page-add';
+    }
+
+    public function validate(ViolationCollectorInterface $violationCollector): void
+    {
+//        if (!$this->pageTypeSubManager->has($this->dataValue('sitemapId'))) {
+//            $violationCollector->add("sitemapId", "invalid_sitemapId");
+//        }
+
+//        if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
+//            $violationCollector->add("name", "invalid_name");
+//        }
+//
+//        if (!empty($this->dataValue("parentSitemapId"))) {
+//            if (!\is_string($this->dataValue("parentSitemapId"))) {
+//                $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
+//            } else {
+//                $sitemap = $this->sitemapRepository->find($this->dataValue("parentSitemapId"));
+//                if (empty($sitemap)) {
+//                    $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
+//                }
+//            }
+//        }
+//
+//        if (!$this->localeManager->has($this->dataValue("locale"))) {
+//            $violationCollector->add("locale", "invalid_locale");
+//        }
     }
 }

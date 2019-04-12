@@ -11,6 +11,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Cms\Router\Factory\CmsRouterFactory;
 use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
@@ -25,6 +26,7 @@ $serviceManager->addSubManager(PageTypeSubManager::class);
 $serviceManager->addSubManager(BlockSubManager::class);
 $serviceManager->addSubManager(XmlSitemapProviderSubManager::class);
 $serviceManager->addSubManager(SearchSubManager::class);
+$serviceManager->addSubManager(ReplacementManager::class);
 
 $serviceManager->addFactory(CmsRouter::class, CmsRouterFactory::class);
 $serviceManager->addFactory(PageRoute::class);

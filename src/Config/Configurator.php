@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Config;
 
+use Ixocreate\Cms\Router\Replacement\ReplacementInterface;
+use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\PageProvider;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
@@ -46,12 +48,18 @@ final class Configurator implements ConfiguratorInterface
     private $treeSearchSubManagerConfigurator;
 
     /**
+     * @var SubManagerConfigurator
+     */
+    private $replacementManagerConfigurator;
+
+    /**
      * Configurator constructor.
      */
     public function __construct()
     {
         $this->xmlSitemapSubManagerConfigurator = new SubManagerConfigurator(XmlSitemapProviderSubManager::class, XmlSitemapProviderInterface::class);
         $this->treeSearchSubManagerConfigurator = new SubManagerConfigurator(SearchSubManager::class, SearchInterface::class);
+        $this->replacementManagerConfigurator = new SubManagerConfigurator(ReplacementManager::class, ReplacementInterface::class);
         $this->addXmlSitemapProvider(PageProvider::class);
     }
 
@@ -126,6 +134,15 @@ final class Configurator implements ConfiguratorInterface
     }
 
     /**
+     * @param string $name
+     * @param string|null $factory
+     */
+    public function addRoutingReplacement(string $name, ?string $factory = null): void
+    {
+        $this->replacementManagerConfigurator->addService($name, $factory);
+    }
+
+    /**
      * @param ServiceRegistryInterface $serviceRegistry
      * @return void
      */
@@ -135,5 +152,6 @@ final class Configurator implements ConfiguratorInterface
 
         $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
         $this->treeSearchSubManagerConfigurator->registerService($serviceRegistry);
+        $this->replacementManagerConfigurator->registerService($serviceRegistry);
     }
 }

@@ -9,16 +9,13 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
-use Ixocreate\Cms\Config\Config;
-use Ixocreate\Intl\LocaleManager;
-use Ixocreate\ProjectUri\ProjectUri;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Zend\Diactoros\Uri;
+use Zend\Expressive\MiddlewareFactory;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
 use Zend\Expressive\Router\RouterInterface;
@@ -31,33 +28,26 @@ final class CmsRouter implements RouterInterface
     private $routes;
 
     /**
-     * @var Config
+     * @var UrlGenerator
      */
-    private $config;
+    private $generator;
 
     /**
-     * @var LocaleManager
+     * @var MiddlewareFactory
      */
-    private $localeManager;
-
-    /**
-     * @var ProjectUri
-     */
-    private $projectUri;
+    private $middlewareFactory;
 
     /**
      * CmsRouter constructor.
-     * @param array $routes
-     * @param Config $config
-     * @param LocaleManager $localeManager
-     * @param ProjectUri $projectUri
+     * @param RouteCollection $routes
+     * @param MiddlewareFactory $middlewareFactory
      */
-    public function __construct(RouteCollection $routes, Config $config, LocaleManager $localeManager, ProjectUri $projectUri)
+    public function __construct(RouteCollection $routes, MiddlewareFactory $middlewareFactory)
     {
         $this->routes = $routes;
-        $this->config = $config;
-        $this->localeManager = $localeManager;
-        $this->projectUri = $projectUri;
+        $this->generator = new UrlGenerator($this->routes, new RequestContext(''));
+
+        $this->middlewareFactory = $middlewareFactory;
     }
 
     /**
@@ -92,12 +82,15 @@ final class CmsRouter implements RouterInterface
         } catch (ResourceNotFoundException $e) {
             return RouteResult::fromRouteFailure(Route::HTTP_METHOD_ANY);
         }
-        //var_dump($routeMatch);die();
 
-        $route = new Route($this->routes->get($routeMatch['_route'])->getPath(), $routeMatch['middleware'], Route::HTTP_METHOD_ANY, $routeMatch['_route']);
+        $route = new Route(
+            $this->routes->get($routeMatch['_route'])->getPath(),
+            $this->middlewareFactory->pipeline($routeMatch['middleware']),
+            Route::HTTP_METHOD_ANY,
+            $routeMatch['_route']
+        );
         $route->setOptions(['pageId' => $routeMatch['pageId']]);
         unset($routeMatch['_route'], $routeMatch['middleware']);
-
 
         return RouteResult::fromRoute($route, $routeMatch);
     }
@@ -111,20 +104,7 @@ final class CmsRouter implements RouterInterface
      */
     public function generateUri(string $name, array $substitutions = [], array $options = []): string
     {
-        if (!\array_key_exists('locale', $options)) {
-            throw new \Exception("Invalid locale");
-        }
-        $locale = $options['locale'];
-
-        $context = new RequestContext('');
-
-        $generator = new UrlGenerator($this->routes, $context);
-
-        $path = $generator->generate($name, $substitutions);
-
-        //$uri = $this->getLocalizationBaseUrl($locale);
-        //$uri = $uri->withPath(\rtrim($uri->getPath(), '/') . $path);
-
+        $path = $this->generator->generate($name, $substitutions);
         return (string) $path;
     }
 }

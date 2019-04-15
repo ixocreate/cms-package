@@ -138,11 +138,12 @@ final class RouteCollectionCacheable implements CacheableInterface
                         $routePrefix .= "." . $name;
                     }
 
-                    $uri = new Uri($uri);
+                    $uriParts = \parse_url($uri);
 
-                    $routeObj = new Route($uri->getPath());
-                    if (!empty($uri->getHost())) {
-                        $routeObj->setHost($uri->getHost());
+                    $routeObj = new Route($uriParts['path']);
+                    if (!empty($uriParts['host'])) {
+                        $routeObj->setHost($uriParts['host']);
+                        $routeObj->setSchemes($uriParts['scheme']);
                     }
 
                     $routeObj->setDefault('pageId', $routeSpecification->pageId());

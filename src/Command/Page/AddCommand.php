@@ -107,7 +107,7 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
                 'sitemapId' => $this->dataValue('sitemapId'),
                 'locale' => $this->dataValue('locale'),
                 'name' => $this->dataValue('name'),
-                'status' => (!empty($this->dataValue('status')))? $this->dataValue('status'):'offline',
+                'status' => 'offline',
                 'updatedAt' => new \DateTime(),
                 'createdAt' => new \DateTime(),
                 'releasedAt' => new \DateTime(),
@@ -128,7 +128,7 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
                 'pageType' => $pageType::serviceName(),
                 'pageId' => (string) $page->id(),
                 'createdBy' => $this->dataValue('createdBy'),
-                'content' => (!empty($this->dataValue('content')))? $this->dataValue('content') : [],
+                'content' => [],
                 'approve' => true,
             ]);
         });

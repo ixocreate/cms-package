@@ -51,6 +51,8 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
      * SlugCommand constructor.
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
+     * @param OldRedirectRepository $oldRedirectRepository
+     * @param PageRoute $pageRoute
      */
     public function __construct(
         PageRepository $pageRepository,

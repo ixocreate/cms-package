@@ -123,7 +123,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 'sitemapId' => $sitemap->id(),
                 'locale' => $this->dataValue('locale'),
                 'name' => $this->dataValue('name'),
-                'status' => (!empty($this->dataValue('status')))? $this->dataValue('status'):'offline',
+                'status' => 'offline',
                 'updatedAt' => $this->createdAt(),
                 'createdAt' => $this->createdAt(),
                 'releasedAt' => $this->createdAt(),
@@ -143,7 +143,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
                 'pageType' => $pageType::serviceName(),
                 'pageId' => (string) $page->id(),
                 'createdBy' => $this->dataValue('createdBy'),
-                'content' => (!empty($this->dataValue('content')))? $this->dataValue('content') : [],
+                'content' => [],
                 'approve' => true,
             ]);
         });

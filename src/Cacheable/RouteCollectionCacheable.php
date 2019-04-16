@@ -20,7 +20,6 @@ use Ixocreate\Intl\LocaleManager;
 use RecursiveIteratorIterator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Zend\Diactoros\Uri;
 
 final class RouteCollectionCacheable implements CacheableInterface
 {

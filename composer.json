@@ -1,5 +1,5 @@
 {
-    "name": "ixocreate/cms",
+    "name": "ixocreate/cms-package",
     "description": "IXOCREATE CMS implementation",
     "license": "MIT",
     "type": "library",

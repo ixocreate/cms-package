@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Block;
+namespace Ixocreate\Cms\Block;
 
 use Ixocreate\Application\Service\Configurator\ConfiguratorInterface;
 use Ixocreate\Application\Service\Registry\ServiceRegistryInterface;

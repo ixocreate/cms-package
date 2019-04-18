@@ -7,16 +7,16 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Cacheable;
+namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Package\Router\Replacement\ReplacementManager;
-use Ixocreate\Cms\Package\Router\RouteSpecification;
-use Ixocreate\Cms\Package\Router\RoutingItem;
-use Ixocreate\Cms\Package\Site\Structure\StructureItem;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Router\RouteSpecification;
+use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\Cache\CacheableInterface;
-use Ixocreate\Intl\Package\LocaleManager;
+use Ixocreate\Intl\LocaleManager;
 use RecursiveIteratorIterator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;

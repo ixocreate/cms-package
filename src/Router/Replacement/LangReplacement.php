@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Router\Replacement;
+namespace Ixocreate\Cms\Router\Replacement;
 
-use Ixocreate\Cms\Package\PageType\RootPageTypeInterface;
-use Ixocreate\Cms\Package\Router\RouteSpecification;
-use Ixocreate\Cms\Package\Router\RoutingItem;
-use Ixocreate\Intl\Package\LocaleManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Cms\Router\RouteSpecification;
+use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Intl\LocaleManager;
 
 final class LangReplacement implements ReplacementInterface
 {

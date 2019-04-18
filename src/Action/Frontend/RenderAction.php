@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Action\Frontend;
+namespace Ixocreate\Cms\Action\Frontend;
 
-use Ixocreate\Cms\Package\Request\CmsRequest;
-use Ixocreate\Template\Package\TemplateResponse;
+use Ixocreate\Cms\Request\CmsRequest;
+use Ixocreate\Template\TemplateResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

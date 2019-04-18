@@ -1,9 +1,9 @@
 <?php
 namespace App;
-use Ixocreate\Cms\Package\Template\NavigationExtension;
-use Ixocreate\Cms\Package\Template\PageUrlExtension;
-use Ixocreate\Cms\Package\Template\TreeExtension;
-use Ixocreate\Template\Package\TemplateConfigurator;
+use Ixocreate\Cms\Template\NavigationExtension;
+use Ixocreate\Cms\Template\PageUrlExtension;
+use Ixocreate\Cms\Template\TreeExtension;
+use Ixocreate\Template\TemplateConfigurator;
 
 /** @var TemplateConfigurator $template */
 

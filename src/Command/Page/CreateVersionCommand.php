@@ -7,26 +7,26 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Command\Page;
+namespace Ixocreate\Cms\Command\Page;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Package\Cacheable\PageVersionCacheable;
-use Ixocreate\Cms\Package\Entity\Page;
-use Ixocreate\Cms\Package\Entity\PageVersion;
-use Ixocreate\Cms\Package\Entity\Sitemap;
-use Ixocreate\Cms\Package\Event\PageEvent;
-use Ixocreate\Cms\Package\PageType\PageTypeInterface;
-use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Package\Repository\PageRepository;
-use Ixocreate\Cms\Package\Repository\PageVersionRepository;
-use Ixocreate\Cms\Package\Repository\SitemapRepository;
-use Ixocreate\CommandBus\Package\Command\AbstractCommand;
+use Ixocreate\Cms\Cacheable\PageVersionCacheable;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Event\PageEvent;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommonTypes\Entity\SchemaType;
-use Ixocreate\Filter\Package\FilterableInterface;
-use Ixocreate\Validation\Package\ValidatableInterface;
-use Ixocreate\Validation\Package\ViolationCollectorInterface;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 use Ixocreate\Entity\Type\Type;
-use Ixocreate\Event\Package\EventDispatcher;
+use Ixocreate\Event\EventDispatcher;
 
 final class CreateVersionCommand extends AbstractCommand implements FilterableInterface, ValidatableInterface
 {

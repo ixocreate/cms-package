@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Router\Replacement;
+namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\ServiceManager\SubManager\SubManager;
 

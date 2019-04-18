@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Site\Tree\Search;
+namespace Ixocreate\Cms\Site\Tree\Search;
 
-use Ixocreate\Cms\Package\Site\Tree\Item;
-use Ixocreate\Cms\Package\Site\Tree\SearchInterface;
+use Ixocreate\Cms\Site\Tree\Item;
+use Ixocreate\Cms\Site\Tree\SearchInterface;
 
 final class NavigationSearch implements SearchInterface
 {

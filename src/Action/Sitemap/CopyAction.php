@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Action\Sitemap;
+namespace Ixocreate\Cms\Action\Sitemap;
 
-use Ixocreate\Admin\Package\Entity\User;
-use Ixocreate\Admin\Package\Response\ApiErrorResponse;
-use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Package\Command\Page\CopySitemapCommand;
+use Ixocreate\Admin\Entity\User;
+use Ixocreate\Admin\Response\ApiErrorResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Command\Page\CopySitemapCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

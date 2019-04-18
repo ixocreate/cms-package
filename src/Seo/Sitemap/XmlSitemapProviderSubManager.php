@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Seo\Sitemap;
+namespace Ixocreate\Cms\Seo\Sitemap;
 
 use Ixocreate\ServiceManager\SubManager\SubManager;
 

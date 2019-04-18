@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package;
+namespace Ixocreate\Cms;
 
 /** @var MiddlewareConfigurator $middleware */
 use Ixocreate\Application\Http\Middleware\MiddlewareConfigurator;
-use Ixocreate\Cms\Package\Middleware\CmsMiddleware;
-use Ixocreate\Cms\Package\Middleware\Factory\CmsMiddlewareFactory;
+use Ixocreate\Cms\Middleware\CmsMiddleware;
+use Ixocreate\Cms\Middleware\Factory\CmsMiddlewareFactory;
 
 $middleware->addMiddleware(CmsMiddleware::class, CmsMiddlewareFactory::class);
 

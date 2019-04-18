@@ -7,21 +7,21 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Site\Tree\Factory;
+namespace Ixocreate\Cms\Site\Tree\Factory;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Package\Cacheable\PageCacheable;
-use Ixocreate\Cms\Package\Cacheable\PageVersionCacheable;
-use Ixocreate\Cms\Package\Cacheable\SitemapCacheable;
-use Ixocreate\Cms\Package\Cacheable\StructureCacheable;
-use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Package\Router\PageRoute;
-use Ixocreate\Cms\Package\Site\Tree\Container;
-use Ixocreate\Cms\Package\Site\Tree\ItemFactory;
-use Ixocreate\Cms\Package\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\PageVersionCacheable;
+use Ixocreate\Cms\Cacheable\SitemapCacheable;
+use Ixocreate\Cms\Cacheable\StructureCacheable;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\Tree\Container;
+use Ixocreate\Cms\Site\Tree\ItemFactory;
+use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Cache\Package\CacheableSubManager;
+use Ixocreate\Cache\CacheableSubManager;
 
 final class ContainerFactory implements FactoryInterface
 {

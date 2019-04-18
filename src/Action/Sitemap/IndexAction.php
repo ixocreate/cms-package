@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Action\Sitemap;
+namespace Ixocreate\Cms\Action\Sitemap;
 
-use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Package\Loader\DatabaseSitemapLoader;
-use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Package\PageType\TerminalPageTypeInterface;
-use Ixocreate\Cms\Package\Site\Admin\Builder;
-use Ixocreate\Cms\Package\Site\Admin\Item;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
+use Ixocreate\Cms\Site\Admin\Builder;
+use Ixocreate\Cms\Site\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

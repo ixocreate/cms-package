@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Site\Structure;
+namespace Ixocreate\Cms\Site\Structure;
 
 final class StructureItem
 {

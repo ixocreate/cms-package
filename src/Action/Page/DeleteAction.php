@@ -7,15 +7,15 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Action\Page;
+namespace Ixocreate\Cms\Action\Page;
 
-use Ixocreate\Admin\Package\Response\ApiErrorResponse;
-use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Package\Entity\Page;
-use Ixocreate\Cms\Package\Repository\OldRedirectRepository;
-use Ixocreate\Cms\Package\Repository\PageRepository;
-use Ixocreate\Cms\Package\Repository\PageVersionRepository;
-use Ixocreate\Cms\Package\Repository\SitemapRepository;
+use Ixocreate\Admin\Response\ApiErrorResponse;
+use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Repository\OldRedirectRepository;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

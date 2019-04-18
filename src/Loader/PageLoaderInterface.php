@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Loader;
+namespace Ixocreate\Cms\Loader;
 
-use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Entity\Page;
 
 interface PageLoaderInterface
 {

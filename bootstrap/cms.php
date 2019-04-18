@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Cms\Package;
+namespace Ixocreate\Cms;
 
-use Ixocreate\Cms\Package\Config\Configurator;
-use Ixocreate\Cms\Package\Router\Replacement\LangReplacement;
-use Ixocreate\Cms\Package\Router\Replacement\ParentReplacement;
-use Ixocreate\Cms\Package\Router\Replacement\RegionReplacement;
-use Ixocreate\Cms\Package\Router\Replacement\SlugReplacement;
-use Ixocreate\Cms\Package\Router\Replacement\UriReplacement;
-use Ixocreate\Cms\Package\Site\Tree\Search\ActiveSearch;
-use Ixocreate\Cms\Package\Site\Tree\Search\CallableSearch;
-use Ixocreate\Cms\Package\Site\Tree\Search\HandleSearch;
-use Ixocreate\Cms\Package\Site\Tree\Search\MaxLevelSearch;
-use Ixocreate\Cms\Package\Site\Tree\Search\MinLevelSearch;
-use Ixocreate\Cms\Package\Site\Tree\Search\NavigationSearch;
-use Ixocreate\Cms\Package\Site\Tree\Search\OnlineSearch;
+use Ixocreate\Cms\Config\Configurator;
+use Ixocreate\Cms\Router\Replacement\LangReplacement;
+use Ixocreate\Cms\Router\Replacement\ParentReplacement;
+use Ixocreate\Cms\Router\Replacement\RegionReplacement;
+use Ixocreate\Cms\Router\Replacement\SlugReplacement;
+use Ixocreate\Cms\Router\Replacement\UriReplacement;
+use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
+use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
+use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
+use Ixocreate\Cms\Site\Tree\Search\MaxLevelSearch;
+use Ixocreate\Cms\Site\Tree\Search\MinLevelSearch;
+use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
+use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
 
 /** @var Configurator $cms */
 $cms->addTreeSearchable(ActiveSearch::class);

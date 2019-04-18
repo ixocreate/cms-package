@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Router;
+namespace Ixocreate\Cms\Router;
 
-use Ixocreate\Cms\Package\Config\Config;
-use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Application\Uri\ApplicationUri;
 
 final class PageRoute

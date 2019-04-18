@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Router\Replacement;
+namespace Ixocreate\Cms\Router\Replacement;
 
-use Ixocreate\Cms\Package\Router\RouteSpecification;
-use Ixocreate\Cms\Package\Router\RoutingItem;
+use Ixocreate\Cms\Router\RouteSpecification;
+use Ixocreate\Cms\Router\RoutingItem;
 use Ixocreate\Application\Uri\ApplicationUri;
 
 final class UriReplacement implements ReplacementInterface

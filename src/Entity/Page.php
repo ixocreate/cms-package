@@ -7,18 +7,18 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Entity;
+namespace Ixocreate\Cms\Entity;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Ixocreate\Type\Package\Entity\DateTimeType;
+use Ixocreate\Type\Entity\DateTimeType;
 use Ixocreate\Entity\DatabaseEntityInterface;
-use Ixocreate\Type\Package\TypeInterface;
-use Ixocreate\Entity\Package\Definition;
-use Ixocreate\Entity\Package\DefinitionCollection;
-use Ixocreate\Entity\Package\EntityInterface;
-use Ixocreate\Entity\Package\EntityTrait;
-use Ixocreate\Type\Package\Entity\UuidType;
+use Ixocreate\Type\TypeInterface;
+use Ixocreate\Entity\Definition;
+use Ixocreate\Entity\DefinitionCollection;
+use Ixocreate\Entity\EntityInterface;
+use Ixocreate\Entity\EntityTrait;
+use Ixocreate\Type\Entity\UuidType;
 
 final class Page implements EntityInterface, DatabaseEntityInterface
 {

@@ -7,22 +7,22 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Command\Page;
+namespace Ixocreate\Cms\Command\Page;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Package\Cacheable\PageCacheable;
-use Ixocreate\Cms\Package\Cacheable\StructureCacheable;
-use Ixocreate\Cms\Package\Config\Config;
-use Ixocreate\Cms\Package\Entity\Navigation;
-use Ixocreate\Cms\Package\Entity\Page;
-use Ixocreate\Cms\Package\Repository\NavigationRepository;
-use Ixocreate\Cms\Package\Repository\PageRepository;
-use Ixocreate\CommandBus\Package\Command\AbstractCommand;
+use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\StructureCacheable;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Navigation;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Repository\NavigationRepository;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\CommandBus\Package\CommandInterface;
-use Ixocreate\Filter\Package\FilterableInterface;
-use Ixocreate\Validation\Package\ValidatableInterface;
-use Ixocreate\Validation\Package\ViolationCollectorInterface;
+use Ixocreate\CommandBus\CommandInterface;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
 final class UpdateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package;
+namespace Ixocreate\Cms;
 
-use Ixocreate\Cache\Package\CacheConfigurator;
-use Ixocreate\Cache\Package\Option\Chain;
-use Ixocreate\Cache\Package\Option\Filesystem;
-use Ixocreate\Cache\Package\Option\InMemory;
+use Ixocreate\Cache\CacheConfigurator;
+use Ixocreate\Cache\Option\Chain;
+use Ixocreate\Cache\Option\Filesystem;
+use Ixocreate\Cache\Option\InMemory;
 
 /** @var CacheConfigurator $cache */
 $cache->addCacheableDirectory(__DIR__ . '/../src/Cacheable');

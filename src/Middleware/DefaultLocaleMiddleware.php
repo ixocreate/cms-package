@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Middleware;
+namespace Ixocreate\Cms\Middleware;
 
-use Ixocreate\Cms\Package\Config\Config;
-use Ixocreate\Intl\Package\LocaleManager;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Router;
+namespace Ixocreate\Cms\Router;
 
 final class RouteSpecification
 {

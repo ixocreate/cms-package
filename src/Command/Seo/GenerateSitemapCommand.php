@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Command\Seo;
+namespace Ixocreate\Cms\Command\Seo;
 
-use Ixocreate\Cms\Package\Seo\Sitemap\UrlsetCollector;
-use Ixocreate\Cms\Package\Seo\Sitemap\XmlSitemapProviderInterface;
-use Ixocreate\Cms\Package\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\CommandBus\Package\Command\AbstractCommand;
+use Ixocreate\Cms\Seo\Sitemap\UrlsetCollector;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\CommandBus\Command\AbstractCommand;
 use Thepixeldeveloper\Sitemap\Drivers\XmlWriterDriver;
 
 class GenerateSitemapCommand extends AbstractCommand

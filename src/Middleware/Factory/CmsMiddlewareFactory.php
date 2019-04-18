@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Middleware\Factory;
+namespace Ixocreate\Cms\Middleware\Factory;
 
 use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
-use Ixocreate\Cms\Package\Middleware\CmsMiddleware;
-use Ixocreate\Cms\Package\Middleware\DefaultLocaleMiddleware;
-use Ixocreate\Cms\Package\Middleware\OldUrlRedirectMiddleware;
-use Ixocreate\Cms\Package\Router\CmsRouter;
+use Ixocreate\Cms\Middleware\CmsMiddleware;
+use Ixocreate\Cms\Middleware\DefaultLocaleMiddleware;
+use Ixocreate\Cms\Middleware\OldUrlRedirectMiddleware;
+use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 use Zend\Expressive\MiddlewareContainer;

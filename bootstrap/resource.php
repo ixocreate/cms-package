@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package;
+namespace Ixocreate\Cms;
 
 /** @var ResourceConfigurator $resource */
-use Ixocreate\Resource\Package\SubManager\ResourceConfigurator;
+use Ixocreate\Resource\SubManager\ResourceConfigurator;
 

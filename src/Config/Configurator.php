@@ -7,15 +7,15 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Config;
+namespace Ixocreate\Cms\Config;
 
-use Ixocreate\Cms\Package\Router\Replacement\ReplacementInterface;
-use Ixocreate\Cms\Package\Router\Replacement\ReplacementManager;
-use Ixocreate\Cms\Package\Seo\Sitemap\PageProvider;
-use Ixocreate\Cms\Package\Seo\Sitemap\XmlSitemapProviderInterface;
-use Ixocreate\Cms\Package\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\Cms\Package\Site\Tree\SearchInterface;
-use Ixocreate\Cms\Package\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Router\Replacement\ReplacementInterface;
+use Ixocreate\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Seo\Sitemap\PageProvider;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\Cms\Site\Tree\SearchInterface;
+use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\Application\Service\Configurator\ConfiguratorInterface;
 use Ixocreate\Application\Service\Registry\ServiceRegistryInterface;
 use Ixocreate\Application\Service\SubManagerConfigurator;

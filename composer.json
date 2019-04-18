@@ -24,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Ixocreate\\Cms\\Package\\": "src/"
+            "Ixocreate\\Cms\\": "src/"
         }
     },
     "autoload-dev": {

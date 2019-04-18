@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Action\Seo;
+namespace Ixocreate\Cms\Action\Seo;
 
 use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ResponseInterface;

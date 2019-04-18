@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\Bootstrap;
+namespace Ixocreate\Cms\Bootstrap;
 
-use Ixocreate\Cms\Package\Config\Configurator;
+use Ixocreate\Cms\Config\Configurator;
 use Ixocreate\Application\Service\Bootstrap\BootstrapItemInterface;
 use Ixocreate\Application\Service\Configurator\ConfiguratorInterface;
 

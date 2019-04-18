@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Cms\Package;
+namespace Ixocreate\Cms;
 
-use Ixocreate\Cms\Package\Block\BlockSubManager;
-use Ixocreate\Cms\Package\Loader\DatabasePageLoader;
-use Ixocreate\Cms\Package\Loader\DatabaseSitemapLoader;
-use Ixocreate\Cms\Package\Loader\Factory\DatabasePageLoaderFactory;
-use Ixocreate\Cms\Package\Loader\Factory\DatabaseSitemapLoaderFactory;
-use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Package\Router\CmsRouter;
-use Ixocreate\Cms\Package\Router\Factory\CmsRouterFactory;
-use Ixocreate\Cms\Package\Router\PageRoute;
-use Ixocreate\Cms\Package\Router\Replacement\ReplacementManager;
-use Ixocreate\Cms\Package\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\Cms\Package\Site\Admin\Builder;
-use Ixocreate\Cms\Package\Site\Structure\Factory\StructureBuilderFactory;
-use Ixocreate\Cms\Package\Site\Structure\StructureBuilder;
-use Ixocreate\Cms\Package\Site\Tree\Container;
-use Ixocreate\Cms\Package\Site\Tree\Factory\ContainerFactory;
-use Ixocreate\Cms\Package\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Block\BlockSubManager;
+use Ixocreate\Cms\Loader\DatabasePageLoader;
+use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\Loader\Factory\DatabasePageLoaderFactory;
+use Ixocreate\Cms\Loader\Factory\DatabaseSitemapLoaderFactory;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Router\CmsRouter;
+use Ixocreate\Cms\Router\Factory\CmsRouterFactory;
+use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\Cms\Site\Admin\Builder;
+use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
+use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Cms\Site\Tree\Container;
+use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
+use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\ServiceManager\ServiceManagerConfigurator;
 
 /** @var ServiceManagerConfigurator $serviceManager */

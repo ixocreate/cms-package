@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Package\Command\Page;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Package\Entity\Page;
 use Ixocreate\Cms\Package\Entity\PageVersion;
@@ -126,7 +125,7 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
                 /** @var Sitemap $parent */
                 $parent = $this->sitemapRepository->find($this->dataValue('parentId'));
                 $sitemap = $this->sitemapRepository->insertAsFirstChild($sitemap, $parent);
-            } else if (!empty($this->dataValue('prevSiblingId'))) {
+            } elseif (!empty($this->dataValue('prevSiblingId'))) {
                 /** @var Sitemap $sibling */
                 $sibling = $this->sitemapRepository->find($this->dataValue('prevSiblingId'));
                 $sitemap = $this->sitemapRepository->insertAsNextSibling($sitemap, $sibling);
@@ -150,7 +149,6 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
 
                 foreach ($query->getResult() as $pageVersion) {
                     /** @var PageVersion $pageVersion */
-
                     $page = new Page([
                         'id' => Uuid::uuid4(),
                         'sitemapId' => $sitemap->id(),
@@ -181,7 +179,6 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
                     ]);
                 }
             }
-
         });
 
         return true;

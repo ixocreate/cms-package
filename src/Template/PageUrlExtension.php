@@ -14,7 +14,7 @@ use Ixocreate\Cms\Package\Entity\Sitemap;
 use Ixocreate\Cms\Package\Repository\PageRepository;
 use Ixocreate\Cms\Package\Repository\SitemapRepository;
 use Ixocreate\Cms\Package\Router\PageRoute;
-use Ixocreate\Template\ExtensionInterface;
+use Ixocreate\Template\Package\ExtensionInterface;
 
 final class PageUrlExtension implements ExtensionInterface
 {

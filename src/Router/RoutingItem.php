@@ -70,14 +70,17 @@ final class RoutingItem implements \RecursiveIterator, \Countable
      * @var RoutingItem|null
      */
     private $parent;
+
     /**
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var ReplacementManager
      */
     private $replacementManager;
+
     /**
      * @var \ArrayIterator
      */
@@ -165,7 +168,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
         return $this->structureItem;
     }
 
-
     /**
      * @return PageTypeInterface
      */
@@ -193,9 +195,8 @@ final class RoutingItem implements \RecursiveIterator, \Countable
 
     public function pageRoute(string $locale): ?RouteSpecification
     {
-        if (array_key_exists($locale, $this->pageRoute)) {
+        if (\array_key_exists($locale, $this->pageRoute)) {
             return $this->pageRoute[$locale];
-
         }
         if (!\array_key_exists($locale, $this->structureItem()->pages())) {
             $this->pageRoute[$locale] = null;
@@ -212,7 +213,7 @@ final class RoutingItem implements \RecursiveIterator, \Countable
         $routing = '${PARENT}/${SLUG}';
         if ($pageType instanceof RoutingAwareInterface) {
             $routing = $pageType->routing();
-        } else if ($pageType instanceof RootPageTypeInterface) {
+        } elseif ($pageType instanceof RootPageTypeInterface) {
             $routing = '/';
         }
 
@@ -288,8 +289,8 @@ final class RoutingItem implements \RecursiveIterator, \Countable
     }
 
     /**
-     * @return mixed
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return mixed
      */
     public function current()
     {

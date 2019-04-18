@@ -13,7 +13,7 @@ use Ixocreate\Cms\Package\Navigation\Container;
 use Ixocreate\Cms\Package\Navigation\Item;
 use Ixocreate\Cms\Package\Repository\NavigationRepository;
 use Ixocreate\Cms\Package\Repository\PageRepository;
-use Ixocreate\Template\ExtensionInterface;
+use Ixocreate\Template\Package\ExtensionInterface;
 
 final class NavigationExtension implements ExtensionInterface
 {

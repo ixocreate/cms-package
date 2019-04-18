@@ -27,35 +27,41 @@ final class RouteCollectionCacheable implements CacheableInterface
      * @var StructureCacheable
      */
     private $structureCacheable;
+
     /**
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var PageCacheable
      */
     private $pageCacheable;
+
     /**
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
+
     /**
      * @var PageVersionCacheable
      */
     private $pageVersionCacheable;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var ReplacementManager
      */
     private $replacementManager;
-
 
     /**
      * SitemapCacheable constructor.
@@ -77,8 +83,7 @@ final class RouteCollectionCacheable implements CacheableInterface
         CacheManager $cacheManager,
         PageTypeSubManager $pageTypeSubManager,
         ReplacementManager $replacementManager
-    )
-    {
+    ) {
         $this->structureCacheable = $structureCacheable;
         $this->localeManager = $localeManager;
         $this->pageCacheable = $pageCacheable;
@@ -90,8 +95,8 @@ final class RouteCollectionCacheable implements CacheableInterface
     }
 
     /**
-     * @return mixed
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return mixed
      */
     public function uncachedResult()
     {

@@ -94,8 +94,8 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     }
 
     /**
-     * @return bool
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return bool
      */
     public function execute(): bool
     {

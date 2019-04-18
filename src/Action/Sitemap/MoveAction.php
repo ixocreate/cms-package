@@ -103,7 +103,6 @@ class MoveAction implements MiddlewareInterface
 
             $this->sitemapRepository->moveAsFirstChild($sitemap, $parent);
         } else {
-
             $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
             if (!\is_subclass_of($pageType, RootPageTypeInterface::class)) {
                 return new ApiErrorResponse('invalid_target', [], 400);

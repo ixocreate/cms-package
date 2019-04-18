@@ -117,7 +117,6 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
     public function execute(): bool
     {
         $this->master->transactional(function () {
-
             if (!empty($this->dataValue('fromSitemapId'))) {
                 /** @var Sitemap $fromSitemap */
                 $fromSitemap = $this->sitemapRepository->find($this->dataValue('fromSitemapId'));
@@ -125,9 +124,9 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                 /** @var Page $fromPage */
                 $fromPage = $this->pageRepository->findOneBy([
                     'sitemapId' => (string) $fromSitemap,
-                    'locale' => $this->dataValue('fromLocale')
+                    'locale' => $this->dataValue('fromLocale'),
                 ]);
-            } else if (!empty($this->dataValue('fromPageId'))) {
+            } elseif (!empty($this->dataValue('fromPageId'))) {
                 /** @var Page $fromPage */
                 $fromPage = $this->pageRepository->find($this->dataValue('fromPageId'));
 
@@ -144,7 +143,6 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
             $toPage = null;
 
             if (!empty($this->dataValue('toSitemapId'))) {
-
                 $this->toSitemap = $this->sitemapRepository->find($this->dataValue('toSitemapId'));
 
                 $this->toPage = new Page([
@@ -164,8 +162,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                     'name' => (string) $this->toPage->name(),
                     'pageId' => (string) $this->toPage->id(),
                 ]);
-            } else if (!empty($this->dataValue('toPageId'))) {
-
+            } elseif (!empty($this->dataValue('toPageId'))) {
                 $this->toPage = $this->pageRepository->find($this->dataValue('toPageId'));
 
                 $this->toSitemap = $this->sitemapRepository->find($fromPage->sitemapId());

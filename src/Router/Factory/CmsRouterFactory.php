@@ -25,8 +25,8 @@ final class CmsRouterFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @return CmsRouter|mixed
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return CmsRouter|mixed
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {

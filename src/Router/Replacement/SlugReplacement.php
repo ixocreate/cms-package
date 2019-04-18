@@ -1,5 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Package\Router\Replacement;
 
 use Ixocreate\Cms\Package\Router\RouteSpecification;
@@ -19,15 +26,14 @@ final class SlugReplacement implements ReplacementInterface
      * @param RouteSpecification $routeSpecification
      * @param string $locale
      * @param RoutingItem $item
-     * @return RouteSpecification
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return RouteSpecification
      */
     public function replace(
         RouteSpecification $routeSpecification,
         string $locale,
         RoutingItem $item
     ): RouteSpecification {
-
         $page = $item->page($locale);
         if (!empty($page->slug())) {
             foreach ($routeSpecification->uris() as $name => $uri) {

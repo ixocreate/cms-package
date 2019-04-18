@@ -7,20 +7,20 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Package\BootstrapItem;
+namespace Ixocreate\Cms\Package\Bootstrap;
 
-use Ixocreate\Cms\Package\Config\Configurator;
-use Ixocreate\Application\Bootstrap\BootstrapItemInterface;
-use Ixocreate\Application\ConfiguratorInterface;
+use Ixocreate\Cms\Package\Block\BlockConfigurator;
+use Ixocreate\Application\Service\Bootstrap\BootstrapItemInterface;
+use Ixocreate\Application\Service\Configurator\ConfiguratorInterface;
 
-final class CmsBootstrapItem implements BootstrapItemInterface
+final class BlockBootstrapItem implements BootstrapItemInterface
 {
     /**
      * @return ConfiguratorInterface
      */
     public function getConfigurator(): ConfiguratorInterface
     {
-        return new Configurator();
+        return new BlockConfigurator();
     }
 
     /**
@@ -28,7 +28,7 @@ final class CmsBootstrapItem implements BootstrapItemInterface
      */
     public function getVariableName(): string
     {
-        return 'cms';
+        return 'block';
     }
 
     /**
@@ -36,6 +36,6 @@ final class CmsBootstrapItem implements BootstrapItemInterface
      */
     public function getFileName(): string
     {
-        return 'cms.php';
+        return 'block.php';
     }
 }

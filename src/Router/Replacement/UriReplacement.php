@@ -1,5 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Package\Router\Replacement;
 
 use Ixocreate\Cms\Package\Router\RouteSpecification;
@@ -42,7 +49,6 @@ final class UriReplacement implements ReplacementInterface
         string $locale,
         RoutingItem $item
     ): RouteSpecification {
-
         foreach ($routeSpecification->uris() as $name => $uri) {
             if (!empty(\preg_match('/\${URI:([a-z0-9-_]*)}/i', $uri, $matches))) {
                 $projectUri = $this->projectUri->getPossibleUri($matches[1]);

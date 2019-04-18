@@ -172,7 +172,6 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         if (!$this->localeManager->has((string) $this->dataValue("locale"))) {
             $violationCollector->add("locale", "invalid_locale");
         }
-
     }
 
     public function filter(): FilterableInterface

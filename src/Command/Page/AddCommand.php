@@ -24,7 +24,6 @@ use Ixocreate\Validation\Package\ViolationCollectorInterface;
 use Ixocreate\Intl\Package\LocaleManager;
 use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cache\CacheInterface;
-use Ramsey\Uuid\Uuid;
 
 final class AddCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {

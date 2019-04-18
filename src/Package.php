@@ -12,9 +12,9 @@ namespace Ixocreate\Cms\Package;
 use Ixocreate\Cms\Package\Bootstrap\BlockBootstrapItem;
 use Ixocreate\Cms\Package\Bootstrap\CmsBootstrapItem;
 use Ixocreate\Cms\Package\Bootstrap\PageTypeBootstrapItem;
-use Ixocreate\Application\ConfiguratorRegistryInterface;
-use Ixocreate\Application\Package\PackageInterface;
-use Ixocreate\Application\ServiceRegistryInterface;
+use Ixocreate\Application\Service\Configurator\ConfiguratorRegistryInterface;
+use Ixocreate\Application\PackageInterface;
+use Ixocreate\Application\Service\Registry\ServiceRegistryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 
 final class Package implements PackageInterface

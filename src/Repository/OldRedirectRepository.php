@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Repository;
+namespace Ixocreate\Package\Cms\Repository;
 
-use Ixocreate\Cms\Entity\OldRedirect;
-use Ixocreate\Database\Repository\AbstractRepository;
+use Ixocreate\Package\Cms\Entity\OldRedirect;
+use Ixocreate\Package\Database\Repository\AbstractRepository;
 
 final class OldRedirectRepository extends AbstractRepository
 {

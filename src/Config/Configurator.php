@@ -7,17 +7,17 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Config;
+namespace Ixocreate\Package\Cms\Config;
 
-use Ixocreate\Cms\Router\Replacement\ReplacementInterface;
-use Ixocreate\Cms\Router\Replacement\ReplacementManager;
-use Ixocreate\Cms\Seo\Sitemap\PageProvider;
-use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
-use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\Cms\Site\Tree\SearchInterface;
-use Ixocreate\Cms\Site\Tree\SearchSubManager;
-use Ixocreate\Contract\Application\ConfiguratorInterface;
-use Ixocreate\Contract\Application\ServiceRegistryInterface;
+use Ixocreate\Package\Cms\Router\Replacement\ReplacementInterface;
+use Ixocreate\Package\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Package\Cms\Seo\Sitemap\PageProvider;
+use Ixocreate\Package\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
+use Ixocreate\Package\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\Package\Cms\Site\Tree\SearchInterface;
+use Ixocreate\Package\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Application\ConfiguratorInterface;
+use Ixocreate\Application\ServiceRegistryInterface;
 use Ixocreate\ServiceManager\SubManager\SubManagerConfigurator;
 
 final class Configurator implements ConfiguratorInterface

@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Template;
+namespace Ixocreate\Package\Cms\Template;
 
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Contract\Template\ExtensionInterface;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\Repository\PageRepository;
+use Ixocreate\Package\Cms\Repository\SitemapRepository;
+use Ixocreate\Package\Cms\Router\PageRoute;
+use Ixocreate\Template\ExtensionInterface;
 
 final class PageUrlExtension implements ExtensionInterface
 {

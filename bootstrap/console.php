@@ -1,7 +1,7 @@
 <?php
-namespace Ixocreate\Cms;
+namespace Ixocreate\Package\Cms;
 
 /** @var ConsoleConfigurator $console */
-use Ixocreate\ApplicationConsole\ConsoleConfigurator;
+use Ixocreate\Application\Console\ConsoleConfigurator;
 
 $console->addDirectory(__DIR__ . '/../src/Console', true);

@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Seo\Sitemap;
+namespace Ixocreate\Package\Cms\Seo\Sitemap;
 
 use Doctrine\Common\Collections\Criteria;
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Repository\PageRepository;
+use Ixocreate\Package\Cms\Router\PageRoute;
 
 class PageProvider implements XmlSitemapProviderInterface
 {

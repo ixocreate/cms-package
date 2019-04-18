@@ -7,16 +7,16 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Tree;
+namespace Ixocreate\Package\Cms\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\SitemapCacheable;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Contract\Cache\CacheableInterface;
-use Ixocreate\Contract\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\Package\Cms\Cacheable\PageCacheable;
+use Ixocreate\Package\Cms\Cacheable\SitemapCacheable;
+use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Package\Cms\Router\PageRoute;
+use Ixocreate\Package\Cms\Site\Structure\StructureItem;
+use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 
 final class ItemFactory
 {

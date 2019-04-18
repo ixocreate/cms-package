@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Cms\Router\Replacement;
+namespace Ixocreate\Package\Cms\Router\Replacement;
 
-use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
-use Ixocreate\ProjectUri\ProjectUri;
+use Ixocreate\Package\Cms\Router\RouteSpecification;
+use Ixocreate\Package\Cms\Router\RoutingItem;
+use Ixocreate\Package\ProjectUri\ProjectUri;
 
 final class UriReplacement implements ReplacementInterface
 {

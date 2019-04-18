@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Config;
+namespace Ixocreate\Package\Cms\Config;
 
-use Ixocreate\Contract\Application\SerializableServiceInterface;
+use Ixocreate\Application\SerializableServiceInterface;
 
 final class Config implements SerializableServiceInterface
 {

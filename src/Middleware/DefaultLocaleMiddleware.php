@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Middleware;
+namespace Ixocreate\Package\Cms\Middleware;
 
-use Ixocreate\Cms\Config\Config;
-use Ixocreate\Intl\LocaleManager;
-use Ixocreate\ProjectUri\ProjectUri;
+use Ixocreate\Package\Cms\Config\Config;
+use Ixocreate\Package\Intl\LocaleManager;
+use Ixocreate\Package\ProjectUri\ProjectUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

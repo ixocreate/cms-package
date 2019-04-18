@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace IxocreateMigration;
+namespace Ixocreate\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
-use Ixocreate\CommonTypes\Entity\UuidType;
+use Ixocreate\Package\Type\Entity\UuidType;
 
 final class Version20180514112247 extends AbstractMigration
 {

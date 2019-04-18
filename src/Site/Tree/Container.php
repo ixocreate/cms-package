@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Tree;
+namespace Ixocreate\Package\Cms\Site\Tree;
 
-use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
-use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
-use Ixocreate\Cms\Site\Tree\Search\MaxLevelSearch;
-use Ixocreate\Cms\Site\Tree\Search\MinLevelSearch;
-use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
+use Ixocreate\Package\Cms\Site\Tree\Search\CallableSearch;
+use Ixocreate\Package\Cms\Site\Tree\Search\HandleSearch;
+use Ixocreate\Package\Cms\Site\Tree\Search\MaxLevelSearch;
+use Ixocreate\Package\Cms\Site\Tree\Search\MinLevelSearch;
+use Ixocreate\Package\Cms\Site\Tree\Search\NavigationSearch;
 use RecursiveIteratorIterator;
 
 class Container implements ContainerInterface

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Cms\Router;
+namespace Ixocreate\Package\Cms\Router;
 
 final class RouteSpecification
 {

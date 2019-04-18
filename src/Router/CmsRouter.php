@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Router;
+namespace Ixocreate\Package\Cms\Router;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;

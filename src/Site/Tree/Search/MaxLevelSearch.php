@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Tree\Search;
+namespace Ixocreate\Package\Cms\Site\Tree\Search;
 
-use Ixocreate\Cms\Site\Tree\Item;
-use Ixocreate\Cms\Site\Tree\SearchInterface;
+use Ixocreate\Package\Cms\Site\Tree\Item;
+use Ixocreate\Package\Cms\Site\Tree\SearchInterface;
 
 final class MaxLevelSearch implements SearchInterface
 {

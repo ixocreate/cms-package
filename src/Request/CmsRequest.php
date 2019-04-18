@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Request;
+namespace Ixocreate\Package\Cms\Request;
 
-use Ixocreate\ApplicationHttp\Request\AbstractRequestWrapper;
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\PageVersion;
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Application\Http\Request\AbstractRequestWrapper;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Entity\PageVersion;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\PageType\PageTypeInterface;
 
 final class CmsRequest extends AbstractRequestWrapper
 {

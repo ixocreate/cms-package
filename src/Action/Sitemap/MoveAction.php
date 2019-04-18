@@ -7,16 +7,16 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Action\Sitemap;
+namespace Ixocreate\Package\Cms\Action\Sitemap;
 
-use Ixocreate\Admin\Response\ApiErrorResponse;
-use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\PageType\RootPageTypeInterface;
-use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Contract\Cache\CacheInterface;
+use Ixocreate\Package\Admin\Response\ApiErrorResponse;
+use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\PageType\PageTypeInterface;
+use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Package\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Package\Cms\Repository\SitemapRepository;
+use Ixocreate\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

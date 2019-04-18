@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Package\Cms;
 
 use Ixocreate\Package\Cache\CacheConfigurator;
 use Ixocreate\Package\Cache\Option\Chain;

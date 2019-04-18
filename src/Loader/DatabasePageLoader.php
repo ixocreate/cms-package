@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Loader;
+namespace Ixocreate\Package\Cms\Loader;
 
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Entity\Entity\EntityCollection;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Repository\PageRepository;
+use Ixocreate\Package\Entity\EntityCollection;
 
 final class DatabasePageLoader implements PageLoaderInterface
 {

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Cms\Router\Replacement;
+namespace Ixocreate\Package\Cms\Router\Replacement;
 
 use Ixocreate\ServiceManager\SubManager\SubManager;
 

@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Middleware;
+namespace Ixocreate\Package\Cms\Middleware;
 
-use Ixocreate\Cms\Repository\OldRedirectRepository;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\ProjectUri\ProjectUri;
+use Ixocreate\Package\Cms\Repository\OldRedirectRepository;
+use Ixocreate\Package\Cms\Repository\PageRepository;
+use Ixocreate\Package\Cms\Router\PageRoute;
+use Ixocreate\Package\ProjectUri\ProjectUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

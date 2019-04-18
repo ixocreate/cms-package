@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Cms\Router\Replacement;
+namespace Ixocreate\Package\Cms\Router\Replacement;
 
-use Ixocreate\Cms\PageType\RootPageTypeInterface;
-use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
-use Ixocreate\Intl\LocaleManager;
+use Ixocreate\Package\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Package\Cms\Router\RouteSpecification;
+use Ixocreate\Package\Cms\Router\RoutingItem;
+use Ixocreate\Package\Intl\LocaleManager;
 
 final class LangReplacement implements ReplacementInterface
 {

@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Config\Client\Provider;
+namespace Ixocreate\Package\Cms\Config\Client\Provider;
 
-use Ixocreate\Admin\Config\AdminConfig;
-use Ixocreate\Contract\Admin\ClientConfigProviderInterface;
-use Ixocreate\Contract\Admin\UserInterface;
+use Ixocreate\Package\Admin\Config\AdminConfig;
+use Ixocreate\Admin\ClientConfigProviderInterface;
+use Ixocreate\Admin\UserInterface;
 
 final class CmsProvider implements ClientConfigProviderInterface
 {

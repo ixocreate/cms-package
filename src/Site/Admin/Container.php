@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Admin;
+namespace Ixocreate\Package\Cms\Site\Admin;
 
-use Ixocreate\Cms\Loader\PageLoaderInterface;
-use Ixocreate\Cms\Loader\SitemapLoaderInterface;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Package\Cms\Loader\PageLoaderInterface;
+use Ixocreate\Package\Cms\Loader\SitemapLoaderInterface;
+use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Package\Cms\Router\PageRoute;
 use RecursiveIterator;
 
 final class Container implements \RecursiveIterator, \JsonSerializable, \Countable

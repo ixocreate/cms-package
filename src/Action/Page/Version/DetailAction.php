@@ -7,17 +7,17 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Action\Page\Version;
+namespace Ixocreate\Package\Cms\Action\Page\Version;
 
-use Ixocreate\Admin\Entity\User;
-use Ixocreate\Admin\Repository\UserRepository;
-use Ixocreate\Admin\Response\ApiErrorResponse;
-use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Entity\PageVersion;
-use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
-use Ixocreate\Entity\Entity\EntityCollection;
+use Ixocreate\Package\Admin\Entity\User;
+use Ixocreate\Package\Admin\Repository\UserRepository;
+use Ixocreate\Package\Admin\Response\ApiErrorResponse;
+use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Package\Cms\Entity\PageVersion;
+use Ixocreate\Package\Cms\Repository\PageVersionRepository;
+use Ixocreate\Package\Cms\Site\Admin\Builder;
+use Ixocreate\Package\Cms\Site\Admin\Item;
+use Ixocreate\Package\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

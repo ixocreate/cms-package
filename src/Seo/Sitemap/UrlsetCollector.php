@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Seo\Sitemap;
+namespace Ixocreate\Package\Cms\Seo\Sitemap;
 
 use Thepixeldeveloper\Sitemap\Urlset;
 

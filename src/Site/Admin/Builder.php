@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Admin;
+namespace Ixocreate\Package\Cms\Site\Admin;
 
-use Ixocreate\Cms\Loader\DatabasePageLoader;
-use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Package\Cms\Loader\DatabasePageLoader;
+use Ixocreate\Package\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Package\Cms\Router\PageRoute;
+use Ixocreate\Package\Cms\Site\Structure\StructureBuilder;
 
 class Builder
 {

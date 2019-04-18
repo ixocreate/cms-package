@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Event;
+namespace Ixocreate\Package\Cms\Event;
 
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\PageVersion;
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Event\Event;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Entity\PageVersion;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\PageType\PageTypeInterface;
+use Ixocreate\Package\Event\Event;
 
 final class PageEvent extends Event
 {

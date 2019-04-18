@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Loader;
+namespace Ixocreate\Package\Cms\Loader;
 
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Entity\Entity\EntityCollection;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\Repository\SitemapRepository;
+use Ixocreate\Package\Entity\EntityCollection;
 
 final class DatabaseSitemapLoader implements SitemapLoaderInterface
 {

@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Navigation;
+namespace Ixocreate\Package\Cms\Navigation;
 
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Entity\Sitemap;
 
 final class Item
 {

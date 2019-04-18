@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Tree;
+namespace Ixocreate\Package\Cms\Site\Tree;
 
 interface ContainerInterface extends \RecursiveIterator, \Countable
 {

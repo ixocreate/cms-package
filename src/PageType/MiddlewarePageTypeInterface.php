@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\PageType;
+namespace Ixocreate\Package\Cms\PageType;
 
 interface MiddlewarePageTypeInterface
 {

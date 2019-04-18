@@ -7,15 +7,15 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Package\Cms;
 
-use Ixocreate\Cms\BootstrapItem\BlockBootstrapItem;
-use Ixocreate\Cms\BootstrapItem\CmsBootstrapItem;
-use Ixocreate\Cms\BootstrapItem\PageTypeBootstrapItem;
-use Ixocreate\Contract\Application\ConfiguratorRegistryInterface;
-use Ixocreate\Contract\Application\PackageInterface;
-use Ixocreate\Contract\Application\ServiceRegistryInterface;
-use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Package\Cms\BootstrapItem\BlockBootstrapItem;
+use Ixocreate\Package\Cms\BootstrapItem\CmsBootstrapItem;
+use Ixocreate\Package\Cms\BootstrapItem\PageTypeBootstrapItem;
+use Ixocreate\Application\ConfiguratorRegistryInterface;
+use Ixocreate\Application\PackageInterface;
+use Ixocreate\Application\ServiceRegistryInterface;
+use Ixocreate\ServiceManager\ServiceManagerInterface;
 
 final class Package implements PackageInterface
 {

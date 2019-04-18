@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Action\Page;
+namespace Ixocreate\Package\Cms\Action\Page;
 
-use Ixocreate\Admin\Response\ApiErrorResponse;
-use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Entity\OldRedirect;
-use Ixocreate\Cms\Repository\OldRedirectRepository;
+use Ixocreate\Package\Admin\Response\ApiErrorResponse;
+use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Package\Cms\Entity\OldRedirect;
+use Ixocreate\Package\Cms\Repository\OldRedirectRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Navigation;
+namespace Ixocreate\Package\Cms\Navigation;
 
-use Ixocreate\Cms\Entity\Navigation;
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Repository\NavigationRepository;
+use Ixocreate\Package\Cms\Entity\Navigation;
+use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\Repository\NavigationRepository;
 
 final class Container implements \Iterator
 {

@@ -7,17 +7,17 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Site\Admin;
+namespace Ixocreate\Package\Cms\Site\Admin;
 
-use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Loader\PageLoaderInterface;
-use Ixocreate\Cms\Loader\SitemapLoaderInterface;
-use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\PageType\RootPageTypeInterface;
-use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
-use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Site\Structure\StructureItem;
+use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Package\Cms\Loader\PageLoaderInterface;
+use Ixocreate\Package\Cms\Loader\SitemapLoaderInterface;
+use Ixocreate\Package\Cms\PageType\PageTypeInterface;
+use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Package\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Package\Cms\PageType\TerminalPageTypeInterface;
+use Ixocreate\Package\Cms\Router\PageRoute;
+use Ixocreate\Package\Cms\Site\Structure\StructureItem;
 use RecursiveIterator;
 
 final class Item implements \JsonSerializable, \RecursiveIterator, \Countable

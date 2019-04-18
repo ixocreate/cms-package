@@ -22,11 +22,13 @@ final class Version20180514145006 extends AbstractMigration
         $table->addColumn('publishedFrom', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('publishedUntil', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('status', Type::STRING)->setLength(255);
+        $table->addColumn('releasedAt', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('updatedAt', DateTimeType::serviceName());
         $table->addColumn('createdAt', DateTimeType::serviceName());
 
         $table->setPrimaryKey(["id"]);
         $table->addUniqueIndex(["sitemapId", "locale"]);
+        $table->addIndex(['releasedAt']);
     }
 
     public function down(Schema $schema): void

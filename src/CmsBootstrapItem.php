@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-use Ixocreate\Application\BootstrapItemInterface;
-use Ixocreate\Application\ConfiguratorInterface;
+use Ixocreate\Application\Bootstrap\BootstrapItemInterface;
+use Ixocreate\Application\Configurator\ConfiguratorInterface;
 
 final class CmsBootstrapItem implements BootstrapItemInterface
 {

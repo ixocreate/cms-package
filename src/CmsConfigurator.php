@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-use Ixocreate\Application\ConfiguratorInterface;
+use Ixocreate\Application\Configurator\ConfiguratorInterface;
 use Ixocreate\Application\Service\ServiceRegistryInterface;
 use Ixocreate\Application\Service\SubManagerConfigurator;
 use Ixocreate\Cms\Config\Config;

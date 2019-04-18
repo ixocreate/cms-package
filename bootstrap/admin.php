@@ -1,6 +1,6 @@
 <?php
-namespace Ixocreate\Package\Cms;
-use Ixocreate\Package\Cms\Config\Client\Provider\CmsProvider;
+namespace Ixocreate\Cms\Package;
+use Ixocreate\Cms\Package\Config\Client\Provider\CmsProvider;
 
-/** @var \Ixocreate\Package\Admin\Config\AdminConfigurator $admin */
+/** @var \Ixocreate\Admin\Package\Config\AdminConfigurator $admin */
 $admin->addClientProvider(CmsProvider::class);

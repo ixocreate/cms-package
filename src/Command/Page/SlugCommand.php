@@ -7,22 +7,22 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Command\Page;
+namespace Ixocreate\Cms\Package\Command\Page;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\Criteria;
-use Ixocreate\Package\Cms\Entity\OldRedirect;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Cms\Repository\OldRedirectRepository;
-use Ixocreate\Package\Cms\Repository\PageRepository;
-use Ixocreate\Package\Cms\Repository\SitemapRepository;
-use Ixocreate\Package\Cms\Router\PageRoute;
-use Ixocreate\Package\CommandBus\Command\AbstractCommand;
-use Ixocreate\Package\CommandBus\CommandInterface;
-use Ixocreate\Package\Filter\FilterableInterface;
-use Ixocreate\Package\Validation\ValidatableInterface;
-use Ixocreate\Package\Validation\ViolationCollectorInterface;
+use Ixocreate\Cms\Package\Entity\OldRedirect;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Cms\Package\Repository\OldRedirectRepository;
+use Ixocreate\Cms\Package\Repository\PageRepository;
+use Ixocreate\Cms\Package\Repository\SitemapRepository;
+use Ixocreate\Cms\Package\Router\PageRoute;
+use Ixocreate\CommandBus\Package\Command\AbstractCommand;
+use Ixocreate\CommandBus\Package\CommandInterface;
+use Ixocreate\Filter\Package\FilterableInterface;
+use Ixocreate\Validation\Package\ValidatableInterface;
+use Ixocreate\Validation\Package\ViolationCollectorInterface;
 use Zend\Expressive\Router\Exception\RuntimeException;
 
 final class SlugCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface

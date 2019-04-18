@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Console;
+namespace Ixocreate\Cms\Package\Console;
 
-use Ixocreate\Package\Cms\Command\Seo\GenerateSitemapCommand;
+use Ixocreate\Cms\Package\Command\Seo\GenerateSitemapCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Application\Console\CommandInterface;;
 use Symfony\Component\Console\Command\Command;

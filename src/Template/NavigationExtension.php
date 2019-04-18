@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Template;
+namespace Ixocreate\Cms\Package\Template;
 
-use Ixocreate\Package\Cms\Navigation\Container;
-use Ixocreate\Package\Cms\Navigation\Item;
-use Ixocreate\Package\Cms\Repository\NavigationRepository;
-use Ixocreate\Package\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Package\Navigation\Container;
+use Ixocreate\Cms\Package\Navigation\Item;
+use Ixocreate\Cms\Package\Repository\NavigationRepository;
+use Ixocreate\Cms\Package\Repository\PageRepository;
 use Ixocreate\Template\ExtensionInterface;
 
 final class NavigationExtension implements ExtensionInterface

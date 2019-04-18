@@ -7,32 +7,32 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Router;
+namespace Ixocreate\Cms\Package\Router;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Action\Frontend\RenderAction;
-use Ixocreate\Package\Cms\Cacheable\PageCacheable;
-use Ixocreate\Package\Cms\Cacheable\PageVersionCacheable;
-use Ixocreate\Package\Cms\Cacheable\SitemapCacheable;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Cms\Entity\PageVersion;
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Cms\Middleware\LoadPageContentMiddleware;
-use Ixocreate\Package\Cms\Middleware\LoadPageMiddleware;
-use Ixocreate\Package\Cms\Middleware\LoadPageTypeMiddleware;
-use Ixocreate\Package\Cms\Middleware\LoadSitemapMiddleware;
-use Ixocreate\Package\Cms\PageType\MiddlewarePageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\PageType\RootPageTypeInterface;
-use Ixocreate\Package\Cms\PageType\RoutingAwareInterface;
-use Ixocreate\Package\Cms\Router\Replacement\ReplacementManager;
-use Ixocreate\Package\Cms\Site\Structure\StructureItem;
-use Ixocreate\Package\Type\Entity\SchemaType;
+use Ixocreate\Cms\Package\Action\Frontend\RenderAction;
+use Ixocreate\Cms\Package\Cacheable\PageCacheable;
+use Ixocreate\Cms\Package\Cacheable\PageVersionCacheable;
+use Ixocreate\Cms\Package\Cacheable\SitemapCacheable;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Package\Entity\PageVersion;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Cms\Package\Middleware\LoadPageContentMiddleware;
+use Ixocreate\Cms\Package\Middleware\LoadPageMiddleware;
+use Ixocreate\Cms\Package\Middleware\LoadPageTypeMiddleware;
+use Ixocreate\Cms\Package\Middleware\LoadSitemapMiddleware;
+use Ixocreate\Cms\Package\PageType\MiddlewarePageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\PageType\RootPageTypeInterface;
+use Ixocreate\Cms\Package\PageType\RoutingAwareInterface;
+use Ixocreate\Cms\Package\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Package\Site\Structure\StructureItem;
+use Ixocreate\Type\Package\Entity\SchemaType;
 use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
-use Ixocreate\Package\Entity\Type\Type;
-use Ixocreate\Package\Intl\LocaleManager;
+use Ixocreate\Entity\Package\Type\Type;
+use Ixocreate\Intl\Package\LocaleManager;
 
 final class RoutingItem implements \RecursiveIterator, \Countable
 {

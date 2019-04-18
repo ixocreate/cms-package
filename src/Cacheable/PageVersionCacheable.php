@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Cacheable;
+namespace Ixocreate\Cms\Package\Cacheable;
 
 use Doctrine\Common\Collections\Criteria;
-use Ixocreate\Package\Cms\Repository\PageVersionRepository;
-use Ixocreate\Package\Type\Entity\UuidType;
+use Ixocreate\Cms\Package\Repository\PageVersionRepository;
+use Ixocreate\Type\Package\Entity\UuidType;
 use Ixocreate\Cache\CacheableInterface;
 
 final class PageVersionCacheable implements CacheableInterface

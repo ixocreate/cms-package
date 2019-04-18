@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Middleware;
+namespace Ixocreate\Cms\Package\Middleware;
 
-use Ixocreate\Package\Cms\Repository\OldRedirectRepository;
-use Ixocreate\Package\Cms\Repository\PageRepository;
-use Ixocreate\Package\Cms\Router\PageRoute;
-use Ixocreate\Package\ProjectUri\ProjectUri;
+use Ixocreate\Cms\Package\Repository\OldRedirectRepository;
+use Ixocreate\Cms\Package\Repository\PageRepository;
+use Ixocreate\Cms\Package\Router\PageRoute;
+use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -22,7 +22,7 @@ use Zend\Diactoros\Response\RedirectResponse;
 class OldUrlRedirectMiddleware implements MiddlewareInterface
 {
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
@@ -41,7 +41,7 @@ class OldUrlRedirectMiddleware implements MiddlewareInterface
      */
     private $pageRoute;
 
-    public function __construct(OldRedirectRepository $oldRedirectRepository, ProjectUri $projectUri, PageRepository $pageRepository, PageRoute $pageRoute)
+    public function __construct(OldRedirectRepository $oldRedirectRepository, ApplicationUri $projectUri, PageRepository $pageRepository, PageRoute $pageRoute)
     {
         $this->oldRedirectRepository = $oldRedirectRepository;
         $this->projectUri = $projectUri;

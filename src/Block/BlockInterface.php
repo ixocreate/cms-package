@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Block;
+namespace Ixocreate\Cms\Package\Block;
 
-use Ixocreate\Package\Schema\SchemaReceiverInterface;
+use Ixocreate\Schema\Package\SchemaReceiverInterface;
 use Ixocreate\ServiceManager\NamedServiceInterface;
 
 interface BlockInterface extends NamedServiceInterface, SchemaReceiverInterface

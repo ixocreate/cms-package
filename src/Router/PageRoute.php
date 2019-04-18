@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Router;
+namespace Ixocreate\Cms\Package\Router;
 
-use Ixocreate\Package\Cms\Config\Config;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\ProjectUri\ProjectUri;
+use Ixocreate\Cms\Package\Config\Config;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Application\Uri\ApplicationUri;
 
 final class PageRoute
 {
@@ -26,11 +26,11 @@ final class PageRoute
     private $cmsRouter;
 
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
-    public function __construct(Config $config, CmsRouter $cmsRouter, ProjectUri $projectUri)
+    public function __construct(Config $config, CmsRouter $cmsRouter, ApplicationUri $projectUri)
     {
         $this->config = $config;
         $this->cmsRouter = $cmsRouter;

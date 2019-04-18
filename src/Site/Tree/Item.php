@@ -7,23 +7,23 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Site\Tree;
+namespace Ixocreate\Cms\Package\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Cacheable\PageCacheable;
-use Ixocreate\Package\Cms\Cacheable\PageVersionCacheable;
-use Ixocreate\Package\Cms\Cacheable\SitemapCacheable;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Cms\Entity\PageVersion;
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Cms\PageType\PageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\Router\PageRoute;
-use Ixocreate\Package\Cms\Site\Structure\StructureItem;
-use Ixocreate\Package\Type\Entity\SchemaType;
+use Ixocreate\Cms\Package\Cacheable\PageCacheable;
+use Ixocreate\Cms\Package\Cacheable\PageVersionCacheable;
+use Ixocreate\Cms\Package\Cacheable\SitemapCacheable;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Package\Entity\PageVersion;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Cms\Package\PageType\PageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Router\PageRoute;
+use Ixocreate\Cms\Package\Site\Structure\StructureItem;
+use Ixocreate\Type\Package\Entity\SchemaType;
 use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
-use Ixocreate\Package\Entity\Type\Type;
+use Ixocreate\Entity\Package\Type\Type;
 use RecursiveIterator;
 
 class Item implements ContainerInterface

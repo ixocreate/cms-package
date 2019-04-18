@@ -7,15 +7,15 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Router\Factory;
+namespace Ixocreate\Cms\Package\Router\Factory;
 
 use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Cacheable\RouteCollectionCacheable;
-use Ixocreate\Package\Cms\Router\CmsRouter;
+use Ixocreate\Cms\Package\Cacheable\RouteCollectionCacheable;
+use Ixocreate\Cms\Package\Router\CmsRouter;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Package\Cache\CacheableSubManager;
+use Ixocreate\Cache\Package\CacheableSubManager;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
 

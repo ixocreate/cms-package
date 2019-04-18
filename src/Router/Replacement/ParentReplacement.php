@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Package\Cms\Router\Replacement;
+namespace Ixocreate\Cms\Package\Router\Replacement;
 
-use Ixocreate\Package\Cms\Router\RouteSpecification;
-use Ixocreate\Package\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Package\Router\RouteSpecification;
+use Ixocreate\Cms\Package\Router\RoutingItem;
 
 final class ParentReplacement implements ReplacementInterface
 {

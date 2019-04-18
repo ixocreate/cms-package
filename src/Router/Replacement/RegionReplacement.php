@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Package\Cms\Router\Replacement;
+namespace Ixocreate\Cms\Package\Router\Replacement;
 
-use Ixocreate\Package\Cms\Router\RouteSpecification;
-use Ixocreate\Package\Cms\Router\RoutingItem;
-use Ixocreate\Package\Intl\LocaleManager;
+use Ixocreate\Cms\Package\Router\RouteSpecification;
+use Ixocreate\Cms\Package\Router\RoutingItem;
+use Ixocreate\Intl\Package\LocaleManager;
 
 final class RegionReplacement implements ReplacementInterface
 {

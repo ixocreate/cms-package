@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Loader;
+namespace Ixocreate\Cms\Package\Loader;
 
-use Ixocreate\Package\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Package\Entity\Sitemap;
 
 interface SitemapLoaderInterface
 {

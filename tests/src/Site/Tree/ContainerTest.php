@@ -10,19 +10,19 @@ declare(strict_types=1);
 namespace Ixocreate\Test\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Site\Structure\Structure;
-use Ixocreate\Package\Cms\Site\Tree\Container;
-use Ixocreate\Package\Cms\Site\Tree\Item;
-use Ixocreate\Package\Cms\Site\Tree\ItemFactory;
-use Ixocreate\Package\Cms\Site\Tree\Search\ActiveSearch;
-use Ixocreate\Package\Cms\Site\Tree\Search\CallableSearch;
-use Ixocreate\Package\Cms\Site\Tree\Search\HandleSearch;
-use Ixocreate\Package\Cms\Site\Tree\Search\MaxLevelSearch;
-use Ixocreate\Package\Cms\Site\Tree\Search\MinLevelSearch;
-use Ixocreate\Package\Cms\Site\Tree\Search\NavigationSearch;
-use Ixocreate\Package\Cms\Site\Tree\Search\OnlineSearch;
-use Ixocreate\Package\Cms\Site\Tree\SearchInterface;
-use Ixocreate\Package\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Package\Site\Structure\Structure;
+use Ixocreate\Cms\Package\Site\Tree\Container;
+use Ixocreate\Cms\Package\Site\Tree\Item;
+use Ixocreate\Cms\Package\Site\Tree\ItemFactory;
+use Ixocreate\Cms\Package\Site\Tree\Search\ActiveSearch;
+use Ixocreate\Cms\Package\Site\Tree\Search\CallableSearch;
+use Ixocreate\Cms\Package\Site\Tree\Search\HandleSearch;
+use Ixocreate\Cms\Package\Site\Tree\Search\MaxLevelSearch;
+use Ixocreate\Cms\Package\Site\Tree\Search\MinLevelSearch;
+use Ixocreate\Cms\Package\Site\Tree\Search\NavigationSearch;
+use Ixocreate\Cms\Package\Site\Tree\Search\OnlineSearch;
+use Ixocreate\Cms\Package\Site\Tree\SearchInterface;
+use Ixocreate\Cms\Package\Site\Tree\SearchSubManager;
 use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use Ixocreate\ServiceManager\ServiceManager;
@@ -152,7 +152,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @covers \Ixocreate\Package\Cms\Site\Tree\Container::filter
+     * @covers \Ixocreate\Cms\Package\Site\Tree\Container::filter
      */
     public function testFilter()
     {
@@ -179,7 +179,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @covers \Ixocreate\Package\Cms\Site\Tree\Container::withMaxLevel
+     * @covers \Ixocreate\Cms\Package\Site\Tree\Container::withMaxLevel
      */
     public function testWithMaxLevel()
     {
@@ -218,7 +218,7 @@ class ContainerTest extends TestCase
     }
 
     /**
-     * @covers \Ixocreate\Package\Cms\Site\Tree\Container::withNavigation
+     * @covers \Ixocreate\Cms\Package\Site\Tree\Container::withNavigation
      */
     public function testWithNavigation()
     {

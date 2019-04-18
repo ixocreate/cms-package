@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\PageType;
+namespace Ixocreate\Cms\Package\PageType;
 
-use Ixocreate\Package\Schema\SchemaProviderInterface;
+use Ixocreate\Schema\Package\SchemaProviderInterface;
 use Ixocreate\ServiceManager\NamedServiceInterface;
 
 interface PageTypeInterface extends NamedServiceInterface, SchemaProviderInterface

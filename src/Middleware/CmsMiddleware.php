@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Middleware;
+namespace Ixocreate\Cms\Package\Middleware;
 
-use Ixocreate\Package\Cms\Request\CmsRequest;
+use Ixocreate\Cms\Package\Request\CmsRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

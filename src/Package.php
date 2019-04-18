@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms;
+namespace Ixocreate\Cms\Package;
 
-use Ixocreate\Package\Cms\BootstrapItem\BlockBootstrapItem;
-use Ixocreate\Package\Cms\BootstrapItem\CmsBootstrapItem;
-use Ixocreate\Package\Cms\BootstrapItem\PageTypeBootstrapItem;
+use Ixocreate\Cms\Package\Bootstrap\BlockBootstrapItem;
+use Ixocreate\Cms\Package\Bootstrap\CmsBootstrapItem;
+use Ixocreate\Cms\Package\Bootstrap\PageTypeBootstrapItem;
 use Ixocreate\Application\ConfiguratorRegistryInterface;
-use Ixocreate\Application\PackageInterface;
+use Ixocreate\Application\Package\PackageInterface;
 use Ixocreate\Application\ServiceRegistryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 

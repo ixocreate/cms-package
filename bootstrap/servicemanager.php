@@ -1,24 +1,24 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Package\Cms;
+namespace Ixocreate\Cms\Package;
 
-use Ixocreate\Package\Cms\Block\BlockSubManager;
-use Ixocreate\Package\Cms\Loader\DatabasePageLoader;
-use Ixocreate\Package\Cms\Loader\DatabaseSitemapLoader;
-use Ixocreate\Package\Cms\Loader\Factory\DatabasePageLoaderFactory;
-use Ixocreate\Package\Cms\Loader\Factory\DatabaseSitemapLoaderFactory;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\Router\CmsRouter;
-use Ixocreate\Package\Cms\Router\Factory\CmsRouterFactory;
-use Ixocreate\Package\Cms\Router\PageRoute;
-use Ixocreate\Package\Cms\Router\Replacement\ReplacementManager;
-use Ixocreate\Package\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\Package\Cms\Site\Admin\Builder;
-use Ixocreate\Package\Cms\Site\Structure\Factory\StructureBuilderFactory;
-use Ixocreate\Package\Cms\Site\Structure\StructureBuilder;
-use Ixocreate\Package\Cms\Site\Tree\Container;
-use Ixocreate\Package\Cms\Site\Tree\Factory\ContainerFactory;
-use Ixocreate\Package\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Package\Block\BlockSubManager;
+use Ixocreate\Cms\Package\Loader\DatabasePageLoader;
+use Ixocreate\Cms\Package\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\Package\Loader\Factory\DatabasePageLoaderFactory;
+use Ixocreate\Cms\Package\Loader\Factory\DatabaseSitemapLoaderFactory;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Router\CmsRouter;
+use Ixocreate\Cms\Package\Router\Factory\CmsRouterFactory;
+use Ixocreate\Cms\Package\Router\PageRoute;
+use Ixocreate\Cms\Package\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Package\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\Cms\Package\Site\Admin\Builder;
+use Ixocreate\Cms\Package\Site\Structure\Factory\StructureBuilderFactory;
+use Ixocreate\Cms\Package\Site\Structure\StructureBuilder;
+use Ixocreate\Cms\Package\Site\Tree\Container;
+use Ixocreate\Cms\Package\Site\Tree\Factory\ContainerFactory;
+use Ixocreate\Cms\Package\Site\Tree\SearchSubManager;
 use Ixocreate\ServiceManager\ServiceManagerConfigurator;
 
 /** @var ServiceManagerConfigurator $serviceManager */

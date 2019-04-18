@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Site\Structure\Factory;
+namespace Ixocreate\Cms\Package\Site\Structure\Factory;
 
-use Ixocreate\Package\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Cms\Package\Site\Structure\StructureBuilder;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Package\Database\EntityManager\Factory\EntityManagerSubManager;
+use Ixocreate\Database\Package\EntityManager\Factory\EntityManagerSubManager;
 
 final class StructureBuilderFactory implements FactoryInterface
 {

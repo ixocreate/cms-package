@@ -7,16 +7,16 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Action\Page;
+namespace Ixocreate\Cms\Package\Action\Page;
 
 use Doctrine\Common\Collections\Criteria;
-use Ixocreate\Package\Admin\Response\ApiErrorResponse;
-use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Package\Cms\Config\Config;
-use Ixocreate\Package\Cms\Entity\PageVersion;
-use Ixocreate\Package\Cms\Repository\PageVersionRepository;
-use Ixocreate\Package\Cms\Site\Admin\Builder;
-use Ixocreate\Package\Cms\Site\Admin\Item;
+use Ixocreate\Admin\Package\Response\ApiErrorResponse;
+use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Package\Config\Config;
+use Ixocreate\Cms\Package\Entity\PageVersion;
+use Ixocreate\Cms\Package\Repository\PageVersionRepository;
+use Ixocreate\Cms\Package\Site\Admin\Builder;
+use Ixocreate\Cms\Package\Site\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -35,7 +35,7 @@ final class DetailAction implements MiddlewareInterface
     private $config;
 
     /**
-     * @var \Ixocreate\Package\Schema\Builder
+     * @var \Ixocreate\Schema\Package\Builder
      */
     private $schemaBuilder;
 
@@ -48,13 +48,13 @@ final class DetailAction implements MiddlewareInterface
      * DetailAction constructor.
      * @param Builder $builder
      * @param Config $config
-     * @param \Ixocreate\Package\Schema\Builder $schemaBuilder
+     * @param \Ixocreate\Schema\Package\Builder $schemaBuilder
      * @param PageVersionRepository $pageVersionRepository
      */
     public function __construct(
         Builder $builder,
         Config $config,
-        \Ixocreate\Package\Schema\Builder $schemaBuilder,
+        \Ixocreate\Schema\Package\Builder $schemaBuilder,
         PageVersionRepository $pageVersionRepository
     ) {
         $this->builder = $builder;

@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Repository;
+namespace Ixocreate\Cms\Package\Repository;
 
-use Ixocreate\Package\Cms\Entity\PageVersion;
-use Ixocreate\Package\Database\Repository\AbstractRepository;
+use Ixocreate\Cms\Package\Entity\PageVersion;
+use Ixocreate\Database\Package\Repository\AbstractRepository;
 
 final class PageVersionRepository extends AbstractRepository
 {

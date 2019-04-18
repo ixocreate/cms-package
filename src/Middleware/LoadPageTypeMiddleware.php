@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Middleware;
+namespace Ixocreate\Cms\Package\Middleware;
 
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

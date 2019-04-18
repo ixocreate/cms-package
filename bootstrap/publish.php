@@ -1,5 +1,5 @@
 <?php
-namespace Ixocreate\Package\Cms;
+namespace Ixocreate\Cms\Package;
 
 /** @var PublishConfigurator $publish */
 use Ixocreate\Application\Publish\PublishConfigurator;

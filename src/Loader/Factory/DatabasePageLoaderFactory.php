@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Loader\Factory;
+namespace Ixocreate\Cms\Package\Loader\Factory;
 
-use Ixocreate\Package\Cms\Loader\DatabasePageLoader;
-use Ixocreate\Package\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Package\Loader\DatabasePageLoader;
+use Ixocreate\Cms\Package\Repository\PageRepository;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Package\Database\Repository\Factory\RepositorySubManager;
+use Ixocreate\Database\Package\Repository\Factory\RepositorySubManager;
 
 final class DatabasePageLoaderFactory implements FactoryInterface
 {

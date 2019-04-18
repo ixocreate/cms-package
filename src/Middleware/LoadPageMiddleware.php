@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Middleware;
+namespace Ixocreate\Cms\Package\Middleware;
 
 use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Cacheable\PageCacheable;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Intl\LocaleManager;
+use Ixocreate\Cms\Package\Cacheable\PageCacheable;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Intl\Package\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

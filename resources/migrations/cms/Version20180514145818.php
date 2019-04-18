@@ -5,9 +5,9 @@ namespace Ixocreate\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
-use Ixocreate\Package\Type\Entity\DateTimeType;
-use Ixocreate\Package\Type\Entity\SchemaType;
-use Ixocreate\Package\Type\Entity\UuidType;
+use Ixocreate\Type\Package\Entity\DateTimeType;
+use Ixocreate\Type\Package\Entity\SchemaType;
+use Ixocreate\Type\Package\Entity\UuidType;
 
 final class Version20180514145818 extends AbstractMigration
 {

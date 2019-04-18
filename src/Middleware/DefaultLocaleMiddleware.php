@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Middleware;
+namespace Ixocreate\Cms\Package\Middleware;
 
-use Ixocreate\Package\Cms\Config\Config;
-use Ixocreate\Package\Intl\LocaleManager;
-use Ixocreate\Package\ProjectUri\ProjectUri;
+use Ixocreate\Cms\Package\Config\Config;
+use Ixocreate\Intl\Package\LocaleManager;
+use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -31,17 +31,18 @@ final class DefaultLocaleMiddleware implements MiddlewareInterface
     private $config;
 
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
     /**
      * DefaultLocaleMiddleware constructor.
+     *
      * @param Config $config
      * @param LocaleManager $localeManager
-     * @param ProjectUri $projectUri
+     * @param ApplicationUri $projectUri
      */
-    public function __construct(Config $config, LocaleManager $localeManager, ProjectUri $projectUri)
+    public function __construct(Config $config, LocaleManager $localeManager, ApplicationUri $projectUri)
     {
         $this->localeManager = $localeManager;
         $this->config = $config;
@@ -65,7 +66,7 @@ final class DefaultLocaleMiddleware implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    private function getLocalizationBaseUrl(string $locale): Uri
+    private function getLocalizationBaseUrl(string $locale): ApplicationUri
     {
         $uriString = \strtr(
             $this->config->localizationUrlSchema(),

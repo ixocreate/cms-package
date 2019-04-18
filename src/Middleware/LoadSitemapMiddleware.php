@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Middleware;
+namespace Ixocreate\Cms\Package\Middleware;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Cacheable\SitemapCacheable;
-use Ixocreate\Package\Cms\Entity\Page;
+use Ixocreate\Cms\Package\Cacheable\SitemapCacheable;
+use Ixocreate\Cms\Package\Entity\Page;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

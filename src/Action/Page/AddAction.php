@@ -7,20 +7,20 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Action\Page;
+namespace Ixocreate\Cms\Package\Action\Page;
 
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Package\Admin\Entity\User;
-use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Package\Cms\Command\Page\CreateVersionCommand;
-use Ixocreate\Package\Cms\Command\Page\SlugCommand;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Cms\PageType\PageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\Repository\PageRepository;
-use Ixocreate\Package\Cms\Repository\PageVersionRepository;
-use Ixocreate\Package\Cms\Repository\SitemapRepository;
+use Ixocreate\Admin\Package\Entity\User;
+use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Package\Command\Page\CreateVersionCommand;
+use Ixocreate\Cms\Package\Command\Page\SlugCommand;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Cms\Package\PageType\PageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Repository\PageRepository;
+use Ixocreate\Cms\Package\Repository\PageVersionRepository;
+use Ixocreate\Cms\Package\Repository\SitemapRepository;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;

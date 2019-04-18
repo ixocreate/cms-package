@@ -1,23 +1,24 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Package\Cms\Router\Replacement;
+namespace Ixocreate\Cms\Package\Router\Replacement;
 
-use Ixocreate\Package\Cms\Router\RouteSpecification;
-use Ixocreate\Package\Cms\Router\RoutingItem;
-use Ixocreate\Package\ProjectUri\ProjectUri;
+use Ixocreate\Cms\Package\Router\RouteSpecification;
+use Ixocreate\Cms\Package\Router\RoutingItem;
+use Ixocreate\Application\Uri\ApplicationUri;
 
 final class UriReplacement implements ReplacementInterface
 {
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
     /**
      * UriReplacement constructor.
-     * @param ProjectUri $projectUri
+     *
+     * @param ApplicationUri $projectUri
      */
-    public function __construct(ProjectUri $projectUri)
+    public function __construct(ApplicationUri $projectUri)
     {
         $this->projectUri = $projectUri;
     }

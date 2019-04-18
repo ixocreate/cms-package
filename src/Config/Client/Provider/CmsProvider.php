@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Config\Client\Provider;
+namespace Ixocreate\Cms\Package\Config\Client\Provider;
 
-use Ixocreate\Package\Admin\Config\AdminConfig;
+use Ixocreate\Admin\Package\Config\AdminConfig;
 use Ixocreate\Admin\ClientConfigProviderInterface;
 use Ixocreate\Admin\UserInterface;
 

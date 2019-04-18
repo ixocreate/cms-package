@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\BootstrapItem;
+namespace Ixocreate\Cms\Package\BootstrapItem;
 
-use Ixocreate\Package\Cms\Config\Configurator;
-use Ixocreate\Application\BootstrapItemInterface;
+use Ixocreate\Cms\Package\Config\Configurator;
+use Ixocreate\Application\Bootstrap\BootstrapItemInterface;
 use Ixocreate\Application\ConfiguratorInterface;
 
 final class CmsBootstrapItem implements BootstrapItemInterface

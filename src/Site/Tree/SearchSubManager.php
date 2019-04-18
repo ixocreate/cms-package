@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Site\Tree;
+namespace Ixocreate\Cms\Package\Site\Tree;
 
 use Ixocreate\ServiceManager\SubManager\SubManager;
 

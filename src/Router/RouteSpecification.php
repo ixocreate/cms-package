@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Ixocreate\Package\Cms\Router;
+namespace Ixocreate\Cms\Package\Router;
 
 final class RouteSpecification
 {
@@ -42,7 +42,7 @@ final class RouteSpecification
             return $this->uris[$name];
         }
 
-        throw new \Exception("Invalid Uri");
+        throw new \Exception("Invalid ApplicationUri");
     }
 
     /**

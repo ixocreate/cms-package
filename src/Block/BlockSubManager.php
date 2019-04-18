@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Block;
+namespace Ixocreate\Cms\Package\Block;
 
 use Ixocreate\ServiceManager\SubManager\SubManager;
 

@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Repository;
+namespace Ixocreate\Cms\Package\Repository;
 
-use Ixocreate\Package\Cms\Entity\Navigation;
-use Ixocreate\Package\Database\Repository\AbstractRepository;
+use Ixocreate\Cms\Package\Entity\Navigation;
+use Ixocreate\Database\Package\Repository\AbstractRepository;
 
 final class NavigationRepository extends AbstractRepository
 {

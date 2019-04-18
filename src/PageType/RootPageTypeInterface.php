@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\PageType;
+namespace Ixocreate\Cms\Package\PageType;
 
 interface RootPageTypeInterface extends PageTypeInterface
 {

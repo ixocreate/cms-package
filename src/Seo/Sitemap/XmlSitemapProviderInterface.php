@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Seo\Sitemap;
+namespace Ixocreate\Cms\Package\Seo\Sitemap;
 
 use Ixocreate\ServiceManager\NamedServiceInterface;
 

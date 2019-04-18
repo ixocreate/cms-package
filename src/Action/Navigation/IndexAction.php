@@ -7,12 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Action\Navigation;
+namespace Ixocreate\Cms\Package\Action\Navigation;
 
-use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Package\Cms\Config\Config;
-use Ixocreate\Package\Cms\Entity\Navigation;
-use Ixocreate\Package\Cms\Repository\NavigationRepository;
+use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Package\Config\Config;
+use Ixocreate\Cms\Package\Entity\Navigation;
+use Ixocreate\Cms\Package\Repository\NavigationRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

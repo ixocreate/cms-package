@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\PageType;
+namespace Ixocreate\Cms\Package\PageType;
 
-use Ixocreate\Package\Schema\BuilderInterface;
-use Ixocreate\Package\Schema\SchemaInterface;
-use Ixocreate\Package\Schema\SchemaProviderInterface;
+use Ixocreate\Schema\Package\BuilderInterface;
+use Ixocreate\Schema\Package\SchemaInterface;
+use Ixocreate\Schema\Package\SchemaProviderInterface;
 use Ixocreate\ServiceManager\SubManager\SubManager;
 
 final class PageTypeSubManager extends SubManager implements SchemaProviderInterface

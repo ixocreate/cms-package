@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Cacheable;
+namespace Ixocreate\Cms\Package\Cacheable;
 
-use Ixocreate\Package\Cms\Repository\SitemapRepository;
-use Ixocreate\Package\Type\Entity\UuidType;
+use Ixocreate\Cms\Package\Repository\SitemapRepository;
+use Ixocreate\Type\Package\Entity\UuidType;
 use Ixocreate\Cache\CacheableInterface;
 
 final class SitemapCacheable implements CacheableInterface

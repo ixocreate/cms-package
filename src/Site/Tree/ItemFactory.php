@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Site\Tree;
+namespace Ixocreate\Cms\Package\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Package\Cms\Cacheable\PageCacheable;
-use Ixocreate\Package\Cms\Cacheable\SitemapCacheable;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\Router\PageRoute;
-use Ixocreate\Package\Cms\Site\Structure\StructureItem;
+use Ixocreate\Cms\Package\Cacheable\PageCacheable;
+use Ixocreate\Cms\Package\Cacheable\SitemapCacheable;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Router\PageRoute;
+use Ixocreate\Cms\Package\Site\Structure\StructureItem;
 use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 

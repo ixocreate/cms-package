@@ -7,22 +7,22 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Action\Preview;
+namespace Ixocreate\Cms\Package\Action\Preview;
 
-use Ixocreate\Package\Admin\Entity\User;
+use Ixocreate\Admin\Package\Entity\User;
 use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
-use Ixocreate\Package\Cms\Action\Frontend\RenderAction;
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Cms\Entity\PageVersion;
-use Ixocreate\Package\Cms\PageType\MiddlewarePageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\Repository\PageVersionRepository;
-use Ixocreate\Package\Cms\Request\CmsRequest;
-use Ixocreate\Package\Cms\Site\Admin\Builder;
-use Ixocreate\Package\Cms\Site\Admin\Item;
-use Ixocreate\Package\Type\Entity\SchemaType;
-use Ixocreate\Package\Entity\Type\Type;
+use Ixocreate\Cms\Package\Action\Frontend\RenderAction;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Package\Entity\PageVersion;
+use Ixocreate\Cms\Package\PageType\MiddlewarePageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Repository\PageVersionRepository;
+use Ixocreate\Cms\Package\Request\CmsRequest;
+use Ixocreate\Cms\Package\Site\Admin\Builder;
+use Ixocreate\Cms\Package\Site\Admin\Item;
+use Ixocreate\Type\Package\Entity\SchemaType;
+use Ixocreate\Entity\Package\Type\Type;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

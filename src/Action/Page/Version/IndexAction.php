@@ -7,18 +7,18 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Action\Page\Version;
+namespace Ixocreate\Cms\Package\Action\Page\Version;
 
 use Doctrine\Common\Collections\Criteria;
-use Ixocreate\Package\Admin\Entity\User;
-use Ixocreate\Package\Admin\Repository\UserRepository;
-use Ixocreate\Package\Admin\Response\ApiErrorResponse;
-use Ixocreate\Package\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Package\Cms\Entity\PageVersion;
-use Ixocreate\Package\Cms\Repository\PageVersionRepository;
-use Ixocreate\Package\Cms\Site\Admin\Builder;
-use Ixocreate\Package\Cms\Site\Admin\Item;
-use Ixocreate\Package\Entity\EntityCollection;
+use Ixocreate\Admin\Package\Entity\User;
+use Ixocreate\Admin\Package\Repository\UserRepository;
+use Ixocreate\Admin\Package\Response\ApiErrorResponse;
+use Ixocreate\Admin\Package\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Package\Entity\PageVersion;
+use Ixocreate\Cms\Package\Repository\PageVersionRepository;
+use Ixocreate\Cms\Package\Site\Admin\Builder;
+use Ixocreate\Cms\Package\Site\Admin\Item;
+use Ixocreate\Entity\Package\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

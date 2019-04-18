@@ -1,5 +1,5 @@
 <?php
-namespace Ixocreate\Package\Cms;
+namespace Ixocreate\Cms\Package;
 
 /** @var ConsoleConfigurator $console */
 use Ixocreate\Application\Console\ConsoleConfigurator;

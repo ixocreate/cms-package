@@ -7,21 +7,21 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Command\Page;
+namespace Ixocreate\Cms\Package\Command\Page;
 
-use Ixocreate\Package\Cms\Entity\Page;
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Cms\PageType\PageTypeInterface;
-use Ixocreate\Package\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Package\Cms\Repository\PageRepository;
-use Ixocreate\Package\Cms\Repository\SitemapRepository;
-use Ixocreate\Package\CommandBus\Command\AbstractCommand;
+use Ixocreate\Cms\Package\Entity\Page;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Cms\Package\PageType\PageTypeInterface;
+use Ixocreate\Cms\Package\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Package\Repository\PageRepository;
+use Ixocreate\Cms\Package\Repository\SitemapRepository;
+use Ixocreate\CommandBus\Package\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Package\CommandBus\CommandInterface;
-use Ixocreate\Package\Filter\FilterableInterface;
-use Ixocreate\Package\Validation\ValidatableInterface;
-use Ixocreate\Package\Validation\ViolationCollectorInterface;
-use Ixocreate\Package\Intl\LocaleManager;
+use Ixocreate\CommandBus\Package\CommandInterface;
+use Ixocreate\Filter\Package\FilterableInterface;
+use Ixocreate\Validation\Package\ValidatableInterface;
+use Ixocreate\Validation\Package\ViolationCollectorInterface;
+use Ixocreate\Intl\Package\LocaleManager;
 use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cache\CacheInterface;
 use Ramsey\Uuid\Uuid;

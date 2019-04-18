@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Site\Structure;
+namespace Ixocreate\Cms\Package\Site\Structure;
 
 use Serializable;
 

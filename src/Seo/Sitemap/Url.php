@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Seo\Sitemap;
+namespace Ixocreate\Cms\Package\Seo\Sitemap;
 
 use DateTimeInterface;
 
 /**
  * Class Url
- * @package Ixocreate\Package\Cms\Seo\Sitemap
+ * @package Ixocreate\Cms\Package\Seo\Sitemap
  *
  */
 class Url extends \Thepixeldeveloper\Sitemap\Url

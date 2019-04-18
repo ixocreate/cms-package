@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Template;
+namespace Ixocreate\Cms\Package\Template;
 
-use Ixocreate\Package\Cms\Site\Tree\Container;
+use Ixocreate\Cms\Package\Site\Tree\Container;
 use Ixocreate\Template\ExtensionInterface;
 
 final class TreeExtension implements ExtensionInterface

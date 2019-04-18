@@ -6,7 +6,7 @@ namespace Ixocreate\Migration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
-use Ixocreate\Package\Type\Entity\UuidType;
+use Ixocreate\Type\Package\Entity\UuidType;
 
 final class Version20180601120527 extends AbstractMigration
 {

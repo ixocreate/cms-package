@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Package\Cms\Repository;
+namespace Ixocreate\Cms\Package\Repository;
 
-use Ixocreate\Package\Cms\Entity\Sitemap;
-use Ixocreate\Package\Database\Tree\TreeRepository;
+use Ixocreate\Cms\Package\Entity\Sitemap;
+use Ixocreate\Database\Package\Tree\TreeRepository;
 
 final class SitemapRepository extends TreeRepository
 {

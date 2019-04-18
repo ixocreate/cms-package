@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
+
 namespace Ixocreate\Cms;
 
-use Ixocreate\Cms\Config\Configurator;
 use Ixocreate\Cms\Router\Replacement\LangReplacement;
 use Ixocreate\Cms\Router\Replacement\ParentReplacement;
 use Ixocreate\Cms\Router\Replacement\RegionReplacement;
@@ -16,7 +16,7 @@ use Ixocreate\Cms\Site\Tree\Search\MinLevelSearch;
 use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
 use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
 
-/** @var Configurator $cms */
+/** @var CmsConfigurator $cms */
 $cms->addTreeSearchable(ActiveSearch::class);
 $cms->addTreeSearchable(CallableSearch::class);
 $cms->addTreeSearchable(HandleSearch::class);

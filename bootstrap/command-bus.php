@@ -1,5 +1,7 @@
 <?php
+
 namespace Ixocreate\Cms;
-/** @var \Ixocreate\CommandBus\Configurator $commandBus */
+
+/** @var \Ixocreate\CommandBus\CommandBusConfigurator $commandBus */
 
 $commandBus->addCommandDirectory(__DIR__ . '/../src/Command', true);

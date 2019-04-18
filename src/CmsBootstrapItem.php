@@ -7,20 +7,19 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Bootstrap;
+namespace Ixocreate\Cms;
 
-use Ixocreate\Cms\PageType\PageTypeConfigurator;
-use Ixocreate\Application\Service\Bootstrap\BootstrapItemInterface;
-use Ixocreate\Application\Service\Configurator\ConfiguratorInterface;
+use Ixocreate\Application\BootstrapItemInterface;
+use Ixocreate\Application\ConfiguratorInterface;
 
-final class PageTypeBootstrapItem implements BootstrapItemInterface
+final class CmsBootstrapItem implements BootstrapItemInterface
 {
     /**
      * @return ConfiguratorInterface
      */
     public function getConfigurator(): ConfiguratorInterface
     {
-        return new PageTypeConfigurator();
+        return new CmsConfigurator();
     }
 
     /**
@@ -28,7 +27,7 @@ final class PageTypeBootstrapItem implements BootstrapItemInterface
      */
     public function getVariableName(): string
     {
-        return 'pageType';
+        return 'cms';
     }
 
     /**
@@ -36,6 +35,6 @@ final class PageTypeBootstrapItem implements BootstrapItemInterface
      */
     public function getFileName(): string
     {
-        return 'page-type.php';
+        return 'cms.php';
     }
 }

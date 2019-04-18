@@ -11,7 +11,7 @@ namespace Ixocreate\Cms\Entity;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Ixocreate\Entity\DatabaseEntityInterface;
+use Ixocreate\Database\DatabaseEntityInterface;
 use Ixocreate\Type\TypeInterface;
 use Ixocreate\Entity\Definition;
 use Ixocreate\Entity\DefinitionCollection;

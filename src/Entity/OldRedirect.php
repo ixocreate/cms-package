@@ -12,7 +12,7 @@ namespace Ixocreate\Cms\Entity;
 use Doctrine\DBAL\Types\Type;
 use Ixocreate\Type\Entity\DateTimeType;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Ixocreate\Entity\DatabaseEntityInterface;
+use Ixocreate\Database\DatabaseEntityInterface;
 use Ixocreate\Entity\Definition;
 use Ixocreate\Entity\DefinitionCollection;
 use Ixocreate\Entity\EntityInterface;

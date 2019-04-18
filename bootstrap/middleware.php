@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms;
 
 /** @var MiddlewareConfigurator $middleware */
+
 use Ixocreate\Application\Http\Middleware\MiddlewareConfigurator;
 use Ixocreate\Cms\Middleware\CmsMiddleware;
 use Ixocreate\Cms\Middleware\Factory\CmsMiddlewareFactory;

@@ -9,12 +9,11 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-use Ixocreate\Cms\Bootstrap\BlockBootstrapItem;
-use Ixocreate\Cms\Bootstrap\CmsBootstrapItem;
-use Ixocreate\Cms\Bootstrap\PageTypeBootstrapItem;
-use Ixocreate\Application\Service\Configurator\ConfiguratorRegistryInterface;
+use Ixocreate\Application\ConfiguratorRegistryInterface;
 use Ixocreate\Application\PackageInterface;
-use Ixocreate\Application\Service\Registry\ServiceRegistryInterface;
+use Ixocreate\Application\Service\ServiceRegistryInterface;
+use Ixocreate\Cms\Block\BlockBootstrapItem;
+use Ixocreate\Cms\PageType\PageTypeBootstrapItem;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 
 final class Package implements PackageInterface
@@ -66,7 +65,7 @@ final class Package implements PackageInterface
      */
     public function getBootstrapDirectory(): ?string
     {
-        return  __DIR__ . '/../bootstrap';
+        return __DIR__ . '/../bootstrap';
     }
 
     /**
@@ -74,7 +73,7 @@ final class Package implements PackageInterface
      */
     public function getConfigDirectory(): ?string
     {
-        return  __DIR__ . '/../config';
+        return __DIR__ . '/../config';
     }
 
     /**

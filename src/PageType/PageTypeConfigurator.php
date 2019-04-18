@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\PageType;
 
-use Ixocreate\Application\Service\Configurator\ConfiguratorInterface;
-use Ixocreate\Application\Service\Registry\ServiceRegistryInterface;
+use Ixocreate\Application\ConfiguratorInterface;
+use Ixocreate\Application\Service\ServiceRegistryInterface;
 use Ixocreate\ServiceManager\Factory\AutowireFactory;
 use Ixocreate\Application\Service\SubManagerConfigurator;
 

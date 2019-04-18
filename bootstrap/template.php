@@ -1,5 +1,7 @@
 <?php
+
 namespace App;
+
 use Ixocreate\Cms\Template\NavigationExtension;
 use Ixocreate\Cms\Template\PageUrlExtension;
 use Ixocreate\Cms\Template\TreeExtension;

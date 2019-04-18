@@ -12,7 +12,7 @@ namespace Ixocreate\Cms\Entity;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\Type\Entity\DateTimeType;
 use Ixocreate\Type\Entity\SchemaType;
-use Ixocreate\Entity\DatabaseEntityInterface;
+use Ixocreate\Database\DatabaseEntityInterface;
 use Ixocreate\Entity\Definition;
 use Ixocreate\Entity\DefinitionCollection;
 use Ixocreate\Entity\EntityInterface;

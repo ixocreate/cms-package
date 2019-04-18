@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Config;
 
 use Ixocreate\Application\Service\SerializableServiceInterface;
+use Ixocreate\Cms\CmsConfigurator;
 
 final class Config implements SerializableServiceInterface
 {
@@ -30,9 +31,10 @@ final class Config implements SerializableServiceInterface
 
     /**
      * Config constructor.
-     * @param Configurator $configurator
+     *
+     * @param CmsConfigurator $configurator
      */
-    public function __construct(Configurator $configurator)
+    public function __construct(CmsConfigurator $configurator)
     {
         $this->navigation = $configurator->getNavigation();
         $this->robotsNoIndex = $configurator->getRobotsNoIndex();

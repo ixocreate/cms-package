@@ -21,12 +21,12 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
-use Ixocreate\CommonTypes\Entity\SchemaType;
-use Ixocreate\Filter\FilterableInterface;
-use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
 use Ixocreate\Entity\Type\Type;
 use Ixocreate\Event\EventDispatcher;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Type\Entity\SchemaType;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 
 final class CreateVersionCommand extends AbstractCommand implements FilterableInterface, ValidatableInterface
 {
@@ -67,6 +67,7 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
 
     /**
      * CreateVersionCommand constructor.
+     *
      * @param PageVersionRepository $pageVersionRepository
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
@@ -112,12 +113,12 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
                 ->set("version.approvedAt", ":approvedAt")
                 ->setParameter("approvedAt", null)
                 ->where("version.pageId = :pageId")
-                ->setParameter("pageId", (string) $page->id());
+                ->setParameter("pageId", (string)$page->id());
             $queryBuilder->getQuery()->execute();
         }
 
         $content = $this->dataValue('content');
-        if (! ($content instanceof SchemaType)) {
+        if (!($content instanceof SchemaType)) {
             $content = Type::create(
                 $this->dataValue('content'),
                 SchemaType::class,
@@ -132,7 +133,7 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
 
         $pageVersion = new PageVersion([
             'id' => $this->uuid(),
-            'pageId' => (string) $page->id(),
+            'pageId' => (string)$page->id(),
             'content' => $content,
             'createdBy' => $this->dataValue('createdBy'),
             'approvedAt' => ($this->dataValue('approve') === true) ? $this->createdAt() : null,
@@ -143,7 +144,7 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
         $pageVersion = $this->pageVersionRepository->save($pageVersion);
 
         if ($this->dataValue("approve") === true) {
-            $this->cacheManager->fetch($this->pageVersionCacheable->withPageId((string) $page->id()), true);
+            $this->cacheManager->fetch($this->pageVersionCacheable->withPageId((string)$page->id()), true);
         }
 
         $pageEvent = new PageEvent(
@@ -166,11 +167,11 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['pageType'] = (string) $this->dataValue('pageType');
-        $newData['pageId'] = (string) $this->dataValue('pageId');
-        $newData['createdBy'] = (string) $this->dataValue('createdBy');
+        $newData['pageType'] = (string)$this->dataValue('pageType');
+        $newData['pageId'] = (string)$this->dataValue('pageId');
+        $newData['createdBy'] = (string)$this->dataValue('createdBy');
         $newData['content'] = $this->dataValue('content', []);
-        $newData['approve'] = (bool) $this->dataValue('approve', false);
+        $newData['approve'] = (bool)$this->dataValue('approve', false);
 
         return $this->withData($newData);
     }

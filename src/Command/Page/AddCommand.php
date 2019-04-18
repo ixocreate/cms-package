@@ -123,14 +123,6 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
                 'name' => (string) $page->name(),
                 'pageId' => (string) $page->id(),
             ]);
-
-            $this->commandBus->command(CreateVersionCommand::class, [
-                'pageType' => $pageType::serviceName(),
-                'pageId' => (string) $page->id(),
-                'createdBy' => $this->dataValue('createdBy'),
-                'content' => [],
-                'approve' => true,
-            ]);
         });
         return true;
     }

@@ -119,7 +119,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
             }
 
             $page = new Page([
-                'id' => $this->uuid(),
+                'id' => ($this->dataValue('pageId')) ?? $this->uuid(),
                 'sitemapId' => $sitemap->id(),
                 'locale' => $this->dataValue('locale'),
                 'name' => $this->dataValue('name'),
@@ -191,9 +191,11 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         $newData['locale'] = (string) $this->dataValue('locale');
         $newData['name'] = (string) $this->dataValue('name');
         $newData['createdBy'] = (string) $this->dataValue('createdBy');
-        $newData['idFromOriginal'] = (string) $this->dataValue('idFromOriginal');
         $newData['content'] = $this->dataValue('content');
         $newData['status'] = $this->dataValue('status');
+        if (!empty($this->dataValue('pageId'))) {
+            $newData['pageId'] = (string) $this->dataValue('pageId');
+        }
 
         return $this->withData($newData);
     }

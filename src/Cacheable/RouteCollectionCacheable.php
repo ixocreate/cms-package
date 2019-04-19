@@ -20,7 +20,6 @@ use Ixocreate\Intl\LocaleManager;
 use RecursiveIteratorIterator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Zend\Diactoros\Uri;
 
 final class RouteCollectionCacheable implements CacheableInterface
 {
@@ -138,11 +137,12 @@ final class RouteCollectionCacheable implements CacheableInterface
                         $routePrefix .= "." . $name;
                     }
 
-                    $uri = new Uri($uri);
+                    $uriParts = \parse_url($uri);
 
-                    $routeObj = new Route($uri->getPath());
-                    if (!empty($uri->getHost())) {
-                        $routeObj->setHost($uri->getHost());
+                    $routeObj = new Route($uriParts['path']);
+                    if (!empty($uriParts['host'])) {
+                        $routeObj->setHost($uriParts['host']);
+                        $routeObj->setSchemes($uriParts['scheme']);
                     }
 
                     $routeObj->setDefault('pageId', $routeSpecification->pageId());

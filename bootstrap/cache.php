@@ -13,4 +13,4 @@ $cache->addCacheableDirectory(__DIR__ . '/../src/Cacheable');
 
 $cache->addCache('cms', new Chain(['cms_tmp', 'cms_store']));
 $cache->addCache('cms_tmp', new InMemory());
-$cache->addCache('cms_store', new Filesystem());
+$cache->addCache('cms_store', new Filesystem('data/cache/'));

@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Test\Site\Tree;
 
+use Ixocreate\Application\Service\ServiceManagerConfig;
+use Ixocreate\Application\Service\ServiceManagerConfigurator;
+use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Site\Structure\Structure;
 use Ixocreate\Cms\Site\Tree\Container;
@@ -23,12 +26,9 @@ use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
 use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
-use Ixocreate\Cache\CacheableInterface;
-use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use Ixocreate\ServiceManager\ServiceManager;
-use Ixocreate\ServiceManager\ServiceManagerConfig;
-use Ixocreate\Application\Service\ServiceManagerConfigurator;
 use Ixocreate\ServiceManager\ServiceManagerSetup;
+use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase

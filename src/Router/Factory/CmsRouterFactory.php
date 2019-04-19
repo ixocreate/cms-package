@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Router\Factory;
 
 use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
+use Ixocreate\Cache\CacheableSubManager;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\RouteCollectionCacheable;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Cache\CacheableSubManager;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
 

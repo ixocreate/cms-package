@@ -11,12 +11,12 @@ namespace Ixocreate\Cms\Action\Sitemap;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Seo;
 
-use Ixocreate\Cms\Config\Config;
 use Ixocreate\Application\Uri\ApplicationUri;
+use Ixocreate\Cms\Config\Config;
 use Ixocreate\Template\TemplateResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

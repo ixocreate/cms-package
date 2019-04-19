@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router\Replacement;
 
+use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cms\Router\RouteSpecification;
 use Ixocreate\Cms\Router\RoutingItem;
-use Ixocreate\Application\Uri\ApplicationUri;
 
 final class UriReplacement implements ReplacementInterface
 {

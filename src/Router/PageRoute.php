@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
+use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Application\Uri\ApplicationUri;
 
 final class PageRoute
 {

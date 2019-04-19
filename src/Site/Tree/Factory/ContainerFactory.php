@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Tree\Factory;
 
+use Ixocreate\Cache\CacheableSubManager;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\PageVersionCacheable;
@@ -21,7 +22,6 @@ use Ixocreate\Cms\Site\Tree\ItemFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Cache\CacheableSubManager;
 
 final class ContainerFactory implements FactoryInterface
 {

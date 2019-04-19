@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Cacheable;
 
+use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Router\RouteSpecification;
 use Ixocreate\Cms\Router\RoutingItem;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Intl\LocaleManager;
 use RecursiveIteratorIterator;
 use Symfony\Component\Routing\Route;

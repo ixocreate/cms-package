@@ -11,8 +11,8 @@ namespace Ixocreate\Cms\Block;
 
 use Ixocreate\Application\Configurator\ConfiguratorInterface;
 use Ixocreate\Application\Service\ServiceRegistryInterface;
-use Ixocreate\ServiceManager\Factory\AutowireFactory;
 use Ixocreate\Application\Service\SubManagerConfigurator;
+use Ixocreate\ServiceManager\Factory\AutowireFactory;
 
 final class BlockConfigurator implements ConfiguratorInterface
 {

@@ -1,10 +1,15 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
 /** @var PipeConfigurator $pipe */
-
 use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Admin\Middleware\Api\AuthorizationGuardMiddleware;
 use Ixocreate\Admin\Middleware\Api\SessionDataMiddleware;
@@ -35,19 +40,14 @@ use Ixocreate\Cms\Action\Sitemap\MoveAction;
 $pipe->segmentPipe(AdminConfig::class)(function (PipeConfigurator $pipe) {
     $pipe->segment('/api')(function (PipeConfigurator $pipe) {
         $pipe->group("admin.authorized")(function (GroupPipeConfigurator $group) {
-
             $group->get('/page/{id}', DetailAction::class, 'admin.api.page.detail');
-            $group->post('/page/{id}', \Ixocreate\Cms\Action\Page\Version\CreateAction::class,
-                'admin.api.page.version.create');
+            $group->post('/page/{id}', \Ixocreate\Cms\Action\Page\Version\CreateAction::class, 'admin.api.page.version.create');
             $group->patch('/page/{id}', UpdateAction::class, "admin.api.page.pageUpdate");
             $group->delete('/page/{id}', DeleteAction::class, 'admin.api.page.delete');
-            $group->get('/page/{pageId}/version', \Ixocreate\Cms\Action\Page\Version\IndexAction::class,
-                'admin.api.page.version.index');
-            $group->get('/page/{pageId}/version/{id}', \Ixocreate\Cms\Action\Page\Version\DetailAction::class,
-                'admin.api.page.version.detail');
+            $group->get('/page/{pageId}/version', \Ixocreate\Cms\Action\Page\Version\IndexAction::class, 'admin.api.page.version.index');
+            $group->get('/page/{pageId}/version/{id}', \Ixocreate\Cms\Action\Page\Version\DetailAction::class, 'admin.api.page.version.detail');
 
-            $group->get('/page/available-page-types[/{parentSitemapId}]', AvailablePageTypesAction::class,
-                'admin.api.page.availablePageTypes');
+            $group->get('/page/available-page-types[/{parentSitemapId}]', AvailablePageTypesAction::class, 'admin.api.page.availablePageTypes');
             $group->get('/page/list', ListAction::class, 'admin.api.page.list');
             $group->get('/page/sub/index/{handle}', IndexSubSitemapAction::class, 'admin.api.page.indexSub');
             $group->get('/page/flat/index/{handle}', IndexFlatAction::class, 'admin.api.page.indexFlat');
@@ -74,11 +74,11 @@ $pipe->segmentPipe(AdminConfig::class)(function (PipeConfigurator $pipe) {
         $group->before(UserMiddleware::class);
         $group->before(AuthorizationGuardMiddleware::class);
 
-        $group->get('/preview', PreviewAction::class, 'admin.cms.preview')(function (
-            RouteConfigurator $routeConfigurator
-        ) {
-            $routeConfigurator->enablePost();
-        });
+        $group->get('/preview', PreviewAction::class, 'admin.cms.preview')(
+            function (RouteConfigurator $routeConfigurator) {
+                $routeConfigurator->enablePost();
+            }
+        );
     });
 });
 

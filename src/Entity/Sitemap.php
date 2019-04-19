@@ -11,13 +11,13 @@ namespace Ixocreate\Cms\Entity;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Ixocreate\Contract\Entity\DatabaseEntityInterface;
-use Ixocreate\Contract\Type\TypeInterface;
+use Ixocreate\Database\DatabaseEntityInterface;
+use Ixocreate\Type\TypeInterface;
 use Ixocreate\Database\Tree\NodeInterface;
-use Ixocreate\Entity\Entity\Definition;
-use Ixocreate\Entity\Entity\DefinitionCollection;
-use Ixocreate\Entity\Entity\EntityTrait;
-use Ixocreate\CommonTypes\Entity\UuidType;
+use Ixocreate\Entity\Definition;
+use Ixocreate\Entity\DefinitionCollection;
+use Ixocreate\Entity\EntityTrait;
+use Ixocreate\Type\Entity\UuidType;
 
 final class Sitemap implements NodeInterface, DatabaseEntityInterface
 {

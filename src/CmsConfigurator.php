@@ -7,8 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Config;
+namespace Ixocreate\Cms;
 
+use Ixocreate\Application\Configurator\ConfiguratorInterface;
+use Ixocreate\Application\Service\ServiceRegistryInterface;
+use Ixocreate\Application\Service\SubManagerConfigurator;
+use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Router\Replacement\ReplacementInterface;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\PageProvider;
@@ -16,11 +20,8 @@ use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
-use Ixocreate\Contract\Application\ConfiguratorInterface;
-use Ixocreate\Contract\Application\ServiceRegistryInterface;
-use Ixocreate\ServiceManager\SubManager\SubManagerConfigurator;
 
-final class Configurator implements ConfiguratorInterface
+final class CmsConfigurator implements ConfiguratorInterface
 {
     /**
      * @var array
@@ -53,13 +54,22 @@ final class Configurator implements ConfiguratorInterface
     private $replacementManagerConfigurator;
 
     /**
-     * Configurator constructor.
+     * CmsConfigurator constructor.
      */
     public function __construct()
     {
-        $this->xmlSitemapSubManagerConfigurator = new SubManagerConfigurator(XmlSitemapProviderSubManager::class, XmlSitemapProviderInterface::class);
-        $this->treeSearchSubManagerConfigurator = new SubManagerConfigurator(SearchSubManager::class, SearchInterface::class);
-        $this->replacementManagerConfigurator = new SubManagerConfigurator(ReplacementManager::class, ReplacementInterface::class);
+        $this->xmlSitemapSubManagerConfigurator = new SubManagerConfigurator(
+            XmlSitemapProviderSubManager::class,
+            XmlSitemapProviderInterface::class
+        );
+        $this->treeSearchSubManagerConfigurator = new SubManagerConfigurator(
+            SearchSubManager::class,
+            SearchInterface::class
+        );
+        $this->replacementManagerConfigurator = new SubManagerConfigurator(
+            ReplacementManager::class,
+            ReplacementInterface::class
+        );
         $this->addXmlSitemapProvider(PageProvider::class);
     }
 

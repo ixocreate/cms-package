@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
-use Ixocreate\ApplicationHttp\ErrorHandling\Response\NotFoundHandler;
+use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Entity\Page;

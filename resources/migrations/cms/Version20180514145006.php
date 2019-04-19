@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace IxocreateMigration;
+namespace Ixocreate\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
-use Ixocreate\CommonTypes\Entity\DateTimeType;
-use Ixocreate\CommonTypes\Entity\UuidType;
+use Ixocreate\Type\Entity\DateTimeType;
+use Ixocreate\Type\Entity\UuidType;
 
 final class Version20180514145006 extends AbstractMigration
 {
@@ -22,11 +22,13 @@ final class Version20180514145006 extends AbstractMigration
         $table->addColumn('publishedFrom', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('publishedUntil', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('status', Type::STRING)->setLength(255);
+        $table->addColumn('releasedAt', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('updatedAt', DateTimeType::serviceName());
         $table->addColumn('createdAt', DateTimeType::serviceName());
 
         $table->setPrimaryKey(["id"]);
         $table->addUniqueIndex(["sitemapId", "locale"]);
+        $table->addIndex(['releasedAt']);
     }
 
     public function down(Schema $schema): void

@@ -46,10 +46,9 @@ class CopyAction implements MiddlewareInterface
 
         $result = $this->commandBus->command(CopyPageCommand::class, $data);
         if ($result->isSuccessful()) {
-
             return new ApiSuccessResponse([
                 'toPageId' => (string) $result->command()->toPage()->id(),
-                'toSitemapId' => (string) $result->command()->toSitemap()->id()
+                'toSitemapId' => (string) $result->command()->toSitemap()->id(),
             ]);
         }
 

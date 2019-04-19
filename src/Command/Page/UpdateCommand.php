@@ -19,10 +19,10 @@ use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Contract\CommandBus\CommandInterface;
-use Ixocreate\Contract\Filter\FilterableInterface;
-use Ixocreate\Contract\Validation\ValidatableInterface;
-use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\CommandBus\CommandInterface;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
 final class UpdateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface

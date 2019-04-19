@@ -15,8 +15,8 @@ use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Contract\Cache\CacheableInterface;
-use Ixocreate\Contract\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 
 final class ItemFactory
 {

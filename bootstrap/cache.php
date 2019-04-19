@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-use Ixocreate\Package\Cache\CacheConfigurator;
-use Ixocreate\Package\Cache\Option\Chain;
-use Ixocreate\Package\Cache\Option\Filesystem;
-use Ixocreate\Package\Cache\Option\InMemory;
+use Ixocreate\Cache\CacheConfigurator;
+use Ixocreate\Cache\Option\Chain;
+use Ixocreate\Cache\Option\Filesystem;
+use Ixocreate\Cache\Option\InMemory;
 
 /** @var CacheConfigurator $cache */
 $cache->addCacheableDirectory(__DIR__ . '/../src/Cacheable');

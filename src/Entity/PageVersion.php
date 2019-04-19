@@ -10,14 +10,14 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Entity;
 
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
-use Ixocreate\CommonTypes\Entity\DateTimeType;
-use Ixocreate\CommonTypes\Entity\SchemaType;
-use Ixocreate\Contract\Entity\DatabaseEntityInterface;
-use Ixocreate\Entity\Entity\Definition;
-use Ixocreate\Entity\Entity\DefinitionCollection;
-use Ixocreate\Entity\Entity\EntityInterface;
-use Ixocreate\Entity\Entity\EntityTrait;
-use Ixocreate\CommonTypes\Entity\UuidType;
+use Ixocreate\Type\Entity\DateTimeType;
+use Ixocreate\Type\Entity\SchemaType;
+use Ixocreate\Database\DatabaseEntityInterface;
+use Ixocreate\Entity\Definition;
+use Ixocreate\Entity\DefinitionCollection;
+use Ixocreate\Entity\EntityInterface;
+use Ixocreate\Entity\EntityTrait;
+use Ixocreate\Type\Entity\UuidType;
 
 final class PageVersion implements EntityInterface, DatabaseEntityInterface
 {

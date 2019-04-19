@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
+
 namespace Ixocreate\Cms;
 
+use Ixocreate\Application\Service\ServiceManagerConfigurator;
 use Ixocreate\Cms\Block\BlockSubManager;
 use Ixocreate\Cms\Loader\DatabasePageLoader;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
@@ -19,7 +21,6 @@ use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
-use Ixocreate\ServiceManager\ServiceManagerConfigurator;
 
 /** @var ServiceManagerConfigurator $serviceManager */
 $serviceManager->addSubManager(PageTypeSubManager::class);

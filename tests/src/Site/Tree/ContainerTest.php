@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace IxocreateTest\Site\Tree;
+namespace Ixocreate\Test\Site\Tree;
 
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Site\Structure\Structure;
@@ -23,11 +23,11 @@ use Ixocreate\Cms\Site\Tree\Search\NavigationSearch;
 use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
-use Ixocreate\Contract\Cache\CacheableInterface;
-use Ixocreate\Contract\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use Ixocreate\ServiceManager\ServiceManager;
 use Ixocreate\ServiceManager\ServiceManagerConfig;
-use Ixocreate\ServiceManager\ServiceManagerConfigurator;
+use Ixocreate\Application\Service\ServiceManagerConfigurator;
 use Ixocreate\ServiceManager\ServiceManagerSetup;
 use PHPUnit\Framework\TestCase;
 

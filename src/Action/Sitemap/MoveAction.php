@@ -16,7 +16,7 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Contract\Cache\CacheInterface;
+use Ixocreate\Cache\CacheInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -103,7 +103,6 @@ class MoveAction implements MiddlewareInterface
 
             $this->sitemapRepository->moveAsFirstChild($sitemap, $parent);
         } else {
-
             $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
             if (!\is_subclass_of($pageType, RootPageTypeInterface::class)) {
                 return new ApiErrorResponse('invalid_target', [], 400);

@@ -7,11 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\BootstrapItem;
+namespace Ixocreate\Cms;
 
-use Ixocreate\Cms\Config\Configurator;
-use Ixocreate\Contract\Application\BootstrapItemInterface;
-use Ixocreate\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Application\Bootstrap\BootstrapItemInterface;
+use Ixocreate\Application\Configurator\ConfiguratorInterface;
 
 final class CmsBootstrapItem implements BootstrapItemInterface
 {
@@ -20,7 +19,7 @@ final class CmsBootstrapItem implements BootstrapItemInterface
      */
     public function getConfigurator(): ConfiguratorInterface
     {
-        return new Configurator();
+        return new CmsConfigurator();
     }
 
     /**

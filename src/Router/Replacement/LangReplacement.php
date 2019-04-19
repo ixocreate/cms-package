@@ -1,5 +1,12 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOCREATE GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
@@ -35,8 +42,8 @@ final class LangReplacement implements ReplacementInterface
      * @param RouteSpecification $routeSpecification
      * @param string $locale
      * @param RoutingItem $routingItem
-     * @return RouteSpecification
      * @throws \Exception
+     * @return RouteSpecification
      */
     public function replace(
         RouteSpecification $routeSpecification,

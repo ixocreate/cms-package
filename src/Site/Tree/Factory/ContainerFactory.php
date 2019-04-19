@@ -19,9 +19,9 @@ use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
-use Ixocreate\Contract\ServiceManager\FactoryInterface;
-use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Package\Cache\CacheableSubManager;
+use Ixocreate\ServiceManager\FactoryInterface;
+use Ixocreate\ServiceManager\ServiceManagerInterface;
+use Ixocreate\Cache\CacheableSubManager;
 
 final class ContainerFactory implements FactoryInterface
 {

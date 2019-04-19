@@ -11,7 +11,7 @@ namespace Ixocreate\Cms\Router;
 
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\ProjectUri\ProjectUri;
+use Ixocreate\Application\Uri\ApplicationUri;
 
 final class PageRoute
 {
@@ -26,11 +26,11 @@ final class PageRoute
     private $cmsRouter;
 
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
-    public function __construct(Config $config, CmsRouter $cmsRouter, ProjectUri $projectUri)
+    public function __construct(Config $config, CmsRouter $cmsRouter, ApplicationUri $projectUri)
     {
         $this->config = $config;
         $this->cmsRouter = $cmsRouter;

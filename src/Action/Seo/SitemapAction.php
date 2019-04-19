@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Seo;
 
-use Ixocreate\ProjectUri\ProjectUri;
+use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -23,11 +23,11 @@ use Zend\Diactoros\Stream;
 class SitemapAction implements MiddlewareInterface
 {
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
-    public function __construct(ProjectUri $projectUri)
+    public function __construct(ApplicationUri $projectUri)
     {
         $this->projectUri = $projectUri;
     }

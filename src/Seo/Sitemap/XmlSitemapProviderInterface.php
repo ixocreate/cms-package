@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Seo\Sitemap;
 
-use Ixocreate\Contract\ServiceManager\NamedServiceInterface;
+use Ixocreate\ServiceManager\NamedServiceInterface;
 
 interface XmlSitemapProviderInterface extends NamedServiceInterface
 {

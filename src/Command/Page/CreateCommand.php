@@ -19,11 +19,11 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Contract\Cache\CacheInterface;
-use Ixocreate\Contract\CommandBus\CommandInterface;
-use Ixocreate\Contract\Filter\FilterableInterface;
-use Ixocreate\Contract\Validation\ValidatableInterface;
-use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\Cache\CacheInterface;
+use Ixocreate\CommandBus\CommandInterface;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 use Ixocreate\Intl\LocaleManager;
 
 final class CreateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
@@ -172,7 +172,6 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
         if (!$this->localeManager->has((string) $this->dataValue("locale"))) {
             $violationCollector->add("locale", "invalid_locale");
         }
-
     }
 
     public function filter(): FilterableInterface

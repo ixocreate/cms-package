@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\CommonTypes\Entity\UuidType;
-use Ixocreate\Contract\Cache\CacheableInterface;
+use Ixocreate\Type\Entity\UuidType;
+use Ixocreate\Cache\CacheableInterface;
 
 final class PageCacheable implements CacheableInterface
 {

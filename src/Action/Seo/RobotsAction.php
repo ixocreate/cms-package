@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Action\Seo;
 
 use Ixocreate\Cms\Config\Config;
-use Ixocreate\ProjectUri\ProjectUri;
+use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Template\TemplateResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,16 +25,17 @@ class RobotsAction implements MiddlewareInterface
     protected $config;
 
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
     /**
      * RobotsAction constructor.
+     *
      * @param Config $config
-     * @param ProjectUri $projectUri
+     * @param ApplicationUri $projectUri
      */
-    public function __construct(Config $config, ProjectUri $projectUri)
+    public function __construct(Config $config, ApplicationUri $projectUri)
     {
         $this->config = $config;
         $this->projectUri = $projectUri;

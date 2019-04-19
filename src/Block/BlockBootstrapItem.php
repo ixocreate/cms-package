@@ -7,11 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\BootstrapItem;
+namespace Ixocreate\Cms\Block;
 
-use Ixocreate\Cms\Block\BlockConfigurator;
-use Ixocreate\Contract\Application\BootstrapItemInterface;
-use Ixocreate\Contract\Application\ConfiguratorInterface;
+use Ixocreate\Application\Bootstrap\BootstrapItemInterface;
+use Ixocreate\Application\Configurator\ConfiguratorInterface;
 
 final class BlockBootstrapItem implements BootstrapItemInterface
 {

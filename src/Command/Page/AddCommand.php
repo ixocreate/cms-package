@@ -17,14 +17,13 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Contract\CommandBus\CommandInterface;
-use Ixocreate\Contract\Filter\FilterableInterface;
-use Ixocreate\Contract\Validation\ValidatableInterface;
-use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\CommandBus\CommandInterface;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 use Ixocreate\Intl\LocaleManager;
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Contract\Cache\CacheInterface;
-use Ramsey\Uuid\Uuid;
+use Ixocreate\Cache\CacheInterface;
 
 final class AddCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
 {

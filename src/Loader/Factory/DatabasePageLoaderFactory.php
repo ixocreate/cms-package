@@ -11,8 +11,8 @@ namespace Ixocreate\Cms\Loader\Factory;
 
 use Ixocreate\Cms\Loader\DatabasePageLoader;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Contract\ServiceManager\FactoryInterface;
-use Ixocreate\Contract\ServiceManager\ServiceManagerInterface;
+use Ixocreate\ServiceManager\FactoryInterface;
+use Ixocreate\ServiceManager\ServiceManagerInterface;
 use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 
 final class DatabasePageLoaderFactory implements FactoryInterface

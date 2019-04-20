@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\DBAL\Driver\Connection;
+use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -20,12 +21,11 @@ use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\ViolationCollectorInterface;
-use Ixocreate\Intl\LocaleManager;
 use Ramsey\Uuid\Uuid;
 
 final class CopySitemapCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface

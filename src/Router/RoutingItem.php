@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
+use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Action\Frontend\RenderAction;
 use Ixocreate\Cms\Cacheable\PageCacheable;
@@ -28,11 +29,10 @@ use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\PageType\RoutingAwareInterface;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Type\Entity\SchemaType;
-use Ixocreate\Cache\CacheableInterface;
-use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use Ixocreate\Entity\Type\Type;
 use Ixocreate\Intl\LocaleManager;
+use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\Type\Entity\SchemaType;
 
 final class RoutingItem implements \RecursiveIterator, \Countable
 {

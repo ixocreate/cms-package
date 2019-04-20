@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
+use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

@@ -18,7 +18,7 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Admin\Item;
-use Ixocreate\Entity\Entity\EntityCollection;
+use Ixocreate\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

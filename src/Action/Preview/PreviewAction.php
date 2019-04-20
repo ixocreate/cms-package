@@ -10,18 +10,19 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Action\Preview;
 
 use Ixocreate\Admin\Entity\User;
-use Ixocreate\ApplicationHttp\Middleware\MiddlewareSubManager;
+use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
 use Ixocreate\Cms\Action\Frontend\RenderAction;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\PageType\MiddlewarePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Request\CmsRequest;
 use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Admin\Item;
-use Ixocreate\CommonTypes\Entity\SchemaType;
 use Ixocreate\Entity\Type\Type;
+use Ixocreate\Type\Entity\SchemaType;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -104,10 +105,14 @@ final class PreviewAction implements MiddlewareInterface
             ->withPageType($item->pageType())
             ->withPageVersion($pageVersion);
 
-        $middleware = $item->pageType()->middleware();
-        if (empty($middleware)) {
-            $middleware = [];
+        $middleware = [];
+        if ($item->pageType() instanceof MiddlewarePageTypeInterface) {
+            $middleware = $item->pageType()->middleware();
+            if (empty($middleware)) {
+                $middleware = [];
+            }
         }
+
         $middleware[] = RenderAction::class;
 
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($this->middlewareSubManager));

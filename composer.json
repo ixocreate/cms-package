@@ -1,8 +1,10 @@
 {
     "name": "ixocreate/cms-package",
-    "description": "IXOCREATE CMS implementation",
+    "description": "IXOCREATE CMS Package",
     "license": "MIT",
     "type": "library",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "IXOCREATE"
@@ -10,13 +12,17 @@
     ],
     "require": {
         "php": "^7.1",
+        "ixocreate/application": "^0.1",
+        "ixocreate/admin-package": "^0.1",
+        "ixocreate/cache-package": "^0.1",
         "symfony/options-resolver": "^4.1",
-        "ixocreate/contract": "=1.0.0-alpha2"
+        "symfony/routing": "^4.2.4",
+        "thepixeldeveloper/sitemap": "^5.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0.6",
-        "php-coveralls/php-coveralls": "^2.0",
-        "ixocreate/coding-standard": "^1.0"
+        "ixocreate/coding-standard": "^2.0",
+        "php-coveralls/php-coveralls": "^2.1",
+        "phpunit/phpunit": "^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -25,8 +31,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "IxocreateMisc\\Cms\\": "tests/misc/",
-            "IxocreateTest\\Cms\\": "tests/src/"
+            "Ixocreate\\Misc\\Cms\\": "tests/misc/",
+            "Ixocreate\\Test\\Cms\\": "tests/src/"
         }
     },
     "scripts": {

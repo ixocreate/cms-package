@@ -9,24 +9,14 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\PageType;
 
-use Ixocreate\Contract\Schema\SchemaReceiverInterface;
-use Ixocreate\Contract\ServiceManager\NamedServiceInterface;
+use Ixocreate\Schema\SchemaProviderInterface;
+use Ixocreate\ServiceManager\NamedServiceInterface;
 
-interface PageTypeInterface extends NamedServiceInterface, SchemaReceiverInterface
+interface PageTypeInterface extends NamedServiceInterface, SchemaProviderInterface
 {
     public function label(): string;
 
-    public function routing(): string;
-
-    public function handle(): ?string;
-
-    public function isRoot(): ?bool;
-
     public function allowedChildren(): ?array;
 
-    public function middleware(): ?array;
-
-    public function layout(): string;
-
-    public function terminal(): bool;
+    public function template(): string;
 }

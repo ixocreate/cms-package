@@ -9,38 +9,36 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Config;
 
-use Ixocreate\Contract\Application\SerializableServiceInterface;
+use Ixocreate\Application\Service\SerializableServiceInterface;
+use Ixocreate\Cms\CmsConfigurator;
 
 final class Config implements SerializableServiceInterface
 {
-    /**
-     * @var string
-     */
-    private $localizationUrlSchema;
-
     /**
      * @var array
      */
     private $navigation = [];
 
     /**
-     * @var string
+     * @var bool
      */
-    private $defaultBaseUrl;
-
-    public function __construct(Configurator $configurator)
-    {
-        $this->localizationUrlSchema = $configurator->getLocalizationUrlSchema();
-        $this->navigation = $configurator->getNavigation();
-        $this->defaultBaseUrl = $configurator->getDefaultBaseUrl();
-    }
+    private $robotsNoIndex;
 
     /**
-     * @return string
+     * @var string
      */
-    public function localizationUrlSchema(): string
+    private $robotsTemplate;
+
+    /**
+     * Config constructor.
+     *
+     * @param CmsConfigurator $configurator
+     */
+    public function __construct(CmsConfigurator $configurator)
     {
-        return $this->localizationUrlSchema;
+        $this->navigation = $configurator->getNavigation();
+        $this->robotsNoIndex = $configurator->getRobotsNoIndex();
+        $this->robotsTemplate = $configurator->getRobotsTemplate();
     }
 
     /**
@@ -51,9 +49,20 @@ final class Config implements SerializableServiceInterface
         return $this->navigation;
     }
 
-    public function defaultBaseUrl(): ?string
+    /**
+     * @return bool
+     */
+    public function robotsNoIndex(): bool
     {
-        return $this->defaultBaseUrl;
+        return $this->robotsNoIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function robotsTemplate(): string
+    {
+        return $this->robotsTemplate;
     }
 
     /**
@@ -62,9 +71,9 @@ final class Config implements SerializableServiceInterface
     public function serialize()
     {
         return \serialize([
-            'localizationUrlSchema' => $this->localizationUrlSchema,
-            'defaultBaseUrl' => $this->defaultBaseUrl,
             'navigation' => $this->navigation,
+            'robotsNoIndex' => $this->robotsNoIndex,
+            'robotsTemplate' => $this->robotsTemplate,
         ]);
     }
 
@@ -76,7 +85,7 @@ final class Config implements SerializableServiceInterface
         $unserialized = \unserialize($serialized);
 
         $this->navigation = $unserialized['navigation'];
-        $this->defaultBaseUrl = $unserialized['defaultBaseUrl'];
-        $this->localizationUrlSchema = $unserialized['localizationUrlSchema'];
+        $this->robotsNoIndex = $unserialized['robotsNoIndex'];
+        $this->robotsTemplate = $unserialized['robotsTemplate'];
     }
 }

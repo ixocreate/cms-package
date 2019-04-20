@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -19,12 +21,12 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
-use Ixocreate\CommonTypes\Entity\SchemaType;
-use Ixocreate\Contract\Filter\FilterableInterface;
-use Ixocreate\Contract\Validation\ValidatableInterface;
-use Ixocreate\Contract\Validation\ViolationCollectorInterface;
 use Ixocreate\Entity\Type\Type;
 use Ixocreate\Event\EventDispatcher;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Type\Entity\SchemaType;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 
 final class CreateVersionCommand extends AbstractCommand implements FilterableInterface, ValidatableInterface
 {
@@ -54,29 +56,46 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     private $eventDispatcher;
 
     /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+
+    /**
+     * @var PageVersionCacheable
+     */
+    private $pageVersionCacheable;
+
+    /**
      * CreateVersionCommand constructor.
+     *
      * @param PageVersionRepository $pageVersionRepository
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
      * @param PageTypeSubManager $pageTypeSubManager
      * @param EventDispatcher $eventDispatcher
+     * @param CacheManager $cacheManager
+     * @param PageVersionCacheable $pageVersionCacheable
      */
     public function __construct(
         PageVersionRepository $pageVersionRepository,
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         PageTypeSubManager $pageTypeSubManager,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher,
+        CacheManager $cacheManager,
+        PageVersionCacheable $pageVersionCacheable
     ) {
         $this->pageVersionRepository = $pageVersionRepository;
         $this->pageRepository = $pageRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->cacheManager = $cacheManager;
+        $this->pageVersionCacheable = $pageVersionCacheable;
     }
 
     /**
-     * @throws \Exception
+     * @throws \Psr\Cache\InvalidArgumentException
      * @return bool
      */
     public function execute(): bool
@@ -94,31 +113,39 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
                 ->set("version.approvedAt", ":approvedAt")
                 ->setParameter("approvedAt", null)
                 ->where("version.pageId = :pageId")
-                ->setParameter("pageId", (string) $page->id());
+                ->setParameter("pageId", (string)$page->id());
             $queryBuilder->getQuery()->execute();
         }
 
-        $content = [
-            '__receiver__' => [
-                'receiver' => PageTypeSubManager::class,
-                'options' => [
-                    'pageType' => $pageType::serviceName(),
-                ],
-            ],
-            '__value__' => $this->dataValue("content"),
-        ];
+        $content = $this->dataValue('content');
+        if (!($content instanceof SchemaType)) {
+            $content = Type::create(
+                $this->dataValue('content'),
+                SchemaType::class,
+                [
+                    'provider' => [
+                        'class' => PageTypeSubManager::class,
+                        'name' => $pageType::serviceName(),
+                    ],
+                ]
+            );
+        }
 
         $pageVersion = new PageVersion([
             'id' => $this->uuid(),
-            'pageId' => (string) $page->id(),
-            'content' => Type::create($content, SchemaType::class)->convertToDatabaseValue(),
-            'createdBy' => $this->dataValue("createdBy"),
-            'approvedAt' => ($this->dataValue("approve") === true) ? $this->createdAt() : null,
+            'pageId' => (string)$page->id(),
+            'content' => $content,
+            'createdBy' => $this->dataValue('createdBy'),
+            'approvedAt' => ($this->dataValue('approve') === true) ? $this->createdAt() : null,
             'createdAt' => $this->createdAt(),
         ]);
 
         /** @var PageVersion $pageVersion */
         $pageVersion = $this->pageVersionRepository->save($pageVersion);
+
+        if ($this->dataValue("approve") === true) {
+            $this->cacheManager->fetch($this->pageVersionCacheable->withPageId((string)$page->id()), true);
+        }
 
         $pageEvent = new PageEvent(
             $sitemap,
@@ -140,11 +167,11 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['pageType'] = (string) $this->dataValue('pageType');
-        $newData['pageId'] = (string) $this->dataValue('pageId');
-        $newData['createdBy'] = (string) $this->dataValue('createdBy');
+        $newData['pageType'] = (string)$this->dataValue('pageType');
+        $newData['pageId'] = (string)$this->dataValue('pageId');
+        $newData['createdBy'] = (string)$this->dataValue('createdBy');
         $newData['content'] = $this->dataValue('content', []);
-        $newData['approve'] = (bool) $this->dataValue('approve', false);
+        $newData['approve'] = (bool)$this->dataValue('approve', false);
 
         return $this->withData($newData);
     }

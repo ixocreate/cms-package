@@ -34,6 +34,11 @@ final class StructureItem
     /**
      * @var array
      */
+    private $childrenInfo;
+
+    /**
+     * @var array
+     */
     private $children;
 
     /**
@@ -46,14 +51,14 @@ final class StructureItem
         ?string $handle,
         array $pages,
         array $navigation,
-        array $children,
+        array $childrenInfo,
         int $level
     ) {
         $this->sitemapId = $sitemapId;
         $this->handle = $handle;
         $this->pages = $pages;
         $this->navigation = $navigation;
-        $this->children = $children;
+        $this->childrenInfo = $childrenInfo;
         $this->level = $level;
     }
 
@@ -84,19 +89,36 @@ final class StructureItem
 
     public function children(): array
     {
-        $children = [];
+        if ($this->children === null) {
+            $this->children = [];
 
-        foreach ($this->children as $item) {
-            $children[] = new StructureItem(
-                $item['sitemapId'],
-                $item['handle'],
-                $item['pages'],
-                $item['navigation'],
-                $item['children'],
-                $this->level() + 1
-            );
+            foreach ($this->childrenInfo as $item) {
+                if ($item instanceof StructureItem) {
+                    $this->children[] = $item;
+
+                    continue;
+                }
+
+                $this->children[] = new StructureItem(
+                    $item['sitemapId'],
+                    $item['handle'],
+                    $item['pages'],
+                    $item['navigation'],
+                    $item['children'],
+                    $this->level() + 1
+                );
+            }
         }
 
-        return $children;
+        return $this->children;
+    }
+
+    public function withChildrenInfo(array $childrenInfo): StructureItem
+    {
+        $item = clone $this;
+        $item->childrenInfo = $childrenInfo;
+        $item->children = null;
+
+        return $item;
     }
 }

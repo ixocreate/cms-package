@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
+use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\ProjectUri\ProjectUri;
 
 final class PageRoute
 {
@@ -26,11 +26,11 @@ final class PageRoute
     private $cmsRouter;
 
     /**
-     * @var ProjectUri
+     * @var ApplicationUri
      */
     private $projectUri;
 
-    public function __construct(Config $config, CmsRouter $cmsRouter, ProjectUri $projectUri)
+    public function __construct(Config $config, CmsRouter $cmsRouter, ApplicationUri $projectUri)
     {
         $this->config = $config;
         $this->cmsRouter = $cmsRouter;
@@ -39,6 +39,6 @@ final class PageRoute
 
     public function fromPage(Page $page, array $params = [], ?string $locale = null): string
     {
-        return $this->cmsRouter->generateUri("page." . (string)$page->id(), $params, ['locale' => $locale ?? $page->locale()]);
+        return $this->cmsRouter->generateUri('page.' . (string)$page->id(), $params, ['locale' => $locale ?? $page->locale()]);
     }
 }

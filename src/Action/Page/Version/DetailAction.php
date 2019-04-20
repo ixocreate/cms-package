@@ -17,7 +17,7 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Admin\Item;
-use Ixocreate\Entity\Entity\EntityCollection;
+use Ixocreate\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -64,7 +64,6 @@ final class DetailAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $versionId = $request->getAttribute("id");
-
         $pageId = $request->getAttribute("pageId");
         $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
             $pages = $item->pages();

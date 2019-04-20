@@ -67,7 +67,7 @@ class AvailablePageTypesAction implements MiddlewareInterface
         }
 
         $result = [];
-        $allowedPageTypes = $this->pageTypeSubManager->allowedChildPageTypes($this->databaseSitemapLoader->receiveHandles(), $parentPageType);
+        $allowedPageTypes = $this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles(), $parentPageType);
         foreach ($allowedPageTypes as $allowedPageType) {
             /** @var PageTypeInterface $allowedPageType */
             $allowedPageType = $this->pageTypeSubManager->get($allowedPageType);

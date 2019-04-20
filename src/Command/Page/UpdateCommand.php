@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
@@ -16,10 +19,10 @@ use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\Contract\CommandBus\CommandInterface;
-use Ixocreate\Contract\Filter\FilterableInterface;
-use Ixocreate\Contract\Validation\ValidatableInterface;
-use Ixocreate\Contract\Validation\ViolationCollectorInterface;
+use Ixocreate\CommandBus\CommandInterface;
+use Ixocreate\Filter\FilterableInterface;
+use Ixocreate\Validation\ValidatableInterface;
+use Ixocreate\Validation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
 final class UpdateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
@@ -45,26 +48,50 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
     private $navigationRepository;
 
     /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+
+    /**
+     * @var PageCacheable
+     */
+    private $pageCacheable;
+
+    /**
+     * @var StructureCacheable
+     */
+    private $structureCacheable;
+
+    /**
      * CreateCommand constructor.
      * @param PageRepository $pageRepository
      * @param CommandBus $commandBus
      * @param Config $config
      * @param NavigationRepository $navigationRepository
+     * @param CacheManager $cacheManager
+     * @param PageCacheable $pageCacheable
+     * @param StructureCacheable $structureCacheable
      */
     public function __construct(
         PageRepository $pageRepository,
         CommandBus $commandBus,
         Config $config,
-        NavigationRepository $navigationRepository
+        NavigationRepository $navigationRepository,
+        CacheManager $cacheManager,
+        PageCacheable $pageCacheable,
+        StructureCacheable $structureCacheable
     ) {
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->config = $config;
         $this->navigationRepository = $navigationRepository;
+        $this->cacheManager = $cacheManager;
+        $this->pageCacheable = $pageCacheable;
+        $this->structureCacheable = $structureCacheable;
     }
 
     /**
-     * @throws \Exception
+     * @throws \Psr\Cache\InvalidArgumentException
      * @return bool
      */
     public function execute(): bool
@@ -103,10 +130,11 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string) $this->dataValue('slug'),
                 'pageId' => (string) $page->id(),
+                'isChange' => true,
             ]);
         }
 
-        if (!empty($this->dataValue('navigation'))) {
+        if ($this->dataValue('navigation') !== null) {
             $queryBuilder = $this->navigationRepository->createQueryBuilder();
             $queryBuilder->delete(Navigation::class, "nav")
                 ->where("nav.pageId = :pageId")
@@ -122,11 +150,15 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
 
                 $this->navigationRepository->save($navigationEntity);
             }
+
+            $this->cacheManager->fetch($this->structureCacheable, true);
         }
 
         if ($updated === true) {
             $page = $page->with('updatedAt', new \DateTime());
             $this->pageRepository->save($page);
+
+            $this->cacheManager->fetch($this->pageCacheable->withPageId((string) $page->id()), true);
         }
 
         return true;
@@ -170,7 +202,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
         $newData['slug'] = $this->dataValue('slug', false);
         $newData['navigation'] = null;
 
-        if (!empty($this->dataValue('navigation'))) {
+        if (\is_array($this->dataValue('navigation'))) {
             $newData['navigation'] = [];
             $navItems = \array_map(function ($nav) {
                 return $nav['name'];
@@ -182,7 +214,6 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
                 }
             }
         }
-
 
         return $this->withData($newData);
     }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Request;
 
-use Ixocreate\ApplicationHttp\Request\AbstractRequestWrapper;
+use Ixocreate\Application\Http\Request\AbstractRequestWrapper;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;

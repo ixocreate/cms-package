@@ -9,18 +9,20 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
 
-use Cocur\Slugify\Slugify;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cache\CacheInterface;
+use Ixocreate\Cms\Command\Page\CreateVersionCommand;
+use Ixocreate\Cms\Command\Page\SlugCommand;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -40,14 +42,24 @@ class AddAction implements MiddlewareInterface
     private $sitemapRepository;
 
     /**
-     * @var PageVersionRepository
-     */
-    private $pageVersionRepository;
-
-    /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
+    /**
+     * @var CommandBus
+     */
+    private $commandBus;
+
+    /**
+     * @var Connection
+     */
+    private $master;
+
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
 
     /**
      * AddAction constructor.
@@ -55,17 +67,24 @@ class AddAction implements MiddlewareInterface
      * @param SitemapRepository $sitemapRepository
      * @param PageVersionRepository $pageVersionRepository
      * @param PageTypeSubManager $pageTypeSubManager
+     * @param CommandBus $commandBus
+     * @param Connection $master
+     * @param CacheInterface $cms
      */
     public function __construct(
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
-        PageVersionRepository $pageVersionRepository,
-        PageTypeSubManager $pageTypeSubManager
+        PageTypeSubManager $pageTypeSubManager,
+        CommandBus $commandBus,
+        Connection $master,
+        CacheInterface $cms
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
-        $this->pageVersionRepository = $pageVersionRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->master = $master;
+        $this->cache = $cms;
+        $this->commandBus = $commandBus;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -88,84 +107,28 @@ class AddAction implements MiddlewareInterface
             'releasedAt' => new \DateTime(),
         ]);
 
-        /** @var Page $page */
-        $page = $this->pageRepository->save($page);
+        $this->master->transactional(function () use (&$page, $sitemap, $pageType, $request) {
+            /** @var Page $page */
+            $page = $this->pageRepository->save($page);
 
-        $this->saveSlug($page, $sitemap);
-        $this->savePageVersion($page, $pageType, (string) $request->getAttribute(User::class, null)->id());
+            $this->cache->clear();
 
+            $this->commandBus->command(SlugCommand::class, [
+                'name' => (string) $page->name(),
+                'pageId' => (string) $page->id(),
+            ]);
+
+            $createdBy = (string) $request->getAttribute(User::class, null)->id();
+
+            $this->commandBus->command(CreateVersionCommand::class, [
+                'pageType' => $pageType::serviceName(),
+                'pageId' => (string) $page->id(),
+                'createdBy' => $createdBy,
+                'content' => [],
+                'approve' => false,
+            ]);
+        });
 
         return new ApiSuccessResponse((string) $page->id());
-    }
-
-    private function saveSlug(Page $page, Sitemap $sitemap)
-    {
-        $slugify = new Slugify();
-
-        $criteria = Criteria::create();
-        if (empty($sitemap->parentId())) {
-            $criteria->where(Criteria::expr()->isNull("parentId"));
-        } else {
-            $criteria->where(Criteria::expr()->eq("parentId", $sitemap->parentId()));
-        }
-        $result = $this->sitemapRepository->matching($criteria);
-        $sitemapIds = [];
-        /** @var Sitemap $item */
-        foreach ($result as $item) {
-            $sitemapIds[] = $item->id();
-        }
-
-
-        $i = 0;
-        do {
-            $name = $page->name();
-            if ($i > 0) {
-                $name .= " " . $i;
-            }
-
-            $slug = $slugify->slugify($name);
-
-            if ($slug === $page->slug()) {
-                return;
-            }
-
-            $criteria = Criteria::create();
-            $criteria->where(Criteria::expr()->in('sitemapId', $sitemapIds));
-            $criteria->andWhere(Criteria::expr()->eq("locale", $page->locale()));
-            $criteria->andWhere(Criteria::expr()->neq("id", $page->id()));
-            $criteria->andWhere(Criteria::expr()->eq("slug", $slug));
-
-            $result = $this->pageRepository->matching($criteria);
-            $found = ($result->count() > 0);
-            $i++;
-        } while ($found == true);
-
-        $page = $page->with("slug", $slug);
-        $this->pageRepository->save($page);
-    }
-
-    private function savePageVersion(Page $page, PageTypeInterface $pageType, $createdBy)
-    {
-        $content = [];
-
-        $pageVersion = new PageVersion([
-            'id' => Uuid::uuid4()->toString(),
-            'pageId' => (string) $page->id(),
-            'content' => [
-                '__receiver__' => [
-                    'receiver' => PageTypeSubManager::class,
-                    'options' => [
-                        'pageType' => $pageType::serviceName(),
-                    ],
-                ],
-                '__value__' => $content,
-            ],
-            'createdBy' => $createdBy,
-            'approvedAt' => new \DateTime(),
-            'createdAt' => new \DateTime(),
-
-        ]);
-        /** @var PageVersion $pageVersion */
-        $pageVersion = $this->pageVersionRepository->save($pageVersion);
     }
 }

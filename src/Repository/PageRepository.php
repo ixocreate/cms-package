@@ -15,6 +15,7 @@ use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Database\Repository\AbstractRepository;
 
 final class PageRepository extends AbstractRepository
@@ -142,15 +143,24 @@ final class PageRepository extends AbstractRepository
                 'sitemap' => $sitemap,
                 'pageType' => [
                     "name" => $pageType::serviceName(),
-                    "handle" => $pageType->handle(),
                     "label" => $pageType->label(),
                     "allowedChildren" => $pageType->allowedChildren(),
-                    "isRoot" => $pageType->isRoot(),
+                    "isRoot" => \is_subclass_of($pageType, RootPageTypeInterface::class),
                 ],
                 'children' => [],
             ];
         }
 
         return $flat;
+    }
+
+    public function slugExists(?string $sParentId, string $pId, string $pSlug, string $pLocale): bool
+    {
+        $query = $this->getEntityManager()->createQuery('SELECT COUNT (p.id) FROM ' . Page::class . ' p JOIN ' . Sitemap::class . ' s WITH p.sitemapId = s.id 
+        WHERE s.parentId = :parentId AND p.id != :id AND p.slug = :slug AND p.locale = :locale');
+        $query->setParameters(array('parentId' => $sParentId, 'id' => $pId, 'slug'=> $pSlug, 'locale' => $pLocale));
+        $result = $query->getResult();
+
+        return $result[0][1] > 0;
     }
 }

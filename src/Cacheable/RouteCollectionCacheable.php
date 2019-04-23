@@ -144,7 +144,7 @@ final class RouteCollectionCacheable implements CacheableInterface
 
                     $uriParts = \parse_url($uri);
 
-                    $routeObj = new Route($uriParts['path']);
+                    $routeObj = new Route(($uriParts['path']) ?? '/');
                     if (!empty($uriParts['host'])) {
                         $routeObj->setHost($uriParts['host']);
                         $routeObj->setSchemes($uriParts['scheme']);

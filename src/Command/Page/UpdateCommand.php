@@ -19,13 +19,12 @@ use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
-final class UpdateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class UpdateCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageRepository
@@ -64,6 +63,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
 
     /**
      * CreateCommand constructor.
+     *
      * @param PageRepository $pageRepository
      * @param CommandBus $commandBus
      * @param Config $config
@@ -128,8 +128,8 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
 
         if ($this->dataValue('slug') !== false) {
             $this->commandBus->command(SlugCommand::class, [
-                'name' => (string) $this->dataValue('slug'),
-                'pageId' => (string) $page->id(),
+                'name' => (string)$this->dataValue('slug'),
+                'pageId' => (string)$page->id(),
                 'isChange' => true,
             ]);
         }
@@ -138,13 +138,13 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
             $queryBuilder = $this->navigationRepository->createQueryBuilder();
             $queryBuilder->delete(Navigation::class, "nav")
                 ->where("nav.pageId = :pageId")
-                ->setParameter("pageId", (string) $page->id());
+                ->setParameter("pageId", (string)$page->id());
             $queryBuilder->getQuery()->execute();
 
             foreach ($this->dataValue('navigation') as $nav) {
                 $navigationEntity = new Navigation([
                     'id' => Uuid::uuid4()->toString(),
-                    'pageId' => (string) $page->id(),
+                    'pageId' => (string)$page->id(),
                     'navigation' => $nav,
                 ]);
 
@@ -158,7 +158,7 @@ final class UpdateCommand extends AbstractCommand implements CommandInterface, V
             $page = $page->with('updatedAt', new \DateTime());
             $this->pageRepository->save($page);
 
-            $this->cacheManager->fetch($this->pageCacheable->withPageId((string) $page->id()), true);
+            $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
         }
 
         return true;

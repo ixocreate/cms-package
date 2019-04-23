@@ -13,7 +13,7 @@
     "require": {
         "php": "^7.1",
         "ixocreate/application": "^0.1",
-        "ixocreate/admin-package": "^0.1",
+        "ixocreate/admin-package": "^0.2",
         "ixocreate/cache-package": "^0.1",
         "symfony/options-resolver": "^4.1",
         "symfony/routing": "^4.2.4",
@@ -34,6 +34,9 @@
             "Ixocreate\\Misc\\Cms\\": "tests/misc/",
             "Ixocreate\\Test\\Cms\\": "tests/src/"
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "scripts": {
         "fix-cs": "vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --config vendor/ixocreate/coding-standard/.php_cs"

@@ -21,13 +21,12 @@ use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\ViolationCollectorInterface;
 
-final class CopyPageCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class CopyPageCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageTypeSubManager
@@ -81,6 +80,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
 
     /**
      * CreateCommand constructor.
+     *
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
@@ -123,7 +123,7 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
 
                 /** @var Page $fromPage */
                 $fromPage = $this->pageRepository->findOneBy([
-                    'sitemapId' => (string) $fromSitemap,
+                    'sitemapId' => (string)$fromSitemap,
                     'locale' => $this->dataValue('fromLocale'),
                 ]);
             } elseif (!empty($this->dataValue('fromPageId'))) {
@@ -159,8 +159,8 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
                 $this->pageRepository->save($this->toPage);
 
                 $this->commandBus->command(SlugCommand::class, [
-                    'name' => (string) $this->toPage->name(),
-                    'pageId' => (string) $this->toPage->id(),
+                    'name' => (string)$this->toPage->name(),
+                    'pageId' => (string)$this->toPage->id(),
                 ]);
             } elseif (!empty($this->dataValue('toPageId'))) {
                 $this->toPage = $this->pageRepository->find($this->dataValue('toPageId'));
@@ -170,14 +170,14 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
             $this->cache->clear();
 
             $query = $this->pageVersionRepository->createQuery('SELECT v FROM ' . PageVersion::class . ' v WHERE v.pageId = :pageId ORDER BY v.createdAt DESC');
-            $query->setParameter('pageId', (string) $fromPage->id());
+            $query->setParameter('pageId', (string)$fromPage->id());
             $query->setMaxResults(1);
 
             $pageVersion = $query->getResult()[0];
 
             $this->commandBus->command(CreateVersionCommand::class, [
                 'pageType' => $pageType::serviceName(),
-                'pageId' => (string) $this->toPage->id(),
+                'pageId' => (string)$this->toPage->id(),
                 'content' => $pageVersion->content(),
                 'approve' => true,
                 'createdBy' => $this->dataValue('createdBy'),
@@ -225,11 +225,19 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
         }
 
         if (empty($this->dataValue('fromSitemapId')) && empty($this->dataValue('fromPageId'))) {
-            $violationCollector->add('fromPageId', 'invalid_parameters', 'either fromSitemapId or fromPageId are required');
+            $violationCollector->add(
+                'fromPageId',
+                'invalid_parameters',
+                'either fromSitemapId or fromPageId are required'
+            );
         }
 
         if (!empty($this->dataValue('fromSitemapId')) && !empty($this->dataValue('fromPageId'))) {
-            $violationCollector->add('fromPageId', 'invalid_parameters', 'only fromSitemapId or fromPageId are allowed');
+            $violationCollector->add(
+                'fromPageId',
+                'invalid_parameters',
+                'only fromSitemapId or fromPageId are allowed'
+            );
         }
 
         if (empty($this->dataValue('createdBy')) || !\is_string($this->dataValue('createdBy'))) {
@@ -240,16 +248,16 @@ final class CopyPageCommand extends AbstractCommand implements CommandInterface,
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['fromSitemapId'] = (string) $this->dataValue('fromSitemapId', '');
-        $newData['fromLocale'] = (string) $this->dataValue('fromLocale', '');
-        $newData['fromPageId'] = (string) $this->dataValue('fromPageId', '');
+        $newData['fromSitemapId'] = (string)$this->dataValue('fromSitemapId', '');
+        $newData['fromLocale'] = (string)$this->dataValue('fromLocale', '');
+        $newData['fromPageId'] = (string)$this->dataValue('fromPageId', '');
 
-        $newData['toSitemapId'] = (string) $this->dataValue('toSitemapId', '');
-        $newData['toLocale'] = (string) $this->dataValue('toLocale', '');
-        $newData['toPageId'] = (string) $this->dataValue('toPageId', '');
+        $newData['toSitemapId'] = (string)$this->dataValue('toSitemapId', '');
+        $newData['toLocale'] = (string)$this->dataValue('toLocale', '');
+        $newData['toPageId'] = (string)$this->dataValue('toPageId', '');
 
-        $newData['name'] = (string) $this->dataValue('name', '');
-        $newData['createdBy'] = (string) $this->dataValue('createdBy', '');
+        $newData['name'] = (string)$this->dataValue('name', '');
+        $newData['createdBy'] = (string)$this->dataValue('createdBy', '');
 
         return $this->withData($newData);
     }

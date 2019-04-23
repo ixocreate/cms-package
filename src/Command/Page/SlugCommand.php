@@ -19,13 +19,12 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\CommandBus\Command\AbstractCommand;
-use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\ViolationCollectorInterface;
 use Zend\Expressive\Router\Exception\RuntimeException;
 
-final class SlugCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class SlugCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageRepository
@@ -49,6 +48,7 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
 
     /**
      * SlugCommand constructor.
+     *
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
      * @param OldRedirectRepository $oldRedirectRepository
@@ -87,8 +87,13 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
             if ($iterationName === $page->slug()) {
                 return true;
             }
-            $sParentId = (!empty($sitemap->parentId())) ? (string) $sitemap->parentId() : null;
-            $found = $this->pageRepository->slugExists($sParentId, (string) $this->dataValue("pageId"), $iterationName, $page->locale());
+            $sParentId = (!empty($sitemap->parentId())) ? (string)$sitemap->parentId() : null;
+            $found = $this->pageRepository->slugExists(
+                $sParentId,
+                (string)$this->dataValue("pageId"),
+                $iterationName,
+                $page->locale()
+            );
             $i++;
         } while ($found == true);
 
@@ -152,9 +157,9 @@ final class SlugCommand extends AbstractCommand implements CommandInterface, Val
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['name'] = (new Slugify())->slugify((string) $this->dataValue('name', ''));
+        $newData['name'] = (new Slugify())->slugify((string)$this->dataValue('name', ''));
         $newData['pageId'] = $this->dataValue('pageId');
-        $newData['isChange'] = (bool) $this->dataValue('isChange', false);
+        $newData['isChange'] = (bool)$this->dataValue('isChange', false);
 
         return $this->withData($newData);
     }

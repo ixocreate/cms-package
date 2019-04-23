@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Cacheable;
 
 use Doctrine\Common\Collections\Criteria;
+use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Type\Entity\UuidType;
-use Ixocreate\Cache\CacheableInterface;
 
 final class PageVersionCacheable implements CacheableInterface
 {

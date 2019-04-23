@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Cacheable;
 
-use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\Cms\Site\Structure\StructureBuilder;
 
 final class StructureCacheable implements CacheableInterface
 {

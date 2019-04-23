@@ -12,12 +12,12 @@ namespace Ixocreate\Cms\Entity;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\Database\DatabaseEntityInterface;
-use Ixocreate\Type\TypeInterface;
 use Ixocreate\Entity\Definition;
 use Ixocreate\Entity\DefinitionCollection;
 use Ixocreate\Entity\EntityInterface;
 use Ixocreate\Entity\EntityTrait;
 use Ixocreate\Type\Entity\UuidType;
+use Ixocreate\Type\TypeInterface;
 
 final class Navigation implements EntityInterface, DatabaseEntityInterface
 {

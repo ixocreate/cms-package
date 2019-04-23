@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Tree;
 
+use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\PageVersionCacheable;
@@ -20,10 +21,9 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Type\Entity\SchemaType;
-use Ixocreate\Cache\CacheableInterface;
-use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use Ixocreate\Entity\Type\Type;
+use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
+use Ixocreate\Type\Entity\SchemaType;
 use RecursiveIterator;
 
 class Item implements ContainerInterface

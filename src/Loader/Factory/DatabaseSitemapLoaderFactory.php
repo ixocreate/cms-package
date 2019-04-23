@@ -11,9 +11,9 @@ namespace Ixocreate\Cms\Loader\Factory;
 
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 
 final class DatabaseSitemapLoaderFactory implements FactoryInterface
 {

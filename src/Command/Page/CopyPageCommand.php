@@ -24,7 +24,7 @@ use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 
 final class CopyPageCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {

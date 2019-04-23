@@ -21,7 +21,7 @@ use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
 final class UpdateCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface

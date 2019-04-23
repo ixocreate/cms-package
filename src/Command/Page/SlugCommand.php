@@ -21,7 +21,7 @@ use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 use Zend\Expressive\Router\Exception\RuntimeException;
 
 final class SlugCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface

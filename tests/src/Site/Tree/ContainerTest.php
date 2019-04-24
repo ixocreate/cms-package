@@ -11,8 +11,14 @@ namespace Ixocreate\Test\Site\Tree;
 
 use Ixocreate\Application\Service\ServiceManagerConfig;
 use Ixocreate\Application\Service\ServiceManagerConfigurator;
+use Ixocreate\Application\Uri\ApplicationUri;
+use Ixocreate\Application\Uri\ApplicationUriConfigurator;
 use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\CmsConfigurator;
+use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Router\CmsRouter;
+use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\Structure;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
@@ -30,6 +36,9 @@ use Ixocreate\ServiceManager\ServiceManager;
 use Ixocreate\ServiceManager\ServiceManagerSetup;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\RouteCollection;
+use Zend\Expressive\MiddlewareContainer;
+use Zend\Expressive\MiddlewareFactory;
 
 class ContainerTest extends TestCase
 {
@@ -145,7 +154,13 @@ class ContainerTest extends TestCase
             $this->createMock(CacheableInterface::class),
             new CacheManager($this->createMock(\Psr\Container\ContainerInterface::class)),
             $this->createMock(SubManagerInterface::class),
-            $searchSubManager
+            $searchSubManager,
+            new PageRoute(
+                new Config(new CmsConfigurator()),
+                new CmsRouter(new RouteCollection(), new MiddlewareFactory($this->createMock(MiddlewareContainer::class))),
+                new ApplicationUri(new ApplicationUriConfigurator())
+            )
+
         );
 
         return new Container($this->generateStructure()->structure(), $searchSubManager, $itemFactory);

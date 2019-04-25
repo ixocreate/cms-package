@@ -15,8 +15,6 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminItem;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -41,7 +39,7 @@ class IndexAction implements MiddlewareInterface
 
     /**
      * IndexAction constructor.
-     * @param Builder $builder
+     * @param AdminContainer $adminContainer
      * @param PageTypeSubManager $pageTypeSubManager
      * @param DatabaseSitemapLoader $databaseSitemapLoader
      */

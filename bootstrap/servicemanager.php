@@ -23,7 +23,6 @@ use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
-use Ixocreate\Cms\Site\Admin\Builder;
 use Ixocreate\Cms\Site\Admin\Factory\AdminContainerFactory;
 use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
@@ -47,4 +46,3 @@ $serviceManager->addFactory(AdminContainer::class, AdminContainerFactory::class)
 $serviceManager->addService(DatabasePageLoader::class, DatabasePageLoaderFactory::class);
 $serviceManager->addService(DatabaseSitemapLoader::class, DatabaseSitemapLoaderFactory::class);
 $serviceManager->addService(StructureBuilder::class, StructureBuilderFactory::class);
-$serviceManager->addService(Builder::class);

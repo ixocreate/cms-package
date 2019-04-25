@@ -3,8 +3,6 @@
     "description": "IXOCREATE CMS Package",
     "license": "MIT",
     "type": "library",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "authors": [
         {
             "name": "IXOCREATE"

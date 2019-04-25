@@ -26,7 +26,7 @@ use Ixocreate\Event\EventDispatcher;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Type\Entity\SchemaType;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 
 final class CreateVersionCommand extends AbstractCommand implements FilterableInterface, ValidatableInterface
 {

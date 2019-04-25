@@ -20,13 +20,12 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 
-final class CreateCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class CreateCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageTypeSubManager
@@ -65,6 +64,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
 
     /**
      * CreateCommand constructor.
+     *
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
@@ -135,8 +135,8 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
             $this->cache->clear();
 
             $this->commandBus->command(SlugCommand::class, [
-                'name' => (string) $page->name(),
-                'pageId' => (string) $page->id(),
+                'name' => (string)$page->name(),
+                'pageId' => (string)$page->id(),
             ]);
         });
 
@@ -169,7 +169,7 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
             }
         }
 
-        if (!$this->localeManager->has((string) $this->dataValue("locale"))) {
+        if (!$this->localeManager->has((string)$this->dataValue("locale"))) {
             $violationCollector->add("locale", "invalid_locale");
         }
     }
@@ -177,15 +177,15 @@ final class CreateCommand extends AbstractCommand implements CommandInterface, V
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['pageType'] = (string) $this->dataValue('pageType');
+        $newData['pageType'] = (string)$this->dataValue('pageType');
         $newData['parentSitemapId'] = $this->dataValue('parentSitemapId');
-        $newData['locale'] = (string) $this->dataValue('locale');
-        $newData['name'] = (string) $this->dataValue('name');
-        $newData['createdBy'] = (string) $this->dataValue('createdBy');
+        $newData['locale'] = (string)$this->dataValue('locale');
+        $newData['name'] = (string)$this->dataValue('name');
+        $newData['createdBy'] = (string)$this->dataValue('createdBy');
         $newData['content'] = $this->dataValue('content');
         $newData['status'] = $this->dataValue('status');
         if (!empty($this->dataValue('pageId'))) {
-            $newData['pageId'] = (string) $this->dataValue('pageId');
+            $newData['pageId'] = (string)$this->dataValue('pageId');
         }
 
         return $this->withData($newData);

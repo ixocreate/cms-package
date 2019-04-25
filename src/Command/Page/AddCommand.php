@@ -19,13 +19,12 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 
-final class AddCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class AddCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageTypeSubManager
@@ -64,6 +63,7 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
 
     /**
      * CreateCommand constructor.
+     *
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
@@ -119,8 +119,8 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
             $this->cache->clear();
 
             $this->commandBus->command(SlugCommand::class, [
-                'name' => (string) $page->name(),
-                'pageId' => (string) $page->id(),
+                'name' => (string)$page->name(),
+                'pageId' => (string)$page->id(),
             ]);
         });
         return true;
@@ -129,10 +129,10 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['sitemapId'] = (string) $this->dataValue('sitemapId');
+        $newData['sitemapId'] = (string)$this->dataValue('sitemapId');
         $newData['locale'] = (string)$this->dataValue('locale');
         $newData['name'] = (string)$this->dataValue('name');
-        $newData['createdBy'] = (string) $this->dataValue('createdBy');
+        $newData['createdBy'] = (string)$this->dataValue('createdBy');
         $newData['content'] = $this->dataValue('content');
         $newData['status'] = $this->dataValue('status');
 
@@ -146,27 +146,27 @@ final class AddCommand extends AbstractCommand implements CommandInterface, Vali
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-//        if (!$this->pageTypeSubManager->has($this->dataValue('sitemapId'))) {
-//            $violationCollector->add("sitemapId", "invalid_sitemapId");
-//        }
+        //        if (!$this->pageTypeSubManager->has($this->dataValue('sitemapId'))) {
+        //            $violationCollector->add("sitemapId", "invalid_sitemapId");
+        //        }
 
-//        if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
-//            $violationCollector->add("name", "invalid_name");
-//        }
-//
-//        if (!empty($this->dataValue("parentSitemapId"))) {
-//            if (!\is_string($this->dataValue("parentSitemapId"))) {
-//                $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
-//            } else {
-//                $sitemap = $this->sitemapRepository->find($this->dataValue("parentSitemapId"));
-//                if (empty($sitemap)) {
-//                    $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
-//                }
-//            }
-//        }
-//
-//        if (!$this->localeManager->has($this->dataValue("locale"))) {
-//            $violationCollector->add("locale", "invalid_locale");
-//        }
+        //        if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
+        //            $violationCollector->add("name", "invalid_name");
+        //        }
+        //
+        //        if (!empty($this->dataValue("parentSitemapId"))) {
+        //            if (!\is_string($this->dataValue("parentSitemapId"))) {
+        //                $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
+        //            } else {
+        //                $sitemap = $this->sitemapRepository->find($this->dataValue("parentSitemapId"));
+        //                if (empty($sitemap)) {
+        //                    $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
+        //                }
+        //            }
+        //        }
+        //
+        //        if (!$this->localeManager->has($this->dataValue("locale"))) {
+        //            $violationCollector->add("locale", "invalid_locale");
+        //        }
     }
 }

@@ -21,14 +21,13 @@ use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
-use Ixocreate\CommandBus\CommandInterface;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
-use Ixocreate\Validation\ViolationCollectorInterface;
+use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 use Ramsey\Uuid\Uuid;
 
-final class CopySitemapCommand extends AbstractCommand implements CommandInterface, ValidatableInterface, FilterableInterface
+final class CopySitemapCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
     /**
      * @var PageTypeSubManager
@@ -72,6 +71,7 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
 
     /**
      * CreateCommand constructor.
+     *
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
@@ -133,7 +133,7 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
                 $sitemap = $this->sitemapRepository->createRoot($sitemap);
             }
 
-            $criteria = ['sitemapId' => (string) $fromSitemap->id()];
+            $criteria = ['sitemapId' => (string)$fromSitemap->id()];
             if (!empty($this->dataValue('locales'))) {
                 $criteria['locale'] = $this->dataValue('locales');
             }
@@ -144,7 +144,7 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
 
                 /** @var Page $referencePage */
                 $query = $this->pageVersionRepository->createQuery('SELECT v FROM ' . PageVersion::class . ' v WHERE v.pageId = :pageId ORDER BY v.createdAt DESC');
-                $query->setParameter('pageId', (string) $referencePage->id());
+                $query->setParameter('pageId', (string)$referencePage->id());
                 $query->setMaxResults(1);
 
                 foreach ($query->getResult() as $pageVersion) {
@@ -164,15 +164,15 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
                     $this->pageRepository->save($page);
 
                     $this->commandBus->command(SlugCommand::class, [
-                        'name' => (string) $page->name(),
-                        'pageId' => (string) $page->id(),
+                        'name' => (string)$page->name(),
+                        'pageId' => (string)$page->id(),
                     ]);
 
                     $this->cache->clear();
 
                     $this->commandBus->command(CreateVersionCommand::class, [
                         'pageType' => $pageType::serviceName(),
-                        'pageId' => (string) $page->id(),
+                        'pageId' => (string)$page->id(),
                         'content' => $pageVersion->content(),
                         'approve' => true,
                         'createdBy' => $this->dataValue('createdBy'),
@@ -239,10 +239,10 @@ final class CopySitemapCommand extends AbstractCommand implements CommandInterfa
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['fromSitemapId'] = (string) $this->dataValue('fromSitemapId');
+        $newData['fromSitemapId'] = (string)$this->dataValue('fromSitemapId');
         $newData['parentId'] = $this->dataValue('parentId');
         $newData['prevSiblingId'] = $this->dataValue('prevSiblingId');
-        $newData['createdBy'] = (string) $this->dataValue('createdBy');
+        $newData['createdBy'] = (string)$this->dataValue('createdBy');
 
         $locales = $this->dataValue('locales');
         if (!empty($locales) && \is_array($locales)) {

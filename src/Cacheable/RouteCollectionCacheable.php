@@ -103,8 +103,8 @@ final class RouteCollectionCacheable implements CacheableInterface
         $structure = $this->cacheManager->fetch($this->structureCacheable);
 
         $rootStructure = new StructureItem(
-            "",
-            "",
+            '',
+            '',
             [],
             [],
             $structure,
@@ -137,9 +137,10 @@ final class RouteCollectionCacheable implements CacheableInterface
                     if ($name === RouteSpecification::NAME_INHERITANCE) {
                         continue;
                     }
-                    $routePrefix = "page.";
+
+                    $routePrefix = 'page.';
                     if ($name !== RouteSpecification::NAME_MAIN) {
-                        $routePrefix .= "." . $name;
+                        $routePrefix .= $name . '.';
                     }
 
                     $uriParts = \parse_url($uri);
@@ -154,8 +155,8 @@ final class RouteCollectionCacheable implements CacheableInterface
                     $routeObj->setDefault('locale', $locale);
                     $routeObj->setDefault('middleware', $routeSpecification->middleware());
 
-                    $routName = $routePrefix . $routeSpecification->pageId();
-                    $routeCollection->add($routName, $routeObj);
+                    $routeName = $routePrefix . $routeSpecification->pageId();
+                    $routeCollection->add($routeName, $routeObj);
                 }
             }
         }

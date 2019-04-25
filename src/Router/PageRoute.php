@@ -37,8 +37,11 @@ final class PageRoute
         $this->projectUri = $projectUri;
     }
 
-    public function fromPage(Page $page, array $params = [], ?string $locale = null): string
+    public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
     {
-        return $this->cmsRouter->generateUri('page.' . (string)$page->id(), $params, ['locale' => $locale ?? $page->locale()]);
+        if ($routePrefix !== '') {
+            $routePrefix .= '.';
+        }
+        return $this->cmsRouter->generateUri('page.' . $routePrefix . (string)$page->id(), $params);
     }
 }

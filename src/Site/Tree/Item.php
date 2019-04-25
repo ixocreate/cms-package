@@ -160,17 +160,18 @@ class Item implements ContainerInterface
     /**
      * @param string $locale
      * @param array $params
+     * @param string $routePrefix
      * @throws \Psr\Cache\InvalidArgumentException
      * @return string
      */
-    public function pageUrl(string $locale, array $params = []): string
+    public function pageUrl(string $locale, array $params = [], string $routePrefix = ''): string
     {
         try {
-            return $this->pageRoute->fromPage($this->page($locale, $params));
+            return $this->pageRoute->fromPage($this->page($locale), $params, $routePrefix);
         } catch (\Exception $exception) {
         }
 
-        return "";
+        return '';
     }
 
     public function sitemap(): Sitemap
@@ -372,7 +373,7 @@ class Item implements ContainerInterface
     }
 
     /**
-     * @return RecursiveIterator|void
+     * @return RecursiveIterator|Item
      */
     public function getChildren()
     {

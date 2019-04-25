@@ -204,10 +204,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
         }
 
         $page = $this->page($locale);
-        if ($page->status() === "offline") {
-            $this->pageRoute[$locale] = null;
-            return null;
-        }
 
         $pageType = $this->pageType();
         $routing = '${PARENT}/${SLUG}';

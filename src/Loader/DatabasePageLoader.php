@@ -46,6 +46,8 @@ final class DatabasePageLoader implements PageLoaderInterface
         }
 
         return $this->collection->get($pageId);
+
+//        return $this->pageRepository->find($pageId);
     }
 
     /**

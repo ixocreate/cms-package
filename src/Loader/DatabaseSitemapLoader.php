@@ -64,6 +64,8 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
         }
 
         return $this->collection->get($sitemapId);
+
+//        return $this->sitemapRepository->find($sitemapId);
     }
 
     public function receiveHandles(): array
@@ -79,5 +81,16 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
         }
 
         return $this->handles;
+
+//        if (!\is_array($this->handles)) {
+//            $this->handles = [];
+//
+//            $result = $this->sitemapRepository->createQuery("SELECT s FROM " . Sitemap::class . " s WHERE s.handle IS NOT NULL")->execute();
+//            foreach ($result as $sitemap) {
+//                $this->handles[] = $sitemap->handle();
+//            }
+//        }
+//
+//        return $this->handles;
     }
 }

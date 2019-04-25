@@ -145,10 +145,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
                     continue;
                 }
 
-                if ($page->status() === "offline") {
-                    continue;
-                }
-
                 $counter++;
                 break;
             }

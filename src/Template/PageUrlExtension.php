@@ -72,9 +72,9 @@ final class PageUrlExtension implements ExtensionInterface
      * @param null|string $locale
      * @return string
      */
-    public function fromPage(Page $page, array $params = [], ?string $locale = null): string
+    public function fromPage(Page $page, array $params = []): string
     {
-        return $this->pageRoute->fromPage($page, $params, $locale);
+        return $this->pageRoute->fromPage($page, $params);
     }
 
     /**
@@ -101,7 +101,7 @@ final class PageUrlExtension implements ExtensionInterface
             return '';
         }
 
-        return $this->fromPage($page, $params, $locale);
+        return $this->fromPage($page, $params);
     }
 
     /**
@@ -125,6 +125,6 @@ final class PageUrlExtension implements ExtensionInterface
             return $this->fromHandle($defaultHandle, [], $locale);
         }
 
-        return $this->fromPage($page, [], $locale);
+        return $this->fromPage($page, []);
     }
 }

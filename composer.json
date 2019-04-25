@@ -3,7 +3,6 @@
     "description": "IXOCREATE CMS Package",
     "license": "MIT",
     "type": "library",
-
     "authors": [
         {
             "name": "IXOCREATE"

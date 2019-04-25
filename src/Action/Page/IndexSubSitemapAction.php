@@ -11,8 +11,8 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,20 +21,20 @@ use Psr\Http\Server\RequestHandlerInterface;
 class IndexSubSitemapAction implements MiddlewareInterface
 {
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     public function __construct(
-        Builder $builder
+        AdminContainer $adminContainer
     ) {
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $handle = $request->getAttribute("handle");
-        $item = $this->builder->build()->findOneBy(function (Item $item) use ($handle) {
+        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
             return $item->sitemap()->handle() === $handle;
         });
 

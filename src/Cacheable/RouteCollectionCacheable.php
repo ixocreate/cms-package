@@ -160,7 +160,6 @@ final class RouteCollectionCacheable implements CacheableInterface
                 }
             }
         }
-
         return $routeCollection;
     }
 

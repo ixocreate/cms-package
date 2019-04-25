@@ -19,8 +19,8 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Request\CmsRequest;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Entity\Type\Type;
 use Ixocreate\Type\Entity\SchemaType;
 use Psr\Http\Message\ResponseInterface;
@@ -35,9 +35,9 @@ use Zend\Expressive\MiddlewareFactory;
 final class PreviewAction implements MiddlewareInterface
 {
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     /**
      * @var PageVersionRepository
@@ -50,11 +50,11 @@ final class PreviewAction implements MiddlewareInterface
     private $middlewareSubManager;
 
     public function __construct(
-        Builder $builder,
+        AdminContainer $adminContainer,
         PageVersionRepository $pageVersionRepository,
         MiddlewareSubManager $middlewareSubManager
     ) {
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->middlewareSubManager = $middlewareSubManager;
     }
@@ -66,7 +66,7 @@ final class PreviewAction implements MiddlewareInterface
         }
         $pageId = $request->getQueryParams()['pageId'];
 
-        $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
+        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
             $pages = $item->pages();
             foreach ($pages as $pageItem) {
                 if ((string) $pageItem['page']->id() === $pageId) {

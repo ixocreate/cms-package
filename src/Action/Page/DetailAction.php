@@ -15,8 +15,8 @@ use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -25,9 +25,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class DetailAction implements MiddlewareInterface
 {
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     /**
      * @var Config
@@ -46,18 +46,18 @@ final class DetailAction implements MiddlewareInterface
 
     /**
      * DetailAction constructor.
-     * @param Builder $builder
+     * @param AdminContainer $adminContainer
      * @param Config $config
      * @param \Ixocreate\Schema\Builder $schemaBuilder
      * @param PageVersionRepository $pageVersionRepository
      */
     public function __construct(
-        Builder $builder,
+        AdminContainer $adminContainer,
         Config $config,
         \Ixocreate\Schema\Builder $schemaBuilder,
         PageVersionRepository $pageVersionRepository
     ) {
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
         $this->config = $config;
         $this->schemaBuilder = $schemaBuilder;
         $this->pageVersionRepository = $pageVersionRepository;
@@ -66,7 +66,7 @@ final class DetailAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute("id");
-        $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
+        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
             $pages = $item->pages();
             foreach ($pages as $pageItem) {
                 if ((string) $pageItem['page']->id() === $pageId) {

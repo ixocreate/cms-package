@@ -11,8 +11,8 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,17 +21,17 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ListAction implements MiddlewareInterface
 {
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     /**
      * ListAction constructor.
-     * @param Builder $builder
+     * @param AdminContainer $adminContainer
      */
-    public function __construct(Builder $builder)
+    public function __construct(AdminContainer $adminContainer)
     {
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
     }
 
     /**
@@ -51,8 +51,8 @@ class ListAction implements MiddlewareInterface
         }
 
         $result = [];
-        $iterator = new \RecursiveIteratorIterator($this->builder->build(), \RecursiveIteratorIterator::SELF_FIRST);
-        /** @var Item $item */
+        $iterator = new \RecursiveIteratorIterator($this->adminContainer, \RecursiveIteratorIterator::SELF_FIRST);
+        /** @var AdminItem $item */
         foreach ($iterator as $item) {
             if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
                 $result[] = [
@@ -65,16 +65,16 @@ class ListAction implements MiddlewareInterface
     }
 
     /**
-     * @param Item $item
+     * @param AdminItem $item
      * @param string $locale
      * @return string
      */
-    private function receiveName(Item $item, string $locale): string
+    private function receiveName(AdminItem $item, string $locale): string
     {
         $name = '';
-        if (!empty($item->parent())) {
-            $name = $this->receiveName($item->parent(), $locale) . ' / ';
-        }
+//        if (!empty($item->parent())) {
+//            $name = $this->receiveName($item->parent(), $locale) . ' / ';
+//        }
 
         if (!\array_key_exists($locale, $item->pages())) {
             return ' --- ';

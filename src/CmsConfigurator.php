@@ -18,6 +18,8 @@ use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\PageProvider;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
+use Ixocreate\Cms\Site\Admin\AdminSearchInterface;
+use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
 
@@ -51,6 +53,11 @@ final class CmsConfigurator implements ConfiguratorInterface
     /**
      * @var SubManagerConfigurator
      */
+    private $adminSearchSubManagerConfigurator;
+
+    /**
+     * @var SubManagerConfigurator
+     */
     private $replacementManagerConfigurator;
 
     /**
@@ -65,6 +72,10 @@ final class CmsConfigurator implements ConfiguratorInterface
         $this->treeSearchSubManagerConfigurator = new SubManagerConfigurator(
             SearchSubManager::class,
             SearchInterface::class
+        );
+        $this->adminSearchSubManagerConfigurator = new SubManagerConfigurator(
+            AdminSearchSubManager::class,
+            AdminSearchInterface::class
         );
         $this->replacementManagerConfigurator = new SubManagerConfigurator(
             ReplacementManager::class,
@@ -147,6 +158,15 @@ final class CmsConfigurator implements ConfiguratorInterface
      * @param string $name
      * @param string|null $factory
      */
+    public function addAdminSearchable(string $name, ?string $factory = null): void
+    {
+        $this->adminSearchSubManagerConfigurator->addService($name, $factory);
+    }
+
+    /**
+     * @param string $name
+     * @param string|null $factory
+     */
     public function addRoutingReplacement(string $name, ?string $factory = null): void
     {
         $this->replacementManagerConfigurator->addService($name, $factory);
@@ -162,6 +182,7 @@ final class CmsConfigurator implements ConfiguratorInterface
 
         $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
         $this->treeSearchSubManagerConfigurator->registerService($serviceRegistry);
+        $this->adminSearchSubManagerConfigurator->registerService($serviceRegistry);
         $this->replacementManagerConfigurator->registerService($serviceRegistry);
     }
 }

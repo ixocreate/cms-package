@@ -13,8 +13,8 @@ use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -28,9 +28,9 @@ class IndexAction implements MiddlewareInterface
     private $pageTypeSubManager;
 
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     /**
      * @var DatabaseSitemapLoader
@@ -39,29 +39,31 @@ class IndexAction implements MiddlewareInterface
 
     /**
      * IndexAction constructor.
-     * @param Builder $builder
+     * @param AdminContainer $adminContainer
      * @param PageTypeSubManager $pageTypeSubManager
      * @param DatabaseSitemapLoader $databaseSitemapLoader
      */
     public function __construct(
-        Builder $builder,
+        AdminContainer $adminContainer,
         PageTypeSubManager $pageTypeSubManager,
         DatabaseSitemapLoader $databaseSitemapLoader
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
         $this->databaseSitemapLoader = $databaseSitemapLoader;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return new ApiSuccessResponse([
-            'items' => $this->builder->build()->filter(function (Item $item) {
-                if (empty($item->parent())) {
+            "items" => iterator_to_array($this->adminContainer->filter(function (AdminItem $item) {
+                if ($item->level() == 0) {
                     return true;
                 }
-                return !(\is_subclass_of($item->parent()->pageType(), TerminalPageTypeInterface::class));
-            }),
+                return !(\is_subclass_of($item, TerminalPageTypeInterface::class));
+
+            }))
+            ,
             'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
         ]);
     }

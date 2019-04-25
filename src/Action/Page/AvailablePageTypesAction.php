@@ -14,8 +14,8 @@ use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -34,18 +34,18 @@ class AvailablePageTypesAction implements MiddlewareInterface
     private $pageTypeSubManager;
 
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     public function __construct(
         DatabaseSitemapLoader $databaseSitemapLoader,
         PageTypeSubManager $pageTypeSubManager,
-        Builder $builder
+        AdminContainer $adminContainer
     ) {
         $this->databaseSitemapLoader = $databaseSitemapLoader;
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -54,8 +54,8 @@ class AvailablePageTypesAction implements MiddlewareInterface
         $parentPageType = null;
 
         if (!empty($parentSitemapId)) {
-            /** @var Item $item */
-            $item = $this->builder->build()->findOneBy(function (Item $item) use ($parentSitemapId) {
+            /** @var AdminItem $item */
+            $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($parentSitemapId) {
                 return (string) $item->sitemap()->id() === $parentSitemapId;
             });
 

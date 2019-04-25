@@ -13,8 +13,8 @@ use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Command\Page\CreateVersionCommand;
-use Ixocreate\Cms\Site\Admin\Builder;
-use Ixocreate\Cms\Site\Admin\Item;
+use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,19 +29,19 @@ final class CreateAction implements MiddlewareInterface
     private $commandBus;
 
     /**
-     * @var Builder
+     * @var AdminContainer
      */
-    private $builder;
+    private $adminContainer;
 
     /**
-     * DetailAction constructor.
+     * CreateAction constructor.
      * @param CommandBus $commandBus
-     * @param Builder $builder
+     * @param AdminContainer $adminContainer
      */
-    public function __construct(CommandBus $commandBus, Builder $builder)
+    public function __construct(CommandBus $commandBus, AdminContainer $adminContainer)
     {
         $this->commandBus = $commandBus;
-        $this->builder = $builder;
+        $this->adminContainer = $adminContainer;
     }
 
     /**
@@ -53,8 +53,8 @@ final class CreateAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute('id');
-        /** @var Item $item */
-        $item = $this->builder->build()->findOneBy(function (Item $item) use ($pageId) {
+        /** @var AdminItem $item */
+        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
             $pages = $item->pages();
             foreach ($pages as $pageItem) {
                 if ((string) $pageItem['page']->id() === $pageId) {

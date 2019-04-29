@@ -148,7 +148,7 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
                 $this->toPage = new Page([
                     'id' => $this->uuid(),
                     'sitemapId' => $this->toSitemap->id(),
-                    'locale' => $this->dataValue('locale'),
+                    'locale' => $this->dataValue('toLocale'),
                     'name' => (!empty($this->dataValue('name'))) ? $this->dataValue('name') : $fromPage->name(),
                     'status' => 'offline',
                     'createdAt' => $this->createdAt(),
@@ -204,7 +204,7 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-        if (!empty($this->dataValue('fromPageId')) && \is_string($this->dataValue('fromPageId'))) {
+        if (!empty($this->dataValue('fromPageId'))) {
             /** @var Page $fromPage */
             $fromPage = $this->pageRepository->find($this->dataValue('fromPageId'));
             if ($fromPage === null) {
@@ -212,7 +212,7 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
             }
         }
 
-        if (!empty($this->dataValue('fromSitemapId')) && \is_string($this->dataValue('fromSitemapId'))) {
+        if (!empty($this->dataValue('fromSitemapId'))) {
             /** @var Sitemap $fromSitemap */
             $fromSitemap = $this->sitemapRepository->find($this->dataValue('fromSitemapId'));
             if ($fromSitemap === null) {
@@ -237,6 +237,35 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
                 'fromPageId',
                 'invalid_parameters',
                 'only fromSitemapId or fromPageId are allowed'
+            );
+        }
+
+
+        if (!empty($this->dataValue('toSitemapId'))) {
+            /** @var Sitemap $fromSitemap */
+            $fromSitemap = $this->sitemapRepository->find($this->dataValue('toSitemapId'));
+            if ($fromSitemap === null) {
+                $violationCollector->add('toSitemapId', 'invalid_toSitemapId');
+            }
+        }
+
+        if (!empty($this->dataValue('toSitemapId')) && empty($this->dataValue('toLocale'))) {
+            $violationCollector->add('toLocale', 'required_toLocale');
+        }
+
+        if (empty($this->dataValue('toSitemapId')) && empty($this->dataValue('toPageId'))) {
+            $violationCollector->add(
+                'toPageId',
+                'invalid_parameters',
+                'either toSitemapId or toPageId are required'
+            );
+        }
+
+        if (!empty($this->dataValue('toSitemapId')) && !empty($this->dataValue('toPageId'))) {
+            $violationCollector->add(
+                'toPageId',
+                'invalid_parameters',
+                'only toSitemapId or toPageId are allowed'
             );
         }
 

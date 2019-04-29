@@ -63,4 +63,11 @@ interface ContainerInterface extends \RecursiveIterator, \Countable
      * @return ContainerInterface
      */
     public function sort(callable $callable): self;
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return ContainerInterface
+     */
+    public function paginate(int $limit, int $offset = 0): self;
 }

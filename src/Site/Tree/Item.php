@@ -324,6 +324,11 @@ class Item implements ContainerInterface
         return $this->container->sort($callable);
     }
 
+    public function paginate(int $limit, int $offset = 0): ContainerInterface
+    {
+        $this->container->paginate($limit, $offset);
+    }
+
     /**
      * @return Item
      */

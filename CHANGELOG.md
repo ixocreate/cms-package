@@ -2,6 +2,19 @@
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.2...develop)
 
+## [v0.2.3 (2019-04-29)](https://github.com/ixocreate/cms-package/compare/0.2.1...0.2.2)
+
+### Changed
+- forward matched routed to template
+- add page list for sitemap entry api endpoint
+- add map to admin site tree
+
+### Fixed
+- fix PageCopyCommand and improve validation
+- add missing paginate method to ContainerInterface
+- fix terminal pageType handling
+- fix slug cache invalidation
+
 ## [v0.2.2 (2019-04-25)](https://github.com/ixocreate/cms-package/compare/0.2.1...0.2.2)
 
 ### Fixed

@@ -58,7 +58,7 @@ class IndexFlatAction implements MiddlewareInterface
         }
 
         $count = $children->count();
-        $children = $children->toArray();
+        $children = $children->jsonSerialize();
 
         $offset = 0;
         $limit = 0;

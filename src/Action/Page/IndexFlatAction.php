@@ -76,7 +76,7 @@ class IndexFlatAction implements MiddlewareInterface
         $children = $children->paginate($limit, $offset);
 
         return new ApiSuccessResponse([
-            'items' => $children,
+            'items' => $children->jsonSerialize(),
             'meta' => [
                 'parentSitemapId' => $item->sitemap()->id(),
                 'count' => $count,

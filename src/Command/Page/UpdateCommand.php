@@ -127,6 +127,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         }
 
         if ($this->dataValue('slug') !== false) {
+            $updated = true;
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string)$this->dataValue('slug'),
                 'pageId' => (string)$page->id(),

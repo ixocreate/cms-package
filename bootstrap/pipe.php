@@ -35,6 +35,7 @@ use Ixocreate\Cms\Action\Seo\RobotsAction;
 use Ixocreate\Cms\Action\Seo\SitemapAction;
 use Ixocreate\Cms\Action\Sitemap\CopyAction as SitemapCopyAction;
 use Ixocreate\Cms\Action\Sitemap\IndexAction;
+use Ixocreate\Cms\Action\Sitemap\ListPagesAction;
 use Ixocreate\Cms\Action\Sitemap\MoveAction;
 
 $pipe->segmentPipe(AdminConfig::class)(function (PipeConfigurator $pipe) {
@@ -62,6 +63,7 @@ $pipe->segmentPipe(AdminConfig::class)(function (PipeConfigurator $pipe) {
             $group->get('/sitemap/index', IndexAction::class, 'admin.api.sitemap.index');
             $group->post('/sitemap/move', MoveAction::class, "admin.api.sitemap.move");
             $group->post('/sitemap/copy', SitemapCopyAction::class, "admin.api.sitemap.copy");
+            $group->get('/sitemap/{id}/list-pages', ListPagesAction::class, "admin.api.sitemap.listPages");
 
             /* deprecated */
             $group->post('/page/move', MoveAction::class, "admin.api.page.move");

@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Expressive\Router\RouteResult;
 
 final class RenderAction implements MiddlewareInterface
 {
@@ -33,6 +34,7 @@ final class RenderAction implements MiddlewareInterface
                 'pageType'    => $request->getPageType(),
                 'sitemap'     => $request->getSitemap(),
                 'request'     => $request,
+                'routeResult' => $request->getAttribute(RouteResult::class),
             ]
         );
 

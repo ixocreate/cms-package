@@ -102,7 +102,7 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
         $this->pageRoute = $pageRoute;
 
 
-        $this->container = new AdminContainer( $this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
+        $this->container = new AdminContainer($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
     }
 
     public function count()
@@ -133,8 +133,8 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
 
     /**
      * @param string $locale
-     * @return Page
      * @throws \Exception
+     * @return Page
      */
     public function page(string $locale): Page
     {
@@ -341,7 +341,7 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
      */
     public function sitemaps()
     {
-            $this->sitemap = $this->structureItem->sitemapId();
+        $this->sitemap = $this->structureItem->sitemapId();
     }
 
     /**

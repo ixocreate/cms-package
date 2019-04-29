@@ -101,7 +101,6 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
         $this->searchSubManager = $searchSubManager;
         $this->pageRoute = $pageRoute;
 
-
         $this->container = new AdminContainer($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
     }
 
@@ -215,6 +214,11 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
         return $this->container->filter($filter, $params);
     }
 
+    public function map(callable $map, array $params = []): AdminContainerInterface
+    {
+        return $this->container->map($map, $params);
+    }
+
     /**
      * @param int $level
      * @return AdminContainerInterface
@@ -288,6 +292,11 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
         return $this->container->sort($callable);
     }
 
+    public function paginate(int $limit, int $offset = 0): AdminContainerInterface
+    {
+        return $this->container->paginate($limit, $offset);
+    }
+
     /**
      * @return AdminItem
      */
@@ -342,6 +351,14 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
     public function sitemaps()
     {
         $this->sitemap = $this->structureItem->sitemapId();
+    }
+
+    public function withClearedChildren()
+    {
+        $item = clone $this;
+        $item->container = new AdminContainer([], $this->searchSubManager, $this->itemFactory);
+
+        return $item;
     }
 
     /**
@@ -435,7 +452,7 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
 
     public function childrenAllowed(): bool
     {
-        return !empty($this->pageTypeSubManager->allowedPageTypes($this->sitemapLoader->receiveHandles(), $this->pageType()::serviceName()));
+        return !$this->pageType() instanceof TerminalPageTypeInterface;
     }
 
     /**

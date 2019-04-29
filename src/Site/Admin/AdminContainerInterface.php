@@ -18,6 +18,13 @@ interface AdminContainerInterface extends \RecursiveIterator, \Countable
     public function filter($filter, array $params = []): self;
 
     /**
+     * @param callable $map
+     * @param array $params
+     * @return AdminContainerInterface
+     */
+    public function map(callable $map, array $params = []): self;
+
+    /**
      * @param int $level
      * @return AdminContainerInterface
      */
@@ -63,4 +70,11 @@ interface AdminContainerInterface extends \RecursiveIterator, \Countable
      * @return AdminContainerInterface
      */
     public function sort(callable $callable): self;
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return AdminContainerInterface
+     */
+    public function paginate(int $limit, int $offset = 0): self;
 }

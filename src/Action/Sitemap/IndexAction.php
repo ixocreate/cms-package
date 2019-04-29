@@ -56,11 +56,12 @@ class IndexAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return new ApiSuccessResponse([
-            "items" => \iterator_to_array($this->adminContainer->filter(function (AdminItem $item) {
-                if ($item->level() == 0) {
-                    return true;
+            'items' => \iterator_to_array($this->adminContainer->map(function (AdminItem $item) {
+                if (\is_subclass_of($item->pageType(), TerminalPageTypeInterface::class)) {
+                    $item = $item->withClearedChildren();
                 }
-                return !(\is_subclass_of($item, TerminalPageTypeInterface::class));
+
+                return $item;
             }))
             ,
             'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),

@@ -149,6 +149,33 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
     }
 
     /**
+     * @param callable $map
+     * @param array $params
+     * @return AdminContainerInterface
+     */
+    public function map(callable $map, array $params = []): AdminContainerInterface
+    {
+        $items = [];
+        /** @var AdminItem $item */
+        foreach ($this as $item) {
+
+            $item = $map($item, $params);
+
+            $children = $item->map($map, $params);
+
+            $enabledStructureItems = [];
+            /** @var AdminItem $child */
+            foreach ($children as $child) {
+                $enabledStructureItems[] = $child->structureItem();
+            }
+
+            $items[] = $item->structureItem()->withChildrenInfo($enabledStructureItems);
+        }
+
+        return new AdminContainer($items, $this->searchSubManager, $this->itemFactory);
+    }
+
+    /**
      * @param int $level
      * @return AdminContainerInterface
      */
@@ -275,6 +302,23 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
             $items[] = $item->structureItem()->withChildrenInfo($enabledStructureItems);
         }
         return new AdminContainer($items, $this->searchSubManager, $this->itemFactory);
+    }
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return AdminContainerInterface
+     */
+    public function paginate(int $limit, int $offset = 0): AdminContainerInterface
+    {
+        if ($offset > $this->count()) {
+            return new AdminContainer([], $this->searchSubManager, $this->itemFactory);
+        }
+
+        $array = $this->iterator->getArrayCopy();
+        $array = \array_slice($array, $offset, $limit);
+
+        return new AdminContainer($array, $this->searchSubManager, $this->itemFactory);
     }
 
     /**

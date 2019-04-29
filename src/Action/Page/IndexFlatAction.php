@@ -33,7 +33,7 @@ class IndexFlatAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $handle = $request->getAttribute("handle");
+        $handle = $request->getAttribute('handle');
         $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
             return $item->sitemap()->handle() === $handle;
         });
@@ -58,7 +58,7 @@ class IndexFlatAction implements MiddlewareInterface
         }
 
         $count = $children->count();
-        $children = $children->toArray();
+        $children = $item->flatten();
 
         $offset = 0;
         $limit = 0;
@@ -73,7 +73,7 @@ class IndexFlatAction implements MiddlewareInterface
             }
         }
 
-        $children = \array_slice($children, $offset, $limit);
+        $children = $children->paginate($limit, $offset);
 
         return new ApiSuccessResponse([
             'items' => $children,

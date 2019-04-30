@@ -4,6 +4,11 @@
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.4...develop)
 -->
 
+# [v0.2.5 (2019-04-30)](https://github.com/ixocreate/cms-package/compare/0.2.4...0.2.5)
+
+### Fixed
+- fix page update
+
 ## [v0.2.4 (2019-04-30)](https://github.com/ixocreate/cms-package/compare/0.2.3...0.2.4)
 
 ### Fixed

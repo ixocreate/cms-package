@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
-use Ixocreate\Cache\Cache;
+use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\StructureCacheable;
@@ -63,7 +63,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
     private $structureCacheable;
 
     /**
-     * @var Cache
+     * @var CacheInterface
      */
     private $cache;
 
@@ -74,7 +74,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
      * @param CommandBus $commandBus
      * @param Config $config
      * @param NavigationRepository $navigationRepository
-     * @param Cache $cache
+     * @param CacheInterface $cms
      * @param CacheManager $cacheManager
      * @param PageCacheable $pageCacheable
      * @param StructureCacheable $structureCacheable
@@ -84,7 +84,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         CommandBus $commandBus,
         Config $config,
         NavigationRepository $navigationRepository,
-        Cache $cache,
+        CacheInterface $cms,
         CacheManager $cacheManager,
         PageCacheable $pageCacheable,
         StructureCacheable $structureCacheable
@@ -93,7 +93,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         $this->commandBus = $commandBus;
         $this->config = $config;
         $this->navigationRepository = $navigationRepository;
-        $this->cache = $cache;
+        $this->cache = $cms;
         $this->cacheManager = $cacheManager;
         $this->pageCacheable = $pageCacheable;
         $this->structureCacheable = $structureCacheable;

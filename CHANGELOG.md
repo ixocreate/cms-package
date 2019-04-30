@@ -1,8 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.2...develop)
+<!--
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.4...develop)
+-->
 
-## [v0.2.3 (2019-04-29)](https://github.com/ixocreate/cms-package/compare/0.2.1...0.2.2)
+## [v0.2.4 (2019-04-30)](https://github.com/ixocreate/cms-package/compare/0.2.3...0.2.4)
+
+### Fixed
+- improve cache handling on create/add/update pages
+
+## [v0.2.3 (2019-04-29)](https://github.com/ixocreate/cms-package/compare/0.2.2...0.2.3)
 
 ### Changed
 - forward matched routed to template

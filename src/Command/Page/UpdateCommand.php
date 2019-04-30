@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
+use Ixocreate\Cache\Cache;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\StructureCacheable;
@@ -62,12 +63,18 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
     private $structureCacheable;
 
     /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
      * CreateCommand constructor.
      *
      * @param PageRepository $pageRepository
      * @param CommandBus $commandBus
      * @param Config $config
      * @param NavigationRepository $navigationRepository
+     * @param Cache $cache
      * @param CacheManager $cacheManager
      * @param PageCacheable $pageCacheable
      * @param StructureCacheable $structureCacheable
@@ -77,6 +84,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         CommandBus $commandBus,
         Config $config,
         NavigationRepository $navigationRepository,
+        Cache $cache,
         CacheManager $cacheManager,
         PageCacheable $pageCacheable,
         StructureCacheable $structureCacheable
@@ -85,6 +93,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         $this->commandBus = $commandBus;
         $this->config = $config;
         $this->navigationRepository = $navigationRepository;
+        $this->cache = $cache;
         $this->cacheManager = $cacheManager;
         $this->pageCacheable = $pageCacheable;
         $this->structureCacheable = $structureCacheable;
@@ -100,6 +109,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         $page = $this->pageRepository->find($this->dataValue("pageId"));
 
         $updated = false;
+        $clearCache = false;
         if ($this->dataValue('name') !== false) {
             $updated = true;
             $page = $page->with("name", $this->dataValue('name'));
@@ -128,6 +138,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
 
         if ($this->dataValue('slug') !== false) {
             $updated = true;
+            $clearCache = true;
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string)$this->dataValue('slug'),
                 'pageId' => (string)$page->id(),
@@ -159,7 +170,11 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
             $page = $page->with('updatedAt', new \DateTime());
             $this->pageRepository->save($page);
 
-            $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
+            if ($clearCache) {
+                $this->cache->clear();
+            } else {
+                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
+            }
         }
 
         return true;
@@ -187,7 +202,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
             }
         }
 
-        if (!empty($this->dataValue("navigation")) && !\is_array($this->dataValue("navigation"))) {
+        if (!empty($this->dataValue('navigation'))) {
             $violationCollector->add("navigation", "invalid_navigation");
         }
     }

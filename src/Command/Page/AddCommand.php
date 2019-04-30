@@ -115,13 +115,12 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
             /** @var Page $page */
             $page = $this->pageRepository->save($page);
 
-
-            $this->cache->clear();
-
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string)$page->name(),
                 'pageId' => (string)$page->id(),
             ]);
+
+            $this->cache->clear();
         });
         return true;
     }

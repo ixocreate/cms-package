@@ -168,8 +168,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                         'pageId' => (string)$page->id(),
                     ]);
 
-                    $this->cache->clear();
-
                     $this->commandBus->command(CreateVersionCommand::class, [
                         'pageType' => $pageType::serviceName(),
                         'pageId' => (string)$page->id(),
@@ -177,6 +175,8 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                         'approve' => true,
                         'createdBy' => $this->dataValue('createdBy'),
                     ]);
+
+                    $this->cache->clear();
                 }
             }
         });

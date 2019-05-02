@@ -167,21 +167,25 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
 
                 $this->toSitemap = $this->sitemapRepository->find($fromPage->sitemapId());
             }
-            $this->cache->clear();
 
             $query = $this->pageVersionRepository->createQuery('SELECT v FROM ' . PageVersion::class . ' v WHERE v.pageId = :pageId ORDER BY v.createdAt DESC');
             $query->setParameter('pageId', (string)$fromPage->id());
             $query->setMaxResults(1);
 
-            $pageVersion = $query->getResult()[0];
+            /** @var PageVersion[] $result */
+            $result = $query->getResult();
 
-            $this->commandBus->command(CreateVersionCommand::class, [
-                'pageType' => $pageType::serviceName(),
-                'pageId' => (string)$this->toPage->id(),
-                'content' => $pageVersion->content(),
-                'approve' => true,
-                'createdBy' => $this->dataValue('createdBy'),
-            ]);
+            if (\count($result) > 0) {
+                $this->commandBus->command(CreateVersionCommand::class, [
+                    'pageType' => $pageType::serviceName(),
+                    'pageId' => (string)$this->toPage->id(),
+                    'content' => $result[0]->content(),
+                    'approve' => true,
+                    'createdBy' => $this->dataValue('createdBy'),
+                ]);
+            }
+
+            $this->cache->clear();
         });
 
         return true;

@@ -1,9 +1,25 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.5...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.8...develop)
 
 ### Changed
 - Upgrade Publish config
+
+## [v0.2.7 (2019-05-03)](https://github.com/ixocreate/cms-package/compare/0.2.6...0.2.7)
+
+### Changed
+- remove PageVersion from routing
+
+### Fix
+- fix validation in page UpdateCommand
+
+## [v0.2.6 (2019-05-02)](https://github.com/ixocreate/cms-package/compare/0.2.5...0.2.6)
+
+### Changed
+- remove duplicate addPage code
+
+### Fixed
+- fix cache clearing deficiencies
 
 ## [v0.2.5 (2019-04-30)](https://github.com/ixocreate/cms-package/compare/0.2.4...0.2.5)
 

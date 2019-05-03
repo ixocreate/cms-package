@@ -44,11 +44,6 @@ final class RouteCollectionCacheable implements CacheableInterface
     private $sitemapCacheable;
 
     /**
-     * @var PageVersionCacheable
-     */
-    private $pageVersionCacheable;
-
-    /**
      * @var CacheManager
      */
     private $cacheManager;
@@ -69,7 +64,6 @@ final class RouteCollectionCacheable implements CacheableInterface
      * @param LocaleManager $localeManager
      * @param PageCacheable $pageCacheable
      * @param SitemapCacheable $sitemapCacheable
-     * @param PageVersionCacheable $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param PageTypeSubManager $pageTypeSubManager
      * @param ReplacementManager $replacementManager
@@ -79,7 +73,6 @@ final class RouteCollectionCacheable implements CacheableInterface
         LocaleManager $localeManager,
         PageCacheable $pageCacheable,
         SitemapCacheable $sitemapCacheable,
-        PageVersionCacheable $pageVersionCacheable,
         CacheManager $cacheManager,
         PageTypeSubManager $pageTypeSubManager,
         ReplacementManager $replacementManager
@@ -88,7 +81,6 @@ final class RouteCollectionCacheable implements CacheableInterface
         $this->localeManager = $localeManager;
         $this->pageCacheable = $pageCacheable;
         $this->sitemapCacheable = $sitemapCacheable;
-        $this->pageVersionCacheable = $pageVersionCacheable;
         $this->cacheManager = $cacheManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->replacementManager = $replacementManager;
@@ -115,7 +107,6 @@ final class RouteCollectionCacheable implements CacheableInterface
             $rootStructure,
             $this->pageCacheable,
             $this->sitemapCacheable,
-            $this->pageVersionCacheable,
             $this->cacheManager,
             $this->pageTypeSubManager,
             $this->localeManager,

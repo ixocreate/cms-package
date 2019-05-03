@@ -13,10 +13,8 @@ use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Action\Frontend\RenderAction;
 use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Middleware\LoadPageContentMiddleware;
 use Ixocreate\Cms\Middleware\LoadPageMiddleware;
@@ -29,10 +27,8 @@ use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\PageType\RoutingAwareInterface;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Entity\Type\Type;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
-use Ixocreate\Type\Entity\SchemaType;
 
 final class RoutingItem implements \RecursiveIterator, \Countable
 {
@@ -60,11 +56,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
-
-    /**
-     * @var PageVersionCacheable
-     */
-    private $pageVersionCacheable;
 
     /**
      * @var RoutingItem|null
@@ -96,7 +87,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
      * @param StructureItem $structureItem
      * @param CacheableInterface $pageCacheable
      * @param CacheableInterface $sitemapCacheable
-     * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
      * @param SubManagerInterface $pageTypeSubManager
      * @param LocaleManager $localeManager
@@ -108,7 +98,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
         StructureItem $structureItem,
         CacheableInterface $pageCacheable,
         CacheableInterface $sitemapCacheable,
-        CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
         SubManagerInterface $pageTypeSubManager,
         LocaleManager $localeManager,
@@ -117,7 +106,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
     ) {
         $this->pageCacheable = $pageCacheable;
         $this->sitemapCacheable = $sitemapCacheable;
-        $this->pageVersionCacheable = $pageVersionCacheable;
         $this->cacheManager = $cacheManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->parent = $parent;
@@ -242,29 +230,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
         );
     }
 
-    /**
-     * @param string $locale
-     * @throws \Psr\Cache\InvalidArgumentException
-     * @return SchemaType
-     */
-    public function pageContent(string $locale): SchemaType
-    {
-        if (!\array_key_exists($locale, $this->structureItem()->pages())) {
-            throw new \Exception(\sprintf("Page with locale '%s' does not exists", $locale));
-        }
-
-        $pageVersion = $this->cacheManager->fetch(
-            $this->pageVersionCacheable
-                ->withPageId($this->structureItem()->pages()[$locale])
-        );
-
-        if (!($pageVersion instanceof PageVersion)) {
-            return Type::create([], SchemaType::serviceName());
-        }
-
-        return $pageVersion->content();
-    }
-
     public function level(): int
     {
         return $this->structureItem()->level();
@@ -290,7 +255,6 @@ final class RoutingItem implements \RecursiveIterator, \Countable
             $this->iterator->current(),
             $this->pageCacheable,
             $this->sitemapCacheable,
-            $this->pageVersionCacheable,
             $this->cacheManager,
             $this->pageTypeSubManager,
             $this->localeManager,

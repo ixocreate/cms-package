@@ -201,10 +201,6 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
                 $violationCollector->add("status", "invalid_status");
             }
         }
-
-        if (!empty($this->dataValue('navigation'))) {
-            $violationCollector->add("navigation", "invalid_navigation");
-        }
     }
 
     public function filter(): FilterableInterface

@@ -7,7 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Cms\CommandBus;
 
-/** @var \Ixocreate\CommandBus\CommandBusConfigurator $commandBus */
+use Ixocreate\CommandBus\CommandBusConfigurator;
+
+/** @var CommandBusConfigurator $commandBus */
 $commandBus->addCommandDirectory(__DIR__ . '/../src/Command', true);

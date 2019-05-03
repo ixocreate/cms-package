@@ -7,13 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Cms\Middleware;
 
-/** @var MiddlewareConfigurator $middleware */
 use Ixocreate\Application\Http\Middleware\MiddlewareConfigurator;
-use Ixocreate\Cms\Middleware\CmsMiddleware;
 use Ixocreate\Cms\Middleware\Factory\CmsMiddlewareFactory;
 
+/** @var MiddlewareConfigurator $middleware */
 $middleware->addMiddleware(CmsMiddleware::class, CmsMiddlewareFactory::class);
 
 $middleware->addDirectory(__DIR__ . '/../src/Action', true);

@@ -21,9 +21,9 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Entity\Type\Type;
+use Ixocreate\Schema\Type\SchemaType;
+use Ixocreate\Schema\Type\Type;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
-use Ixocreate\Type\Entity\SchemaType;
 use RecursiveIterator;
 
 class Item implements ContainerInterface

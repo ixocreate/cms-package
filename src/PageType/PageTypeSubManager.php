@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\PageType;
 
-use Ixocreate\Schema\BuilderInterface;
+use Ixocreate\Schema\Builder\BuilderInterface;
 use Ixocreate\Schema\SchemaInterface;
 use Ixocreate\Schema\SchemaProviderInterface;
 use Ixocreate\ServiceManager\SubManager\SubManager;

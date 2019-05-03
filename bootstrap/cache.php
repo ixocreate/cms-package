@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Cms\Cache;
 
 use Ixocreate\Cache\CacheConfigurator;
 use Ixocreate\Cache\Option\Chain;

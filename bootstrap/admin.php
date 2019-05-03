@@ -7,9 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Cms\Admin;
 
+use Ixocreate\Admin\AdminConfigurator;
 use Ixocreate\Cms\Config\Client\Provider\CmsProvider;
 
-/** @var \Ixocreate\Admin\AdminConfigurator $admin */
+/** @var AdminConfigurator $admin */
 $admin->addClientProvider(CmsProvider::class);

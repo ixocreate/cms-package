@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Admin;
+namespace Ixocreate\Cms\Repository;
 
-/** @var RepositoryConfigurator $repository */
 use Ixocreate\Database\Repository\RepositoryConfigurator;
 
+/** @var RepositoryConfigurator $repository */
 $repository->addDirectory(__DIR__ . '/../src/Repository/');

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-/** @var PublishConfigurator $publish */
 use Ixocreate\Application\Publish\PublishConfigurator;
 
+/** @var PublishConfigurator $publish */
 $publish->addSource('migrations', __DIR__ . '/../resources/migrations');

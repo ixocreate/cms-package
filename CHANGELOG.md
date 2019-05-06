@@ -1,6 +1,8 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.8...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.0...develop)
+
+## [v0.3.0 (2019-05-06)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.3.0)
 ### Changed
 - Upgrade Publish config to Application v0.2
 - Upgrade to Admin Package v0.3

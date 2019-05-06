@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-/** @var PipeConfigurator $pipe */
 use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Admin\Middleware\Api\AuthorizationGuardMiddleware;
 use Ixocreate\Admin\Middleware\Api\SessionDataMiddleware;
@@ -38,6 +37,7 @@ use Ixocreate\Cms\Action\Sitemap\IndexAction;
 use Ixocreate\Cms\Action\Sitemap\ListPagesAction;
 use Ixocreate\Cms\Action\Sitemap\MoveAction;
 
+/** @var PipeConfigurator $pipe */
 $pipe->segmentPipe(AdminConfig::class)(function (PipeConfigurator $pipe) {
     $pipe->segment('/api')(function (PipeConfigurator $pipe) {
         $pipe->group("admin.authorized")(function (GroupPipeConfigurator $group) {

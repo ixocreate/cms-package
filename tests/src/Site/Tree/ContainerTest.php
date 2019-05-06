@@ -131,6 +131,26 @@ class ContainerTest extends TestCase
         return new Structure($tree);
     }
 
+    private function mockCacheableInterface(): CacheableInterface
+    {
+        return $this->createMock(CacheableInterface::class);
+    }
+
+    private function mockContainerInterface(): \Psr\Container\ContainerInterface
+    {
+        return $this->createMock(\Psr\Container\ContainerInterface::class);
+    }
+
+    private function mockMiddlewareContainer(): MiddlewareContainer
+    {
+        return $this->createMock(MiddlewareContainer::class);
+    }
+
+    private function mockSubManagerInterface(): SubManagerInterface
+    {
+        return $this->createMock(SubManagerInterface::class);
+    }
+
     private function getDefaultContainer(): Container
     {
         $serviceManagerConfigurator = new ServiceManagerConfigurator();
@@ -149,15 +169,18 @@ class ContainerTest extends TestCase
         );
 
         $itemFactory = new ItemFactory(
-            $this->createMock(CacheableInterface::class),
-            $this->createMock(CacheableInterface::class),
-            $this->createMock(CacheableInterface::class),
-            new CacheManager($this->createMock(\Psr\Container\ContainerInterface::class)),
-            $this->createMock(SubManagerInterface::class),
+            $this->mockCacheableInterface(),
+            $this->mockCacheableInterface(),
+            $this->mockCacheableInterface(),
+            new CacheManager($this->mockContainerInterface()),
+            $this->mockSubManagerInterface(),
             $searchSubManager,
             new PageRoute(
                 new Config(new CmsConfigurator()),
-                new CmsRouter(new RouteCollection(), new MiddlewareFactory($this->createMock(MiddlewareContainer::class))),
+                new CmsRouter(
+                    new RouteCollection(),
+                    new MiddlewareFactory($this->mockMiddlewareContainer())
+                ),
                 new ApplicationUri(new ApplicationUriConfigurator())
             )
 

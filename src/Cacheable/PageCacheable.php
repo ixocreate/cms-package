@@ -11,7 +11,7 @@ namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Type\Entity\UuidType;
+use Ixocreate\Schema\Type\UuidType;
 
 final class PageCacheable implements CacheableInterface
 {

@@ -158,7 +158,6 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
         $items = [];
         /** @var AdminItem $item */
         foreach ($this as $item) {
-
             $item = $map($item, $params);
 
             $children = $item->map($map, $params);

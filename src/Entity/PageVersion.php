@@ -15,9 +15,9 @@ use Ixocreate\Entity\Definition;
 use Ixocreate\Entity\DefinitionCollection;
 use Ixocreate\Entity\EntityInterface;
 use Ixocreate\Entity\EntityTrait;
-use Ixocreate\Type\Entity\DateTimeType;
-use Ixocreate\Type\Entity\SchemaType;
-use Ixocreate\Type\Entity\UuidType;
+use Ixocreate\Schema\Type\DateTimeType;
+use Ixocreate\Schema\Type\SchemaType;
+use Ixocreate\Schema\Type\UuidType;
 
 final class PageVersion implements EntityInterface, DatabaseEntityInterface
 {

@@ -7,9 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms;
+namespace Ixocreate\Cms\Console;
 
-/** @var ConsoleConfigurator $console */
 use Ixocreate\Application\Console\ConsoleConfigurator;
 
+/** @var ConsoleConfigurator $console */
 $console->addDirectory(__DIR__ . '/../src/Console', true);

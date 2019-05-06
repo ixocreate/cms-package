@@ -7,11 +7,8 @@
 
 declare(strict_types=1);
 
-namespace App;
+namespace Ixocreate\Cms\Template;
 
-use Ixocreate\Cms\Template\NavigationExtension;
-use Ixocreate\Cms\Template\PageUrlExtension;
-use Ixocreate\Cms\Template\TreeExtension;
 use Ixocreate\Template\TemplateConfigurator;
 
 /** @var TemplateConfigurator $template */

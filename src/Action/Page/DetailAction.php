@@ -17,6 +17,7 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Schema\Builder\Builder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -35,7 +36,7 @@ final class DetailAction implements MiddlewareInterface
     private $config;
 
     /**
-     * @var \Ixocreate\Schema\Builder
+     * @var Builder
      */
     private $schemaBuilder;
 
@@ -48,13 +49,13 @@ final class DetailAction implements MiddlewareInterface
      * DetailAction constructor.
      * @param AdminContainer $adminContainer
      * @param Config $config
-     * @param \Ixocreate\Schema\Builder $schemaBuilder
+     * @param Builder $schemaBuilder
      * @param PageVersionRepository $pageVersionRepository
      */
     public function __construct(
         AdminContainer $adminContainer,
         Config $config,
-        \Ixocreate\Schema\Builder $schemaBuilder,
+        Builder $schemaBuilder,
         PageVersionRepository $pageVersionRepository
     ) {
         $this->adminContainer = $adminContainer;

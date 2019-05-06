@@ -20,10 +20,10 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
-use Ixocreate\Entity\Type\Type;
 use Ixocreate\Event\EventDispatcher;
 use Ixocreate\Filter\FilterableInterface;
-use Ixocreate\Type\Entity\SchemaType;
+use Ixocreate\Schema\Type\SchemaType;
+use Ixocreate\Schema\Type\Type;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 

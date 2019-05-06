@@ -14,6 +14,10 @@ use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\Tree\Container;
+use Ixocreate\Cms\Site\Tree\Item;
+use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
+use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
 use Ixocreate\Template\Extension\ExtensionInterface;
 
 final class PageUrlExtension implements ExtensionInterface
@@ -24,30 +28,22 @@ final class PageUrlExtension implements ExtensionInterface
     private $pageRoute;
 
     /**
-     * @var SitemapRepository
+     * @var Container
      */
-    private $sitemapRepository;
-
-    /**
-     * @var PageRepository
-     */
-    private $pageRepository;
+    private $container;
 
     /**
      * PageUrlExtension constructor.
      *
-     * @param PageRoute         $pageRoute
-     * @param SitemapRepository $sitemapRepository
-     * @param PageRepository    $pageRepository
+     * @param PageRoute $pageRoute
+     * @param Container $container
      */
     public function __construct(
         PageRoute $pageRoute,
-        SitemapRepository $sitemapRepository,
-        PageRepository $pageRepository
+        Container $container
     ) {
         $this->pageRoute = $pageRoute;
-        $this->sitemapRepository = $sitemapRepository;
-        $this->pageRepository = $pageRepository;
+        $this->container = $container;
     }
 
     /**
@@ -78,26 +74,42 @@ final class PageUrlExtension implements ExtensionInterface
     }
 
     /**
-     * @param string      $handle
-     * @param array       $params
+     * @param string $handle
+     * @param array $params
      * @param null|string $locale
      * @return string
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function fromHandle(string $handle, array $params = [], ?string $locale = null): string
     {
-        $sitemap = $this->sitemapRepository->findOneBy(['handle' => $handle]);
-        if (!$sitemap) {
+        $item = $this->container->findByHandle($handle);
+        if (empty($item)) {
             return '';
         }
-        $page = $this->pageRepository->findOneBy([
-            'sitemapId' => $sitemap->id(),
-            'locale'    => $locale ?? \Locale::getDefault(),
-        ]);
-        if (empty($page)) {
+        $locale = $locale ?? \Locale::getDefault();
+        $sitemap = $item->sitemap();
+
+        if (!\array_key_exists($locale, $item->structureItem()->pages())) {
             return '';
         }
 
+
+        $page = $item->page($locale);
+
         if (!$page->isOnline()) {
+            return '';
+        }
+
+        $container = $this->container
+            ->filter(OnlineSearch::class, ['locale' => $locale])
+            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
+            ->flatten();
+
+        $item = $container->find(function (Item $item) use ($sitemap){
+            return (string) $item->sitemap()->id() === (string) $sitemap->id();
+        });
+
+        if (empty($item)) {
             return '';
         }
 
@@ -109,19 +121,38 @@ final class PageUrlExtension implements ExtensionInterface
      * @param string $locale
      * @param string $defaultHandle
      * @return string
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle): string
     {
-        $page = $this->pageRepository->findOneBy([
-            'sitemapId' => $sitemap->id(),
-            'locale'    => $locale,
-        ]);
+        $item = $this->container->find(function(Item $item) use ($sitemap) {
+            return (string) $item->sitemap()->id() === (string) $sitemap->id();
+        });
 
-        if (empty($page)) {
+        if (empty($item)) {
             return $this->fromHandle($defaultHandle, [], $locale);
         }
 
+        if (!\array_key_exists($locale, $item->structureItem()->pages())) {
+            return $this->fromHandle($defaultHandle, [], $locale);
+        }
+
+        $page = $item->page($locale);
+
         if (!$page->isOnline()) {
+            return $this->fromHandle($defaultHandle, [], $locale);
+        }
+
+        $container = $this->container
+            ->filter(OnlineSearch::class, ['locale' => $locale])
+            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
+            ->flatten();
+
+        $item = $container->find(function (Item $item) use ($sitemap){
+            return (string) $item->sitemap()->id() === (string) $sitemap->id();
+        });
+
+        if (empty($item)) {
             return $this->fromHandle($defaultHandle, [], $locale);
         }
 

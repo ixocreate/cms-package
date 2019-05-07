@@ -3,8 +3,8 @@
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.0...develop)
 
 ## [v0.2.8 (2019-05-07)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.2.8)
-### Fix
-- Fix: Check Online Status Pages
+### Fixed
+- Check Online Status Pages
 
 ## [v0.3.0 (2019-05-06)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.3.0)
 ### Changed

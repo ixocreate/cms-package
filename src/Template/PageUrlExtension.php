@@ -11,8 +11,6 @@ namespace Ixocreate\Cms\Template;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
@@ -77,8 +75,8 @@ final class PageUrlExtension implements ExtensionInterface
      * @param string $handle
      * @param array $params
      * @param null|string $locale
-     * @return string
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return string
      */
     public function fromHandle(string $handle, array $params = [], ?string $locale = null): string
     {
@@ -105,7 +103,7 @@ final class PageUrlExtension implements ExtensionInterface
             ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
             ->flatten();
 
-        $item = $container->find(function (Item $item) use ($sitemap){
+        $item = $container->find(function (Item $item) use ($sitemap) {
             return (string) $item->sitemap()->id() === (string) $sitemap->id();
         });
 
@@ -120,12 +118,12 @@ final class PageUrlExtension implements ExtensionInterface
      * @param Sitemap $sitemap
      * @param string $locale
      * @param string $defaultHandle
-     * @return string
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return string
      */
     public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle): string
     {
-        $item = $this->container->find(function(Item $item) use ($sitemap) {
+        $item = $this->container->find(function (Item $item) use ($sitemap) {
             return (string) $item->sitemap()->id() === (string) $sitemap->id();
         });
 
@@ -148,7 +146,7 @@ final class PageUrlExtension implements ExtensionInterface
             ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
             ->flatten();
 
-        $item = $container->find(function (Item $item) use ($sitemap){
+        $item = $container->find(function (Item $item) use ($sitemap) {
             return (string) $item->sitemap()->id() === (string) $sitemap->id();
         });
 

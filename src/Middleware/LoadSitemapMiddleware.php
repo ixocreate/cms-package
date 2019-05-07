@@ -33,10 +33,12 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var Container
      */
     private $container;
+
     /**
      * @var NotFoundHandler
      */
@@ -75,7 +77,7 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
             ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
             ->flatten();
 
-        $item = $container->find(function (Item $item) use ($sitemap){
+        $item = $container->find(function (Item $item) use ($sitemap) {
             return (string) $item->sitemap()->id() === (string) $sitemap->id();
         });
 

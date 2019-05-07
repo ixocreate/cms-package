@@ -7,6 +7,11 @@
 - Upgrade Publish config to Application v0.2
 - Upgrade to Admin Package v0.3
 
+## [v0.2.8 (2019-05-07)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.2.8)
+
+### Fix
+- Fix: Check Online Status Pages
+
 ## [v0.2.7 (2019-05-03)](https://github.com/ixocreate/cms-package/compare/0.2.6...0.2.7)
 ### Changed
 - remove PageVersion from routing

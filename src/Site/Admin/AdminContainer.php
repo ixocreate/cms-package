@@ -32,18 +32,24 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
      * @var AdminSearchSubManager
      */
     private $searchSubManager;
+    /**
+     * @var AdminItem|null
+     */
+    private $parent;
 
     /**
      * Container constructor.
      * @param $structureItems
      * @param AdminSearchSubManager $searchSubManager
      * @param AdminItemFactory $itemFactory
+     * @param AdminItem|null $parent
      */
-    public function __construct($structureItems, AdminSearchSubManager $searchSubManager, AdminItemFactory $itemFactory)
+    public function __construct($structureItems, AdminSearchSubManager $searchSubManager, AdminItemFactory $itemFactory, AdminItem $parent = null)
     {
         $this->iterator = new \ArrayIterator($structureItems);
         $this->itemFactory = $itemFactory;
         $this->searchSubManager = $searchSubManager;
+        $this->parent = $parent;
     }
 
     /**
@@ -51,7 +57,7 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
      */
     public function current()
     {
-        return $this->itemFactory->create($this->iterator->current());
+        return $this->itemFactory->create($this->iterator->current(), $this->parent);
     }
 
     /**

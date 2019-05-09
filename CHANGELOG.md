@@ -2,6 +2,11 @@
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.8...develop)
 
+## [v0.2.9 (2019-05-09)](https://github.com/ixocreate/cms-package/compare/0.2.8...0.2.9)
+
+### Update
+- Show hierarchy in page list
+
 ## [v0.2.8 (2019-05-07)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.2.8)
 
 ### Fix

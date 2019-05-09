@@ -1,6 +1,8 @@
 # Release Notes
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.0...develop)
+### Fixed
+- Improved DatabaseSitemapLoader performance
 
 ## [v0.2.8 (2019-05-07)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.2.8)
 ### Fixed

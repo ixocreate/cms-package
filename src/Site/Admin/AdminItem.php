@@ -73,6 +73,7 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
      * @var PageRoute
      */
     private $pageRoute;
+
     /**
      * @var AdminItem|null
      */

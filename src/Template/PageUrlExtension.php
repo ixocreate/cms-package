@@ -61,14 +61,14 @@ final class PageUrlExtension implements ExtensionInterface
     }
 
     /**
-     * @param Page        $page
-     * @param array       $params
-     * @param null|string $locale
+     * @param Page $page
+     * @param array $params
+     * @param string $routePrefix
      * @return string
      */
-    public function fromPage(Page $page, array $params = []): string
+    public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
     {
-        return $this->pageRoute->fromPage($page, $params);
+        return $this->pageRoute->fromPage($page, $params, $routePrefix);
     }
 
     /**

@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.8...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.10...develop)
+
+## [v0.2.10 (2019-05-10)](https://github.com/ixocreate/cms-package/compare/0.2.9...0.2.10)
+
+### Added
+- Support for RoutePrefix in PageUrlExtension 
 
 ## [v0.2.9 (2019-05-09)](https://github.com/ixocreate/cms-package/compare/0.2.8...0.2.9)
 

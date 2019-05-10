@@ -77,7 +77,6 @@ final class PageUrlExtension implements ExtensionInterface
      * @param null|string $locale
      * @throws \Psr\Cache\InvalidArgumentException
      * @return string
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function fromHandle(string $handle, array $params = [], ?string $locale = null): string
     {
@@ -121,11 +120,10 @@ final class PageUrlExtension implements ExtensionInterface
      * @param string $defaultHandle
      * @throws \Psr\Cache\InvalidArgumentException
      * @return string
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle): string
     {
-        $item = $this->container->find(function(Item $item) use ($sitemap) {
+        $item = $this->container->find(function (Item $item) use ($sitemap) {
             return (string) $item->sitemap()->id() === (string) $sitemap->id();
         });
 

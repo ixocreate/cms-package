@@ -41,10 +41,6 @@ final class DatabasePageLoader implements PageLoaderInterface
     {
         $this->init();
 
-        if (!$this->collection->has($pageId)) {
-            return null;
-        }
-
         return $this->collection->get($pageId);
 
 //        return $this->pageRepository->find($pageId);

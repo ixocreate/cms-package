@@ -59,10 +59,6 @@ final class DatabaseSitemapLoader implements SitemapLoaderInterface
     {
         $this->init();
 
-        if (!$this->collection->has($sitemapId)) {
-            return null;
-        }
-
         return $this->collection->get($sitemapId);
 
 //        return $this->sitemapRepository->find($sitemapId);

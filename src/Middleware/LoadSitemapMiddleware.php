@@ -33,14 +33,6 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
      * @var CacheManager
      */
     private $cacheManager;
-    /**
-     * @var Container
-     */
-    private $container;
-    /**
-     * @var NotFoundHandler
-     */
-    private $notFoundHandler;
 
     /**
      * @var Container

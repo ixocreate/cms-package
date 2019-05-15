@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
+use Ixocreate\Application\Uri\ApplicationUri;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -41,11 +42,13 @@ final class CmsRouter implements RouterInterface
      * CmsRouter constructor.
      * @param RouteCollection $routes
      * @param MiddlewareFactory $middlewareFactory
+     * @param ApplicationUri $applicationUri
      */
-    public function __construct(RouteCollection $routes, MiddlewareFactory $middlewareFactory)
+    public function __construct(RouteCollection $routes, MiddlewareFactory $middlewareFactory, ApplicationUri $applicationUri)
     {
         $this->routes = $routes;
-        $this->generator = new UrlGenerator($this->routes, new RequestContext(''));
+        $context = new RequestContext('', 'GET', $applicationUri->getMainUri()->getHost(), $applicationUri->getMainUri()->getScheme());
+        $this->generator = new UrlGenerator($this->routes, $context);
 
         $this->middlewareFactory = $middlewareFactory;
     }
@@ -104,7 +107,7 @@ final class CmsRouter implements RouterInterface
      */
     public function generateUri(string $name, array $substitutions = [], array $options = []): string
     {
-        $path = $this->generator->generate($name, $substitutions);
+        $path = $this->generator->generate($name, $substitutions, UrlGenerator::ABSOLUTE_URL);
         return (string) $path;
     }
 }

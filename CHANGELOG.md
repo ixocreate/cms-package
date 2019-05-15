@@ -2,6 +2,11 @@
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.2.10...develop)
 
+## [v0.2.11 (2019-05-15)](https://github.com/ixocreate/cms-package/compare/0.2.10...0.2.11)
+
+### Fixed
+- generate absolute urls
+
 ## [v0.2.10 (2019-05-10)](https://github.com/ixocreate/cms-package/compare/0.2.9...0.2.10)
 
 ### Added
@@ -14,7 +19,7 @@
 
 ## [v0.2.8 (2019-05-07)](https://github.com/ixocreate/cms-package/compare/0.2.7...0.2.8)
 
-### Fix
+### Fixed
 - Fix: Check Online Status Pages
 
 ## [v0.2.7 (2019-05-03)](https://github.com/ixocreate/cms-package/compare/0.2.6...0.2.7)
@@ -22,7 +27,7 @@
 ### Changed
 - remove PageVersion from routing
 
-### Fix
+### Fixed
 - fix validation in page UpdateCommand
 
 ## [v0.2.6 (2019-05-02)](https://github.com/ixocreate/cms-package/compare/0.2.5...0.2.6)

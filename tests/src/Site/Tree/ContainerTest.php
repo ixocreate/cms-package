@@ -148,6 +148,8 @@ class ContainerTest extends TestCase
             SearchInterface::class
         );
 
+        $applicationUri = new ApplicationUri(new ApplicationUriConfigurator());
+
         $itemFactory = new ItemFactory(
             $this->createMock(CacheableInterface::class),
             $this->createMock(CacheableInterface::class),
@@ -157,8 +159,12 @@ class ContainerTest extends TestCase
             $searchSubManager,
             new PageRoute(
                 new Config(new CmsConfigurator()),
-                new CmsRouter(new RouteCollection(), new MiddlewareFactory($this->createMock(MiddlewareContainer::class))),
-                new ApplicationUri(new ApplicationUriConfigurator())
+                new CmsRouter(
+                    new RouteCollection(),
+                    new MiddlewareFactory($this->createMock(MiddlewareContainer::class)),
+                    $applicationUri
+                ),
+                $applicationUri
             )
 
         );

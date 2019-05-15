@@ -3,11 +3,11 @@
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.0...develop)
 ### Fixed
 - Improved DatabaseSitemapLoader performance
+- generate absolute URLs
 
 ## [v0.2.10 (2019-05-10)](https://github.com/ixocreate/cms-package/compare/0.2.9...0.2.10)
-
 ### Added
-- Support for RoutePrefix in PageUrlExtension 
+- Support for RoutePrefix in PageUrlExtension
 
 ## [v0.2.9 (2019-05-09)](https://github.com/ixocreate/cms-package/compare/0.2.8...0.2.9)
 
@@ -26,7 +26,7 @@
 ## [v0.2.7 (2019-05-03)](https://github.com/ixocreate/cms-package/compare/0.2.6...0.2.7)
 ### Changed
 - remove PageVersion from routing
-### Fix
+### Fixed
 - fix validation in page UpdateCommand
 
 ## [v0.2.6 (2019-05-02)](https://github.com/ixocreate/cms-package/compare/0.2.5...0.2.6)

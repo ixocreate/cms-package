@@ -75,6 +75,11 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
     private $pageRoute;
 
     /**
+     * @var AdminItem|null
+     */
+    private $parent;
+
+    /**
      * AdminItem constructor.
      * @param StructureItem $structureItem
      * @param AdminItemFactory $itemFactory
@@ -83,6 +88,7 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
      * @param SubManagerInterface $pageTypeSubManager
      * @param SubManagerInterface $searchSubManager
      * @param PageRoute $pageRoute
+     * @param AdminItem|null $parent
      */
     public function __construct(
         StructureItem $structureItem,
@@ -91,7 +97,8 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
         DatabaseSitemapLoader $sitemapLoader,
         SubManagerInterface $pageTypeSubManager,
         SubManagerInterface $searchSubManager,
-        PageRoute $pageRoute
+        PageRoute $pageRoute,
+        AdminItem $parent = null
     ) {
         $this->structureItem = clone $structureItem;
         $this->itemFactory = $itemFactory;
@@ -101,7 +108,8 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
         $this->searchSubManager = $searchSubManager;
         $this->pageRoute = $pageRoute;
 
-        $this->container = new AdminContainer($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
+        $this->container = new AdminContainer($this->structureItem->children(), $this->searchSubManager, $this->itemFactory, $this);
+        $this->parent = $parent;
     }
 
     public function count()
@@ -461,5 +469,10 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
     public function children(): AdminContainer
     {
         return $this->container;
+    }
+
+    public function parent(): ?AdminItem
+    {
+        return $this->parent;
     }
 }

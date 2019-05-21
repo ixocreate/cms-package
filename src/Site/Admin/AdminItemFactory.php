@@ -67,7 +67,7 @@ final class AdminItemFactory
         $this->pageRoute = $pageRoute;
     }
 
-    public function create(StructureItem $structureItem): AdminItem
+    public function create(StructureItem $structureItem, AdminItem $parent = null): AdminItem
     {
         return new AdminItem(
             $structureItem,
@@ -76,7 +76,8 @@ final class AdminItemFactory
             $this->sitemapLoader,
             $this->pageTypeSubManager,
             $this->searchSubManager,
-            $this->pageRoute
+            $this->pageRoute,
+            $parent
         );
     }
 }

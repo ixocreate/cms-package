@@ -57,10 +57,11 @@ class ListAction implements MiddlewareInterface
             if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
                 $result[] = [
                     'id' => $item->pages()[$locale]['page']->id(),
-                    'name' => $this->receiveName($item, $locale),
+                    'name' => $this->receiveFullName($item, $locale),
                 ];
             }
         }
+
         return new ApiSuccessResponse($result);
     }
 
@@ -69,12 +70,12 @@ class ListAction implements MiddlewareInterface
      * @param string $locale
      * @return string
      */
-    private function receiveName(AdminItem $item, string $locale): string
+    private function receiveFullName(AdminItem $item, string $locale): string
     {
         $name = '';
-//        if (!empty($item->parent())) {
-//            $name = $this->receiveName($item->parent(), $locale) . ' / ';
-//        }
+        if (!empty($item->parent())) {
+            $name .= $this->receiveFullName($item->parent(), $locale) . ' / ';
+        }
 
         if (!\array_key_exists($locale, $item->pages())) {
             return ' --- ';

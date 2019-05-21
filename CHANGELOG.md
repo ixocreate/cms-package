@@ -3,7 +3,10 @@
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.0...develop)
 ### Fixed
 - Improved DatabaseSitemapLoader performance
-- generate absolute URLs
+
+## [v0.2.11 (2019-05-15)](https://github.com/ixocreate/cms-package/compare/0.2.10...0.2.11)
+### Fixed
+- generate absolute urls
 
 ## [v0.2.10 (2019-05-10)](https://github.com/ixocreate/cms-package/compare/0.2.9...0.2.10)
 ### Added

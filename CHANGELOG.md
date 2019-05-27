@@ -2,6 +2,9 @@
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.1...develop)
 
+### Added
+- Sitemap Link integration
+
 ## [v0.3.1 (2019-05-21)](https://github.com/ixocreate/cms-package/compare/0.3.0...0.3.1)
 ### Added
 - Support for RoutePrefix in PageUrlExtension

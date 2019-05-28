@@ -1,7 +1,7 @@
 <?php
 /**
  * @link https://github.com/ixocreate
- * @copyright IXOCREATE GmbH
+ * @copyright IXOLIT GmbH
  * @license MIT License
  */
 
@@ -13,8 +13,6 @@ use Doctrine\DBAL\Types\JsonType;
 use Ixocreate\Application\ApplicationConfig;
 use Ixocreate\Cms\Block\BlockInterface;
 use Ixocreate\Cms\Block\BlockSubManager;
-use Ixocreate\Entity\Definition;
-use Ixocreate\Entity\DefinitionCollection;
 use Ixocreate\Schema\Builder\Builder;
 use Ixocreate\Schema\Element\ElementInterface;
 use Ixocreate\Schema\SchemaInterface;
@@ -100,23 +98,21 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
             return [];
         }
 
-        $definitions = [];
-        $entityData = [];
+        $data = [];
 
         /** @var ElementInterface $element */
-        foreach ($this->getSchema()->elements() as $element) {
-            $definitions[] = new Definition($element->name(), $element->type(), true, true);
-            $entityData[$element->name()] = null;
-            if (\is_array($value) && \array_key_exists($element->name(), $value)) {
-                $entityData[$element->name()] = $value[$element->name()];
+        foreach ($this->getSchema()->all() as $element) {
+            $data[$element->name()] = null;
+            if (\array_key_exists($element->name(), $value) && $value[$element->name()] !== null) {
+                $data[$element->name()] = Type::create($value[$element->name()], $element->type());
             }
 
             if ($element instanceof TransformableInterface) {
-                $entityData[$element->name()] = $element->transform($entityData[$element->name()]);
+                $data[$element->name()] = $element->transform($data[$element->name()]);
             }
         }
 
-        return (new \Ixocreate\Schema\Entity\Schema($entityData, new DefinitionCollection($definitions)))->toArray();
+        return $data;
     }
 
     /**

@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.1...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.2...develop)
+
+## [v0.3.2 (2019-05-28)](https://github.com/ixocreate/cms-package/compare/0.3.1...0.3.2)
+### Added
+- Sitemap Link integration
 
 ## [v0.3.1 (2019-05-21)](https://github.com/ixocreate/cms-package/compare/0.3.0...0.3.1)
 ### Added

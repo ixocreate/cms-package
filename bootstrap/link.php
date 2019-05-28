@@ -5,11 +5,11 @@
  * @license MIT License
  */
 
-use Ixocreate\Schema\Link\LinkConfigurator;
-
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Link;
+
+use Ixocreate\Schema\Link\LinkConfigurator;
 
 /** @var LinkConfigurator $link */
 $link->addLinkDirectory(__DIR__ . '/../src/Link');

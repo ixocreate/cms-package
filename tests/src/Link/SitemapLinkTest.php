@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
- * @covers \Ixocreate\Schema\Link\SitemapLink
+ * @covers \Ixocreate\Cms\Link\SitemapLink
  */
 class SitemapLinkTest extends TestCase
 {

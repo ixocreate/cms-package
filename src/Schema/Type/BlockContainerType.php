@@ -209,9 +209,9 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
         $value = [];
 
         foreach ($container->value() as $item) {
-            if ($item->type() == $blockName){
+            if ($item->type() == $blockName) {
                 $value[] = $item->withTemplate($template);
-            }else{
+            } else {
                 $value[] = $item;
             }
         }

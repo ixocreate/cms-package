@@ -4,6 +4,14 @@
 ### Added
 - change Template in Block
 
+## [v0.3.3 (2019-05-28)](https://github.com/ixocreate/cms-package/compare/0.3.2...0.3.3)
+### Fixed
+- Travis build clover output
+
+## [v0.3.2 (2019-05-28)](https://github.com/ixocreate/cms-package/compare/0.3.1...0.3.2)
+### Added
+- Sitemap Link integration
+
 ## [v0.3.1 (2019-05-21)](https://github.com/ixocreate/cms-package/compare/0.3.0...0.3.1)
 ### Added
 - Support for RoutePrefix in PageUrlExtension

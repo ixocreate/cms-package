@@ -109,11 +109,11 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
         foreach ($this->getSchema()->all() as $element) {
             $data[$element->name()] = null;
             if (\array_key_exists($element->name(), $value) && $value[$element->name()] !== null) {
-                $data[$element->name()] = Type::create($value[$element->name()], $element->type());
-            }
-
-            if ($element instanceof TransformableInterface) {
-                $data[$element->name()] = $element->transform($data[$element->name()]);
+                if ($element instanceof TransformableInterface) {
+                    $data[$element->name()] = $element->transform($value[$element->name()]);
+                } else {
+                    $data[$element->name()] = Type::create($value[$element->name()], $element->type());
+                }
             }
         }
 

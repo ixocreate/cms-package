@@ -13,7 +13,7 @@ use Ixocreate\Cms\Block\BlockInterface;
 use Ixocreate\Cms\Block\BlockSubManager;
 use Ixocreate\Cms\Block\NameExpressionInterface;
 use Ixocreate\Cms\Schema\Type\BlockContainerType;
-use Ixocreate\Schema\Builder\Builder;
+use Ixocreate\Schema\Builder\BuilderInterface;
 use Ixocreate\Schema\Element\AbstractGroup;
 use Ixocreate\Schema\Element\ElementInterface;
 use Ixocreate\Schema\Element\GroupElement;
@@ -36,11 +36,16 @@ final class BlockContainerElement extends AbstractGroup
     protected $limit = null;
 
     /**
-     * @var Builder
+     * @var BuilderInterface
      */
     private $builder;
 
-    public function __construct(BlockSubManager $blockSubManager, Builder $builder)
+    /**
+     * BlockContainerElement constructor.
+     * @param BlockSubManager $blockSubManager
+     * @param BuilderInterface $builder
+     */
+    public function __construct(BlockSubManager $blockSubManager, BuilderInterface $builder)
     {
         $this->blockSubManager = $blockSubManager;
         $this->builder = $builder;
@@ -106,7 +111,7 @@ final class BlockContainerElement extends AbstractGroup
     public function withAddedElement(ElementInterface $element): SchemaInterface
     {
         if (!($element instanceof GroupElement)) {
-            throw new \Exception("Element must be a GroupElement");
+            throw new \Exception('Element must be a GroupElement');
         }
         return parent::withAddedElement($element);
     }

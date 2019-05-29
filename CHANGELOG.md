@@ -1,6 +1,8 @@
 # Release Notes
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.4...develop)
+### Changed
+- migrate from Builder to BuilderInterface
 
 ## [v0.3.4 (2019-05-29)](https://github.com/ixocreate/cms-package/compare/0.3.3...0.3.4)
 ### Added

@@ -202,4 +202,22 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
     {
         return \count($this->value());
     }
+
+    public function customTemplate(string $blockName, string $template)
+    {
+        $container = clone $this;
+        $value = [];
+
+        foreach ($container->value() as $item) {
+            if ($item->type() == $blockName) {
+                $value[] = $item->withTemplate($template);
+            } else {
+                $value[] = $item;
+            }
+        }
+
+        $container->value = $value;
+
+        return $container;
+    }
 }

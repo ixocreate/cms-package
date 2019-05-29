@@ -53,6 +53,11 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
     /**
      * @var string
      */
+    private $template;
+
+    /**
+     * @var string
+     */
     private $blockType;
 
     public function __construct(
@@ -104,11 +109,11 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
         foreach ($this->getSchema()->all() as $element) {
             $data[$element->name()] = null;
             if (\array_key_exists($element->name(), $value) && $value[$element->name()] !== null) {
-                $data[$element->name()] = Type::create($value[$element->name()], $element->type());
-            }
-
-            if ($element instanceof TransformableInterface) {
-                $data[$element->name()] = $element->transform($data[$element->name()]);
+                if ($element instanceof TransformableInterface) {
+                    $data[$element->name()] = $element->transform($value[$element->name()]);
+                } else {
+                    $data[$element->name()] = Type::create($value[$element->name()], $element->type());
+                }
             }
         }
 
@@ -149,7 +154,11 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
     public function __toString()
     {
         try {
-            return $this->renderer->render($this->getBlock()->template(), $this->value());
+            $template = $this->getBlock()->template();
+            if ($this->template) {
+                $template = $this->template;
+            }
+            return $this->renderer->render($template, $this->value());
         } catch (\Throwable $e) {
             if (!$this->applicationConfig->isDevelopment()) {
                 return '';
@@ -184,6 +193,11 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
         return JsonType::class;
     }
 
+    public function type(): string
+    {
+        return $this->getBlock()->serviceName();
+    }
+
     public function jsonSerialize()
     {
         return \array_merge(
@@ -206,6 +220,14 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
             'value' => $this->value,
             'blockType' => $this->blockType,
         ]);
+    }
+
+    public function withTemplate(string $template): BlockType
+    {
+        $block = clone $this;
+        $block->template = $template;
+
+        return $block;
     }
 
     public function unserialize($serialized)

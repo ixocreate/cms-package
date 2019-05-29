@@ -1,10 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.3...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.4...develop)
+
+## [v0.3.4 (2019-05-29)](https://github.com/ixocreate/cms-package/compare/0.3.3...0.3.4)
 ### Added
-- change Template in Block
+- Change Template in Block
 ### Fixed
-- fix BlockType transform for transformable elements
+- BlockType transform for transformable elements
 
 ## [v0.3.3 (2019-05-28)](https://github.com/ixocreate/cms-package/compare/0.3.2...0.3.3)
 ### Fixed

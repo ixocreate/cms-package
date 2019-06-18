@@ -15,7 +15,7 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Tree\Structure\StructureItem;
 
-abstract class AbstractItem implements ItemInterface
+abstract class AbstractItem extends AbstractContainer implements ItemInterface
 {
     /**
      * @var StructureItem
@@ -45,15 +45,8 @@ abstract class AbstractItem implements ItemInterface
         $this->structureItem = $structureItem;
         $this->factory = $factory;
         $this->pageTypeSubManager = $pageTypeSubManager;
-    }
 
-    private function container(): ContainerInterface
-    {
-        if ($this->container === null) {
-            $this->container = $this->factory->createContainer($this->structureItem()->structure());
-        }
-
-        return $this->container;
+        parent::__construct($this->structureItem()->structure(), $factory);
     }
 
     /**
@@ -67,70 +60,6 @@ abstract class AbstractItem implements ItemInterface
         }
 
         return \Locale::getDefault();
-    }
-
-    /**
-     * @return mixed|void
-     */
-    final public function current()
-    {
-        return $this->container()->current();
-    }
-
-    /**
-     *
-     */
-    final public function next()
-    {
-        $this->container()->next();
-    }
-
-    /**
-     * @return mixed|void
-     */
-    final public function key()
-    {
-        return $this->container()->key();
-    }
-
-    /**
-     * @return bool|void
-     */
-    final public function valid()
-    {
-        return $this->container()->valid();
-    }
-
-    /**
-     *
-     */
-    final public function rewind()
-    {
-        $this->container()->rewind();
-    }
-
-    /**
-     * @return int|void
-     */
-    final public function count()
-    {
-        return $this->container()->count();
-    }
-
-    /**
-     * @return bool
-     */
-    final public function hasChildren()
-    {
-        return $this->count() > 0;
-    }
-
-    /**
-     * @return mixed|\RecursiveIterator|void
-     */
-    final public function getChildren()
-    {
-        return $this->current();
     }
 
     /**
@@ -254,9 +183,10 @@ abstract class AbstractItem implements ItemInterface
 
     /**
      * @return ContainerInterface
+     * @throws \Exception
      */
     final public function below(): ContainerInterface
     {
-        return $this->container();
+        return $this->factory->createContainer($this->structureItem->structure());
     }
 }

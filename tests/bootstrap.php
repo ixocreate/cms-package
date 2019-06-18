@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Test\Template;
+namespace Test\Cms;
 
 use DG\BypassFinals;
 

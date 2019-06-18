@@ -63,14 +63,14 @@ class AbstractContainerTest extends TestCase
                 $this->pageTypeSubManager = $pageTypeSubManager;
             }
 
-            public function createContainer(Structure $structure): ContainerInterface
+            public function createContainer(Structure $structure, array $filter = []): ContainerInterface
             {
-                return new Container($structure, $this);
+                return new Container($structure, $this, $filter);
             }
 
-            public function createItem(StructureItem $structureItem): ItemInterface
+            public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface
             {
-                return new Item($structureItem, $this, $this->pageTypeSubManager);
+                return new Item($structureItem, $this, $this->pageTypeSubManager, $filter);
             }
         };
 
@@ -157,5 +157,14 @@ class AbstractContainerTest extends TestCase
             $this->assertInstanceOf(ItemInterface::class, $item);
             $this->assertTrue(\in_array((string) $item->sitemap()->id(), ['335eb158-98a1-57ee-9459-1403f9e8c002', '0806ee12-b2ea-5d21-9ab1-1eb220957c50']));
         }
+    }
+
+    public function testFilter()
+    {
+        $collection = $this->container->filter(function (ItemInterface $item) {
+            return $item->level() < 2;
+        })->flatten();
+
+        $this->assertCount(4, $collection);
     }
 }

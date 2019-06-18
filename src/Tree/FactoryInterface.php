@@ -14,7 +14,7 @@ use Ixocreate\Cms\Tree\Structure\StructureItem;
 
 interface FactoryInterface
 {
-    public function createContainer(Structure $structure): ContainerInterface;
+    public function createContainer(Structure $structure, array $filter = []): ContainerInterface;
 
-    public function createItem(StructureItem $structureItem): ItemInterface;
+    public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface;
 }

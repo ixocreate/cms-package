@@ -201,7 +201,6 @@ class AbstractContainer implements ContainerInterface
 
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $item) {
-
             if ($callable($item) === true && $this->doFilter($item)) {
                 $items[$item->structureItem()->sitemapId()] = $item;
             }

@@ -183,8 +183,8 @@ abstract class AbstractItem extends AbstractContainer implements ItemInterface
     }
 
     /**
-     * @return ContainerInterface
      * @throws \Exception
+     * @return ContainerInterface
      */
     final public function below(): ContainerInterface
     {

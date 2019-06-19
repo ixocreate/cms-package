@@ -64,14 +64,14 @@ class AbstractItemTest extends TestCase
                 $this->pageTypeSubManager = $pageTypeSubManager;
             }
 
-            public function createContainer(Structure $structure): ContainerInterface
+            public function createContainer(Structure $structure, array $filter = []): ContainerInterface
             {
-                return new Container($structure, $this);
+                return new Container($structure, $this, $filter);
             }
 
-            public function createItem(StructureItem $structureItem): ItemInterface
+            public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface
             {
-                return new Item($structureItem, $this, $this->pageTypeSubManager);
+                return new Item($structureItem, $this, $this->pageTypeSubManager, $filter);
             }
         };
 

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Router\Tree\RoutingItem;
 
 interface ReplacementInterface
 {
@@ -20,5 +20,5 @@ interface ReplacementInterface
         RouteSpecification $routeSpecification,
         string $locale,
         RoutingItem $routingItem
-    ): RouteSpecification;
+    ): void;
 }

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Router\Tree\RoutingItem;
 use Ixocreate\Intl\LocaleManager;
 
 final class RegionReplacement implements ReplacementInterface
@@ -41,17 +41,15 @@ final class RegionReplacement implements ReplacementInterface
      * @param RouteSpecification $routeSpecification
      * @param string $locale
      * @param RoutingItem $item
-     * @return RouteSpecification
+     * @return void
      */
     public function replace(
         RouteSpecification $routeSpecification,
         string $locale,
         RoutingItem $item
-    ): RouteSpecification {
+    ): void {
         foreach ($routeSpecification->uris() as $name => $uri) {
-            $routeSpecification = $routeSpecification->withUri(\str_replace('${REGION}', \Locale::getRegion($locale), $uri), $name);
+            $routeSpecification->addUri(\str_replace('${REGION}', \Locale::getRegion($locale), $uri), $name);
         }
-
-        return $routeSpecification;
     }
 }

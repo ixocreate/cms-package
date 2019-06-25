@@ -16,6 +16,11 @@ use Ixocreate\Cms\Tree\Structure\StructureItem;
 final class Factory implements FactoryInterface
 {
     /**
+     * @var array
+     */
+    private $itemCache = [];
+
+    /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
@@ -32,6 +37,14 @@ final class Factory implements FactoryInterface
 
     public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface
     {
-        return new Item($structureItem, $this, $this->pageTypeSubManager, $filter);
+        $hash = $structureItem->structureKey();
+
+        //TODO Hash
+
+        if (!\array_key_exists($hash, $this->itemCache)) {
+            $this->itemCache[$hash] = new Item($structureItem, $this, $this->pageTypeSubManager, $filter);
+        }
+
+        return $this->itemCache[$hash];
     }
 }

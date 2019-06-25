@@ -14,13 +14,9 @@ use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Tree\AbstractItem;
-use Ixocreate\Cms\Tree\Container;
 use Ixocreate\Cms\Tree\ContainerInterface;
-use Ixocreate\Cms\Tree\FactoryInterface;
-use Ixocreate\Cms\Tree\Item;
+use Ixocreate\Cms\Tree\Factory;
 use Ixocreate\Cms\Tree\ItemInterface;
-use Ixocreate\Cms\Tree\Structure\Structure;
-use Ixocreate\Cms\Tree\Structure\StructureItem;
 use Ixocreate\Cms\Tree\Structure\StructureStore;
 use Ixocreate\Schema\Type\DateTimeType;
 use Ixocreate\Schema\Type\UuidType;
@@ -53,27 +49,7 @@ class AbstractItemTest extends TestCase
         $pageTypeSubManager = $this->createMock(PageTypeSubManager::class);
         $pageTypeSubManager->method('get')->willReturn($this->createMock(PageTypeInterface::class));
 
-        $factory = new class($pageTypeSubManager) implements FactoryInterface {
-            /**
-             * @var PageTypeSubManager
-             */
-            private $pageTypeSubManager;
-
-            public function __construct(PageTypeSubManager $pageTypeSubManager)
-            {
-                $this->pageTypeSubManager = $pageTypeSubManager;
-            }
-
-            public function createContainer(Structure $structure, array $filter = []): ContainerInterface
-            {
-                return new Container($structure, $this, $filter);
-            }
-
-            public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface
-            {
-                return new Item($structureItem, $this, $this->pageTypeSubManager, $filter);
-            }
-        };
+        $factory = new Factory($pageTypeSubManager);
 
         $this->item = $factory->createItem((new StructureStore(include 'tree.php'))->structure()->current());
     }

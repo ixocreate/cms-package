@@ -23,11 +23,6 @@ abstract class AbstractItem extends AbstractContainer implements ItemInterface
     private $structureItem;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container = null;
-
-    /**
      * @var FactoryInterface
      */
     private $factory;

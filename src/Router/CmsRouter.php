@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Router;
 
 use Ixocreate\Application\Uri\ApplicationUri;
+use Ixocreate\Cms\Entity\Page;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -109,5 +110,13 @@ final class CmsRouter implements RouterInterface
     {
         $path = $this->generator->generate($name, $substitutions, UrlGenerator::ABSOLUTE_URL);
         return (string) $path;
+    }
+
+    public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
+    {
+        if ($routePrefix !== '') {
+            $routePrefix .= '.';
+        }
+        return $this->generateUri('page.' . $routePrefix . (string)$page->id(), $params);
     }
 }

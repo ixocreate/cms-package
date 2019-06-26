@@ -11,37 +11,34 @@ namespace Ixocreate\Cms\Template;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Site\Tree\Container;
-use Ixocreate\Cms\Site\Tree\Item;
-use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
-use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
+use Ixocreate\Cms\Router\CmsRouter;
+use Ixocreate\Cms\Tree\Container;
+use Ixocreate\Cms\Tree\Item;
 use Ixocreate\Template\Extension\ExtensionInterface;
 
 final class PageUrlExtension implements ExtensionInterface
 {
     /**
-     * @var PageRoute
-     */
-    private $pageRoute;
-
-    /**
      * @var Container
-     */
+*/
     private $container;
+    /**
+     * @var CmsRouter
+     */
+    private $cmsRouter;
 
     /**
      * PageUrlExtension constructor.
      *
-     * @param PageRoute $pageRoute
+     * @param CmsRouter $cmsRouter
      * @param Container $container
      */
     public function __construct(
-        PageRoute $pageRoute,
+        CmsRouter $cmsRouter,
         Container $container
     ) {
-        $this->pageRoute = $pageRoute;
         $this->container = $container;
+        $this->cmsRouter = $cmsRouter;
     }
 
     /**
@@ -65,95 +62,72 @@ final class PageUrlExtension implements ExtensionInterface
      * @param array $params
      * @param string $routePrefix
      * @return string
+     * @throws \Exception
      */
     public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
     {
-        return $this->pageRoute->fromPage($page, $params, $routePrefix);
+        try {
+            return $this->cmsRouter->fromPage($page, $params, $routePrefix);
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
      * @param string $handle
      * @param array $params
      * @param null|string $locale
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @param string $routePrefix
      * @return string
+     * @throws \Exception
      */
-    public function fromHandle(string $handle, array $params = [], ?string $locale = null): string
+    public function fromHandle(string $handle, array $params = [], ?string $locale = null, string $routePrefix = ''): string
     {
-        $item = $this->container->findByHandle($handle);
+        $item = $this->container->find(function (Item $item) use ($handle) {
+            return ($item->handle() === $handle);
+        });
         if (empty($item)) {
             return '';
         }
         $locale = $locale ?? \Locale::getDefault();
-        $sitemap = $item->sitemap();
 
-        if (!\array_key_exists($locale, $item->structureItem()->pages())) {
+        if (!$item->hasPage($locale)) {
             return '';
         }
 
-
-        $page = $item->page($locale);
-
-        if (!$page->isOnline()) {
+        if (!$item->isOnline($locale)) {
             return '';
         }
 
-        $container = $this->container
-            ->filter(OnlineSearch::class, ['locale' => $locale])
-            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
-            ->flatten();
-
-        $item = $container->find(function (Item $item) use ($sitemap) {
-            return (string) $item->sitemap()->id() === (string) $sitemap->id();
-        });
-
-        if (empty($item)) {
-            return '';
-        }
-
-        return $this->fromPage($page, $params);
+        return $this->fromPage($item->page($locale), $params, $routePrefix);
     }
 
     /**
      * @param Sitemap $sitemap
      * @param string $locale
      * @param string $defaultHandle
-     * @throws \Psr\Cache\InvalidArgumentException
+     * @param string $routePrefix
      * @return string
+     * @throws \Exception
      */
-    public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle): string
+    public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle, string $routePrefix = ''): string
     {
         $item = $this->container->find(function (Item $item) use ($sitemap) {
-            return (string) $item->sitemap()->id() === (string) $sitemap->id();
+            return (string) $item->structureItem()->sitemapId() === (string) $sitemap->id();
         });
 
         if (empty($item)) {
-            return $this->fromHandle($defaultHandle, [], $locale);
+            return $this->fromHandle($defaultHandle, [], $locale, $routePrefix);
         }
 
-        if (!\array_key_exists($locale, $item->structureItem()->pages())) {
-            return $this->fromHandle($defaultHandle, [], $locale);
+        if (!$item->hasPage($locale)) {
+            return $this->fromHandle($defaultHandle, [], $locale, $routePrefix);
         }
 
-        $page = $item->page($locale);
-
-        if (!$page->isOnline()) {
-            return $this->fromHandle($defaultHandle, [], $locale);
+        if (!$item->isOnline($locale)) {
+            return $this->fromHandle($defaultHandle, [], $locale, $routePrefix);
         }
 
-        $container = $this->container
-            ->filter(OnlineSearch::class, ['locale' => $locale])
-            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
-            ->flatten();
-
-        $item = $container->find(function (Item $item) use ($sitemap) {
-            return (string) $item->sitemap()->id() === (string) $sitemap->id();
-        });
-
-        if (empty($item)) {
-            return $this->fromHandle($defaultHandle, [], $locale);
-        }
-
-        return $this->fromPage($page, []);
+        return $this->fromPage($item->page($locale), [], $routePrefix);
     }
 }

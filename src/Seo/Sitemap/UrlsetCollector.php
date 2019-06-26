@@ -45,9 +45,6 @@ final class UrlsetCollector
         $this->count++;
     }
 
-    /**
-     * @return Collection[]
-     */
     public function getCollections(): array
     {
         return $this->collections;

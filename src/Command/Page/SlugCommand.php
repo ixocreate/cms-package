@@ -17,7 +17,7 @@ use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
@@ -40,11 +40,10 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
      * @var OldRedirectRepository
      */
     private $oldRedirectRepository;
-
     /**
-     * @var PageRoute
+     * @var CmsRouter
      */
-    private $pageRoute;
+    private $cmsRouter;
 
     /**
      * SlugCommand constructor.
@@ -52,18 +51,18 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
      * @param PageRepository $pageRepository
      * @param SitemapRepository $sitemapRepository
      * @param OldRedirectRepository $oldRedirectRepository
-     * @param PageRoute $pageRoute
+     * @param CmsRouter $cmsRouter
      */
     public function __construct(
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         OldRedirectRepository $oldRedirectRepository,
-        PageRoute $pageRoute
+        CmsRouter $cmsRouter
     ) {
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->oldRedirectRepository = $oldRedirectRepository;
-        $this->pageRoute = $pageRoute;
+        $this->cmsRouter = $cmsRouter;
     }
 
     /**
@@ -125,7 +124,7 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
             $pages = $this->pageRepository->findBy(['sitemapId' => $sitemapIds, 'locale' => $page->locale()]);
             /** @var Page $pageItem */
             foreach ($pages as $pageItem) {
-                $oldUrl = $this->pageRoute->fromPage($pageItem);
+                $oldUrl = $this->cmsRouter->fromPage($pageItem);
                 $redirect = new OldRedirect([
                     'oldUrl' => $oldUrl,
                     'pageId' => $pageItem->id(),

@@ -9,10 +9,6 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
-use Ixocreate\Cache\CacheInterface;
-use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
@@ -48,60 +44,28 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
     private $navigationRepository;
 
     /**
-     * @var CacheManager
-     */
-    private $cacheManager;
-
-    /**
-     * @var PageCacheable
-     */
-    private $pageCacheable;
-
-    /**
-     * @var StructureCacheable
-     */
-    private $structureCacheable;
-
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
      * CreateCommand constructor.
      *
      * @param PageRepository $pageRepository
      * @param CommandBus $commandBus
      * @param Config $config
      * @param NavigationRepository $navigationRepository
-     * @param CacheInterface $cms
-     * @param CacheManager $cacheManager
-     * @param PageCacheable $pageCacheable
-     * @param StructureCacheable $structureCacheable
      */
     public function __construct(
         PageRepository $pageRepository,
         CommandBus $commandBus,
         Config $config,
-        NavigationRepository $navigationRepository,
-        CacheInterface $cms,
-        CacheManager $cacheManager,
-        PageCacheable $pageCacheable,
-        StructureCacheable $structureCacheable
+        NavigationRepository $navigationRepository
     ) {
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->config = $config;
         $this->navigationRepository = $navigationRepository;
-        $this->cache = $cms;
-        $this->cacheManager = $cacheManager;
-        $this->pageCacheable = $pageCacheable;
-        $this->structureCacheable = $structureCacheable;
     }
 
     /**
-     * @throws \Psr\Cache\InvalidArgumentException
      * @return bool
+     * @throws \Exception
      */
     public function execute(): bool
     {
@@ -170,10 +134,11 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
             $page = $page->with('updatedAt', new \DateTime());
             $this->pageRepository->save($page);
 
+            //TODO Cache
             if ($clearCache) {
-                $this->cache->clear();
+                //$this->cache->clear();
             } else {
-                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
+                //$this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
             }
         }
 

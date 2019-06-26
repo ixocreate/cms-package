@@ -50,7 +50,7 @@ class AbstractContainer implements ContainerInterface
         $this->filter = $filter;
     }
 
-    public function structure(): Structure
+    final public function structure(): Structure
     {
         if ($this->internalStructure === null && !empty($this->filter)) {
             $this->internalStructure = $this->structure->only(function (StructureItem $structureItem) {
@@ -146,7 +146,7 @@ class AbstractContainer implements ContainerInterface
      * @param array $params
      * @return ItemInterface|null
      */
-    public function find($filter, array $params = []): ?ItemInterface
+    final public function find($filter, array $params = []): ?ItemInterface
     {
         list($filter, $params) = $this->normalizeFilter($filter, $params);
         $return = null;
@@ -168,7 +168,7 @@ class AbstractContainer implements ContainerInterface
      * @param array $params
      * @return ContainerInterface
      */
-    public function where($filter, array $params = []): ContainerInterface
+    final public function where($filter, array $params = []): ContainerInterface
     {
         list($filter, $params) = $this->normalizeFilter($filter, $params);
 
@@ -199,7 +199,7 @@ class AbstractContainer implements ContainerInterface
         );
     }
 
-    public function flatten(): CollectionInterface
+    final public function flatten(): CollectionInterface
     {
         $items = [];
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
@@ -218,7 +218,7 @@ class AbstractContainer implements ContainerInterface
      * @param array $params
      * @return CollectionInterface
      */
-    public function search($filter, array $params = []): CollectionInterface
+    final public function search($filter, array $params = []): CollectionInterface
     {
         list($filter, $params) = $this->normalizeFilter($filter, $params);
         $items = [];
@@ -249,7 +249,7 @@ class AbstractContainer implements ContainerInterface
      * @param array $params
      * @return ContainerInterface
      */
-    public function filter($filter, array $params = []): ContainerInterface
+    final public function filter($filter, array $params = []): ContainerInterface
     {
         $container = clone $this;
         $container->filter[] = $this->normalizeFilter($filter, $params);

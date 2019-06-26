@@ -50,6 +50,11 @@ class AbstractContainer implements ContainerInterface
         $this->filter = $filter;
     }
 
+    final public function factory(): FactoryInterface
+    {
+        return $this->factory;
+    }
+
     final public function structure(): Structure
     {
         if ($this->internalStructure === null && !empty($this->filter)) {
@@ -139,7 +144,6 @@ class AbstractContainer implements ContainerInterface
             $params,
         ];
     }
-
 
     /**
      * @param string|callable $filter

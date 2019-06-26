@@ -16,6 +16,8 @@ use RecursiveIterator;
 
 interface ContainerInterface extends Countable, RecursiveIterator
 {
+    public function factory(): FactoryInterface;
+
     public function structure(): Structure;
 
     public function find($filter, array $params = []): ?ItemInterface;

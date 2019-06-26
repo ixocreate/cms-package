@@ -12,7 +12,6 @@ namespace Ixocreate\Cms\Template;
 use Ixocreate\Template\TemplateConfigurator;
 
 /** @var TemplateConfigurator $template */
-$template->addExtension(NavigationExtension::class);
 $template->addExtension(PageUrlExtension::class);
 $template->addExtension(TreeExtension::class);
 

@@ -14,6 +14,7 @@ use Ixocreate\Cms\Router\Replacement\ParentReplacement;
 use Ixocreate\Cms\Router\Replacement\RegionReplacement;
 use Ixocreate\Cms\Router\Replacement\SlugReplacement;
 use Ixocreate\Cms\Router\Replacement\UriReplacement;
+use Ixocreate\Cms\Tree\Filter\CallableFilter;
 
 /** @var CmsConfigurator $cms */
 $cms->addRoutingReplacement(LangReplacement::class);
@@ -21,3 +22,5 @@ $cms->addRoutingReplacement(RegionReplacement::class);
 $cms->addRoutingReplacement(ParentReplacement::class);
 $cms->addRoutingReplacement(SlugReplacement::class);
 $cms->addRoutingReplacement(UriReplacement::class);
+
+$cms->addTreeFilter(CallableFilter::class);

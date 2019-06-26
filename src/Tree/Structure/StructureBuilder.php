@@ -78,7 +78,6 @@ final class StructureBuilder
         $query = $this->entityManager->createNativeQuery($sql, $rm);
 
         $result = $query->getResult();
-
         $flat = [];
         foreach ($result as $item) {
             if (!\array_key_exists($item['sitemap_id'], $flat)) {
@@ -87,6 +86,7 @@ final class StructureBuilder
                     'sitemap' => $sitemap,
                     'pages' => [],
                     'children' => [],
+                    'navigation' => [],
                 ];
             }
             $page = $this->objectData($item, 'page_');
@@ -104,7 +104,6 @@ final class StructureBuilder
 
             $tree[] =& $item;
         }
-
 
         return (new StructureStore($tree))->structure();
     }

@@ -93,7 +93,7 @@ class IndexFlatAction implements MiddlewareInterface
         $children = $children->slice($offset, $limit);
 
         return new ApiSuccessResponse([
-            'items' => $children->toArray(),
+            'items' => \array_values($children->toArray()),
             'meta' => [
                 'parentSitemapId' => $item->structureItem()->sitemapId(),
                 'count' => $count,

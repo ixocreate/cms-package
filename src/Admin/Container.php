@@ -18,6 +18,9 @@ final class Container extends AbstractContainer implements JsonSerializable
     {
         $items = [];
         foreach ($this as $item) {
+            if (!$this->doFilter($item)) {
+                continue;
+            }
             $items[] = $item;
         }
         return $items;

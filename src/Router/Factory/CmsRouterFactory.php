@@ -13,6 +13,8 @@ use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
 use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cache\CacheableSubManager;
 use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\CompiledGeneratorRoutesCacheable;
+use Ixocreate\Cms\Cacheable\CompiledMatcherRoutesCacheable;
 use Ixocreate\Cms\Cacheable\RouteCollectionCacheable;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\ServiceManager\FactoryInterface;
@@ -37,6 +39,12 @@ final class CmsRouterFactory implements FactoryInterface
 
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
-        return new CmsRouter($routeCollection, $middlewareFactory, $container->get(ApplicationUri::class));
+        return new CmsRouter(
+            $middlewareFactory,
+            $container->get(ApplicationUri::class),
+            $container->get(CacheManager::class),
+            $container->get(CacheableSubManager::class)->get(CompiledGeneratorRoutesCacheable::class),
+            $container->get(CacheableSubManager::class)->get(CompiledMatcherRoutesCacheable::class)
+        );
     }
 }

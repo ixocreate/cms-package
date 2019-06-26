@@ -11,7 +11,6 @@ namespace Ixocreate\Cms\Middleware\Factory;
 
 use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
 use Ixocreate\Cms\Middleware\CmsMiddleware;
-use Ixocreate\Cms\Middleware\DefaultLocaleMiddleware;
 use Ixocreate\Cms\Middleware\OldUrlRedirectMiddleware;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\ServiceManager\FactoryInterface;

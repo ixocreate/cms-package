@@ -33,6 +33,7 @@ final class DetailAction implements MiddlewareInterface
      * @var UserRepository
      */
     private $userRepository;
+
     /**
      * @var PageRepository
      */

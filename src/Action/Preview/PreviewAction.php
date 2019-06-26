@@ -44,14 +44,17 @@ final class PreviewAction implements MiddlewareInterface
      * @var MiddlewareSubManager
      */
     private $middlewareSubManager;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var PageTypeSubManager
      */

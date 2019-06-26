@@ -24,6 +24,7 @@ final class Factory implements FactoryInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var FilterManager
      */

@@ -40,6 +40,7 @@ final class CompiledGeneratorRoutesCacheable implements CacheableInterface
      * @var ReplacementManager
      */
     private $replacementManager;
+
     /**
      * @var FilterManager
      */

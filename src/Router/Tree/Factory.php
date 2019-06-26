@@ -34,6 +34,7 @@ final class Factory implements FactoryInterface
      * @var ReplacementManager
      */
     private $replacementManager;
+
     /**
      * @var FilterManager
      */

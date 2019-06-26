@@ -34,6 +34,7 @@ final class IndexAction implements MiddlewareInterface
      * @var UserRepository
      */
     private $userRepository;
+
     /**
      * @var PageRepository
      */

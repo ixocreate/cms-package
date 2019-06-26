@@ -40,6 +40,7 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
      * @var OldRedirectRepository
      */
     private $oldRedirectRepository;
+
     /**
      * @var CmsRouter
      */

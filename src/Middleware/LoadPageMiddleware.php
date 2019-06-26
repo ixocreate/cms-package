@@ -10,13 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Middleware;
 
 use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
-use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\StructureCacheable;
-use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Tree\Container;
-use Ixocreate\Cms\Tree\Factory;
-use Ixocreate\Cms\Tree\Item;
 use Ixocreate\Cms\Tree\Structure\StructureItem;
 use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
@@ -36,22 +30,11 @@ final class LoadPageMiddleware implements MiddlewareInterface
      * @var NotFoundHandler
      */
     private $notFoundHandler;
+
     /**
      * @var Container
      */
     private $container;
-    /**
-     * @var Factory
-     */
-    private $factory;
-    /**
-     * @var CacheManager
-     */
-    private $cacheManager;
-    /**
-     * @var StructureCacheable
-     */
-    private $structureCacheable;
 
     /**
      * LoadPageMiddleware constructor.

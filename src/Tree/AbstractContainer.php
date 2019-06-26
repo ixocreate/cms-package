@@ -37,6 +37,7 @@ class AbstractContainer implements ContainerInterface
      * @var array
      */
     private $filter = [];
+
     /**
      * @var FilterManager
      */

@@ -27,15 +27,16 @@ final class CreateAction implements MiddlewareInterface
      * @var CommandBus
      */
     private $commandBus;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
-
 
     /**
      * CreateAction constructor.

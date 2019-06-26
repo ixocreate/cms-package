@@ -64,8 +64,8 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
     }
 
     /**
-     * @return bool
      * @throws \Exception
+     * @return bool
      */
     public function execute(): bool
     {
@@ -127,7 +127,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
                 $this->navigationRepository->save($navigationEntity);
             }
 
-            $this->cacheManager->fetch($this->structureCacheable, true);
+            //$this->cacheManager->fetch($this->structureCacheable, true);
         }
 
         if ($updated === true) {

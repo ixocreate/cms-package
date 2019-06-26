@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Admin;
@@ -19,14 +25,17 @@ final class Factory implements FactoryInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var FilterManager
      */
     private $filterManager;
+
     /**
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var CmsRouter
      */

@@ -22,6 +22,7 @@ final class PageUrlExtension implements ExtensionInterface
      * @var Container
 */
     private $container;
+
     /**
      * @var CmsRouter
      */
@@ -61,8 +62,8 @@ final class PageUrlExtension implements ExtensionInterface
      * @param Page $page
      * @param array $params
      * @param string $routePrefix
-     * @return string
      * @throws \Exception
+     * @return string
      */
     public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
     {
@@ -78,13 +79,13 @@ final class PageUrlExtension implements ExtensionInterface
      * @param array $params
      * @param null|string $locale
      * @param string $routePrefix
-     * @return string
      * @throws \Exception
+     * @return string
      */
     public function fromHandle(string $handle, array $params = [], ?string $locale = null, string $routePrefix = ''): string
     {
         $item = $this->container->find(function (Item $item) use ($handle) {
-            return ($item->handle() === $handle);
+            return $item->handle() === $handle;
         });
         if (empty($item)) {
             return '';
@@ -107,8 +108,8 @@ final class PageUrlExtension implements ExtensionInterface
      * @param string $locale
      * @param string $defaultHandle
      * @param string $routePrefix
-     * @return string
      * @throws \Exception
+     * @return string
      */
     public function switchLanguage(Sitemap $sitemap, string $locale, string $defaultHandle, string $routePrefix = ''): string
     {

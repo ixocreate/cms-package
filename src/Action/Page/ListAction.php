@@ -36,8 +36,8 @@ class ListAction implements MiddlewareInterface
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
      * @throws \Exception
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -69,7 +69,7 @@ class ListAction implements MiddlewareInterface
         foreach ($collection as $item) {
             $result[] = [
                 'id' => $item->structureItem()->pageId($locale),
-                'name' => $this->receiveFullName($item, $locale)
+                'name' => $this->receiveFullName($item, $locale),
             ];
         }
 
@@ -79,8 +79,8 @@ class ListAction implements MiddlewareInterface
     /**
      * @param Item $item
      * @param string $locale
-     * @return string
      * @throws \Exception
+     * @return string
      */
     private function receiveFullName(Item $item, string $locale): string
     {

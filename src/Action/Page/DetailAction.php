@@ -41,10 +41,12 @@ final class DetailAction implements MiddlewareInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var Container
      */
     private $container;
+
     /**
      * @var PageRepository
      */
@@ -83,8 +85,8 @@ final class DetailAction implements MiddlewareInterface
         }
 
         /** @var Item $item */
-        $item = $this->container->find(function (Item $item) use ($page){
-            return ($item->structureItem()->sitemapId() === (string) $page->sitemapId());
+        $item = $this->container->find(function (Item $item) use ($page) {
+            return $item->structureItem()->sitemapId() === (string) $page->sitemapId();
         });
         if (empty($item)) {
             return new ApiErrorResponse("invalid_page_id");
@@ -92,8 +94,8 @@ final class DetailAction implements MiddlewareInterface
 
         $result = $item->jsonSerialize();
         $result['hasChildren'] = (\count($result['children']) > 0);
-        unset($result['children']);
-        unset($result['childrenAllowed']);
+        unset($result['children'], $result['childrenAllowed']);
+
 
         $result['localizedPages'] = [];
         foreach ($result['pages'] as $locale => $pageData) {

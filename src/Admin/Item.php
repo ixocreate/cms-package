@@ -26,6 +26,7 @@ final class Item extends AbstractItem implements JsonSerializable
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var CmsRouter
      */
@@ -61,7 +62,7 @@ final class Item extends AbstractItem implements JsonSerializable
             $pages[$locale] = [
                 'page' => $page->toPublicArray(),
                 'url' => $this->cmsRouter->fromPage($page),
-                'isOnline' => $this->isOnline($locale)
+                'isOnline' => $this->isOnline($locale),
             ];
         }
 
@@ -75,9 +76,9 @@ final class Item extends AbstractItem implements JsonSerializable
                 'allowedChildren' => $pageType->allowedChildren(),
                 'isRoot' => $pageType instanceof RootPageTypeInterface,
                 'name' => $pageType::serviceName(),
-                'terminal' => $pageType instanceof TerminalPageTypeInterface
+                'terminal' => $pageType instanceof TerminalPageTypeInterface,
             ],
-            'children' => $this->below()
+            'children' => $this->below(),
         ];
     }
 }

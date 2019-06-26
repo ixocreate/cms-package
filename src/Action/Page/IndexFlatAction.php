@@ -25,6 +25,7 @@ class IndexFlatAction implements MiddlewareInterface
      * @var Container
      */
     private $container;
+
     /**
      * @var LocaleManager
      */
@@ -57,7 +58,7 @@ class IndexFlatAction implements MiddlewareInterface
 
         if (!empty($request->getQueryParams()['search'])) {
             $search = $request->getQueryParams()['search'];
-            $children = $children->filter(function (Item $item) use ($search){
+            $children = $children->filter(function (Item $item) use ($search) {
                 foreach ($this->localeManager->all() as $locale) {
                     $locale = $locale['locale'];
                     if (!$item->hasPage($locale)) {

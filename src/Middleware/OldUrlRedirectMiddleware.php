@@ -12,7 +12,7 @@ namespace Ixocreate\Cms\Middleware;
 use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Router\CmsRouter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -37,16 +37,16 @@ class OldUrlRedirectMiddleware implements MiddlewareInterface
     private $pageRepository;
 
     /**
-     * @var PageRoute
+     * @var CmsRouter
      */
-    private $pageRoute;
+    private $cmsRouter;
 
-    public function __construct(OldRedirectRepository $oldRedirectRepository, ApplicationUri $projectUri, PageRepository $pageRepository, PageRoute $pageRoute)
+    public function __construct(OldRedirectRepository $oldRedirectRepository, ApplicationUri $projectUri, PageRepository $pageRepository, CmsRouter $cmsRouter)
     {
         $this->oldRedirectRepository = $oldRedirectRepository;
         $this->projectUri = $projectUri;
         $this->pageRepository = $pageRepository;
-        $this->pageRoute = $pageRoute;
+        $this->cmsRouter = $cmsRouter;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -57,7 +57,7 @@ class OldUrlRedirectMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
         $url = $this->pageRepository->findOneBy(['id' => $oldPage->pageId]);
-        $newUri = $this->pageRoute->fromPage($url);
+        $newUri = $this->cmsRouter->fromPage($url);
         if ($oldPage === null or !$url->isOnline()) {
             return $handler->handle($request);
         }

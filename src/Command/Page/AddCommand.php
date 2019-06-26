@@ -13,7 +13,6 @@ use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
@@ -96,11 +95,6 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
     public function execute(): bool
     {
         $this->master->transactional(function () {
-            /** @var Sitemap $sitemap */
-            $sitemap = $this->sitemapRepository->find($this->dataValue('sitemapId'));
-            /** @var PageTypeInterface $pageType */
-            $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
-
             $page = new Page([
                 'id' => $this->uuid(),
                 'sitemapId' => $this->dataValue('sitemapId'),

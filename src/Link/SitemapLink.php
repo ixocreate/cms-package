@@ -11,7 +11,7 @@ namespace Ixocreate\Cms\Link;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Schema\Link\LinkInterface;
 
 final class SitemapLink implements LinkInterface
@@ -22,24 +22,24 @@ final class SitemapLink implements LinkInterface
     private $pageRepository;
 
     /**
-     * @var PageRoute
-     */
-    private $pageRoute;
-
-    /**
      * @var Page
      */
     private $page = null;
 
     /**
+     * @var CmsRouter
+     */
+    private $cmsRouter;
+
+    /**
      * MediaLink constructor.
      * @param PageRepository $pageRepository
-     * @param PageRoute $pageRoute
+     * @param CmsRouter $cmsRouter
      */
-    public function __construct(PageRepository $pageRepository, PageRoute $pageRoute)
+    public function __construct(PageRepository $pageRepository, CmsRouter $cmsRouter)
     {
         $this->pageRepository = $pageRepository;
-        $this->pageRoute = $pageRoute;
+        $this->cmsRouter = $cmsRouter;
     }
 
     /**
@@ -102,7 +102,7 @@ final class SitemapLink implements LinkInterface
         }
 
         try {
-            return $this->pageRoute->fromPage($this->page);
+            return $this->cmsRouter->fromPage($this->page);
         } catch (\Exception $exception) {
             return "";
         }

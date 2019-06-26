@@ -12,7 +12,7 @@ namespace Ixocreate\Cms\Seo\Sitemap;
 use Doctrine\Common\Collections\Criteria;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Router\CmsRouter;
 
 class PageProvider implements XmlSitemapProviderInterface
 {
@@ -22,14 +22,14 @@ class PageProvider implements XmlSitemapProviderInterface
     private $pageRepository;
 
     /**
-     * @var PageRoute
+     * @var CmsRouter
      */
-    private $pageRoute;
+    private $cmsRouter;
 
-    public function __construct(PageRepository $pageRepository, PageRoute $pageRoute)
+    public function __construct(PageRepository $pageRepository, CmsRouter $cmsRouter)
     {
         $this->pageRepository = $pageRepository;
-        $this->pageRoute = $pageRoute;
+        $this->cmsRouter = $cmsRouter;
     }
 
     public static function serviceName(): string
@@ -70,7 +70,7 @@ class PageProvider implements XmlSitemapProviderInterface
 
         foreach ($pages as $page) {
             /** @var Page $page */
-            $loc = $this->pageRoute->fromPage($page);
+            $loc = $this->cmsRouter->fromPage($page);
 
             $lastMod =  $page->updatedAt()->value();
 

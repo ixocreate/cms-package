@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 use Zend\Expressive\MiddlewareFactory;
 use Zend\Expressive\Router\Route;
 use Zend\Expressive\Router\RouteResult;
@@ -29,11 +28,6 @@ use Zend\Expressive\Router\RouterInterface;
 
 final class CmsRouter implements RouterInterface
 {
-    /**
-     * @var RouteCollection
-     */
-    private $routes;
-
     /**
      * @var UrlGeneratorInterface
      */

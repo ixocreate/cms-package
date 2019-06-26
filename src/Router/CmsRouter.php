@@ -134,7 +134,7 @@ final class CmsRouter implements RouterInterface
             Route::HTTP_METHOD_ANY,
             $routeMatch['_route']
         );
-        $route->setOptions(['pageId' => $routeMatch['pageId'], 'structureKey' => $routeMatch['structureKey']]);
+        $route->setOptions(['pageId' => $routeMatch['pageId'], 'structureKey' => $routeMatch['structureKey'], 'locale' => $routeMatch['locale']]);
         unset($routeMatch['_route'], $routeMatch['middleware']);
 
         return RouteResult::fromRoute($route, $routeMatch);

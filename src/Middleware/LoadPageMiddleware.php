@@ -12,7 +12,12 @@ namespace Ixocreate\Cms\Middleware;
 use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Tree\Container;
+use Ixocreate\Cms\Tree\Factory;
+use Ixocreate\Cms\Tree\Item;
+use Ixocreate\Cms\Tree\Structure\StructureItem;
 use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,30 +36,37 @@ final class LoadPageMiddleware implements MiddlewareInterface
      * @var NotFoundHandler
      */
     private $notFoundHandler;
-
     /**
-     * @var PageCacheable
+     * @var Container
      */
-    private $pageCacheable;
-
+    private $container;
+    /**
+     * @var Factory
+     */
+    private $factory;
     /**
      * @var CacheManager
      */
     private $cacheManager;
+    /**
+     * @var StructureCacheable
+     */
+    private $structureCacheable;
 
     /**
      * LoadPageMiddleware constructor.
-     * @param PageCacheable $pageCacheable
-     * @param CacheManager $cacheManager
      * @param LocaleManager $localeManager
      * @param NotFoundHandler $notFoundHandler
+     * @param Container $container
      */
-    public function __construct(PageCacheable $pageCacheable, CacheManager $cacheManager, LocaleManager $localeManager, NotFoundHandler $notFoundHandler)
-    {
+    public function __construct(
+        LocaleManager $localeManager,
+        NotFoundHandler $notFoundHandler,
+        Container $container
+    ) {
         $this->localeManager = $localeManager;
         $this->notFoundHandler = $notFoundHandler;
-        $this->pageCacheable = $pageCacheable;
-        $this->cacheManager = $cacheManager;
+        $this->container = $container;
     }
 
     /**
@@ -66,23 +78,34 @@ final class LoadPageMiddleware implements MiddlewareInterface
         /** @var RouteResult $routeResult */
         $routeResult = $request->getAttribute(RouteResult::class);
 
-        $pageId = $routeResult->getMatchedRoute()->getOptions()['pageId'];
+        $locale = $routeResult->getMatchedRoute()->getOptions()['locale'];
+        if (!$this->localeManager->has($locale)) {
+            return $this->notFoundHandler->process($request, $handler);
+        }
+        $structureKey = $routeResult->getMatchedRoute()->getOptions()['structureKey'];
 
-        $cacheable = $this->pageCacheable->withPageId($pageId);
-        /** @var Page $page */
-        $page = $this->cacheManager->fetch($cacheable);
-
-        if (!($page instanceof Page)) {
+        try {
+            /** @var StructureItem $structureItem */
+            $structureItem = $this->container->structure()->structureStore()->item($structureKey);
+        } catch (\Throwable $e) {
             return $this->notFoundHandler->process($request, $handler);
         }
 
-        if (!$page->isOnline()) {
+        $item = $this->container->factory()->createItem($structureItem);
+
+        if (!$item->hasPage($locale)) {
             return $this->notFoundHandler->process($request, $handler);
         }
 
-        $this->localeManager->acceptLocale($page->locale());
+        if (!$item->isOnline($locale)) {
+            return $this->notFoundHandler->process($request, $handler);
+        }
 
-        $request = $request->withPage($page);
+        $this->localeManager->acceptLocale($locale);
+
+        $request = $request->withPage($item->page($locale))
+            ->withSitemap($item->sitemap())
+            ->withPageType($item->pageType());
 
         return $handler->handle($request);
     }

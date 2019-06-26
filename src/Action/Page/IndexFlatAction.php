@@ -11,8 +11,9 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Admin\Container;
+use Ixocreate\Cms\Admin\Item;
+use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,34 +22,50 @@ use Psr\Http\Server\RequestHandlerInterface;
 class IndexFlatAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var Container
      */
-    private $adminContainer;
+    private $container;
+    /**
+     * @var LocaleManager
+     */
+    private $localeManager;
 
+    /**
+     * @param Container $container
+     * @param LocaleManager $localeManager
+     */
     public function __construct(
-        AdminContainer $adminContainer
+        Container $container,
+        LocaleManager $localeManager
     ) {
-        $this->adminContainer = $adminContainer;
+        $this->container = $container;
+        $this->localeManager = $localeManager;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $handle = $request->getAttribute('handle');
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
-            return $item->sitemap()->handle() === $handle;
+        $item = $this->container->find(function (Item $item) use ($handle) {
+            return $item->handle() === $handle;
         });
 
         if (empty($item)) {
             return new ApiErrorResponse('invalid_handle');
         }
 
-        $children = $item->children();
+        $children = $item->below()->flatten();
 
         if (!empty($request->getQueryParams()['search'])) {
             $search = $request->getQueryParams()['search'];
-            $children = $children->filter(function (AdminItem $item) use ($search) {
-                foreach ($item->pages() as $padeData) {
-                    if (\mb_stripos($padeData['page']->name(), $search) !== false) {
+            $children = $children->filter(function (Item $item) use ($search){
+                foreach ($this->localeManager->all() as $locale) {
+                    $locale = $locale['locale'];
+                    if (!$item->hasPage($locale)) {
+                        continue;
+                    }
+
+                    $pageData = $item->structureItem()->pageData($locale);
+                    if (\mb_stripos($pageData['name'], $search) !== false) {
                         return true;
                     }
                 }
@@ -58,7 +75,6 @@ class IndexFlatAction implements MiddlewareInterface
         }
 
         $count = $children->count();
-        $children = $item->flatten();
 
         $offset = 0;
         $limit = 0;
@@ -73,12 +89,12 @@ class IndexFlatAction implements MiddlewareInterface
             }
         }
 
-        $children = $children->paginate($limit, $offset);
+        $children = $children->slice($offset, $limit);
 
         return new ApiSuccessResponse([
-            'items' => $children->jsonSerialize(),
+            'items' => $children->toArray(),
             'meta' => [
-                'parentSitemapId' => $item->sitemap()->id(),
+                'parentSitemapId' => $item->structureItem()->sitemapId(),
                 'count' => $count,
             ],
         ]);

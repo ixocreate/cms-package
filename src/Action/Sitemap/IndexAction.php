@@ -10,11 +10,11 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Action\Sitemap;
 
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\Admin\Container;
+use Ixocreate\Cms\Admin\Item;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -26,45 +26,42 @@ class IndexAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
-
     /**
-     * @var AdminContainer
+     * @var SitemapRepository
      */
-    private $adminContainer;
-
+    private $sitemapRepository;
     /**
-     * @var DatabaseSitemapLoader
+     * @var Container
      */
-    private $databaseSitemapLoader;
+    private $container;
 
     /**
      * IndexAction constructor.
-     * @param AdminContainer $adminContainer
      * @param PageTypeSubManager $pageTypeSubManager
-     * @param DatabaseSitemapLoader $databaseSitemapLoader
+     * @param SitemapRepository $sitemapRepository
+     * @param Container $container
      */
     public function __construct(
-        AdminContainer $adminContainer,
         PageTypeSubManager $pageTypeSubManager,
-        DatabaseSitemapLoader $databaseSitemapLoader
+        SitemapRepository $sitemapRepository,
+        Container $container
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->adminContainer = $adminContainer;
-        $this->databaseSitemapLoader = $databaseSitemapLoader;
+        $this->sitemapRepository = $sitemapRepository;
+        $this->container = $container;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return new ApiSuccessResponse([
-            'items' => \iterator_to_array($this->adminContainer->map(function (AdminItem $item) {
-                if (\is_subclass_of($item->pageType(), TerminalPageTypeInterface::class)) {
-                    $item = $item->withClearedChildren();
+            'items' => \iterator_to_array($this->container->filter(function (Item $item) {
+                if (empty($item->parent())) {
+                    return true;
                 }
 
-                return $item;
-            }))
-            ,
-            'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
+                return !($item->parent()->pageType() instanceof TerminalPageTypeInterface);
+            })),
+            'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedPageTypes($this->sitemapRepository->receiveUsedHandles())) > 0),
         ]);
     }
 }

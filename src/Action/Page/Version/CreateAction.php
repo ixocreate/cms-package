@@ -13,8 +13,8 @@ use Ixocreate\Admin\Entity\User;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Command\Page\CreateVersionCommand;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,21 +27,26 @@ final class CreateAction implements MiddlewareInterface
      * @var CommandBus
      */
     private $commandBus;
-
     /**
-     * @var AdminContainer
+     * @var PageRepository
      */
-    private $adminContainer;
+    private $pageRepository;
+    /**
+     * @var SitemapRepository
+     */
+    private $sitemapRepository;
+
 
     /**
      * CreateAction constructor.
      * @param CommandBus $commandBus
-     * @param AdminContainer $adminContainer
+     * @param PageRepository $pageRepository
      */
-    public function __construct(CommandBus $commandBus, AdminContainer $adminContainer)
+    public function __construct(CommandBus $commandBus, PageRepository $pageRepository, SitemapRepository $sitemapRepository)
     {
         $this->commandBus = $commandBus;
-        $this->adminContainer = $adminContainer;
+        $this->pageRepository = $pageRepository;
+        $this->sitemapRepository = $sitemapRepository;
     }
 
     /**
@@ -53,27 +58,15 @@ final class CreateAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute('id');
-        /** @var AdminItem $item */
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
 
-            return false;
-        });
-
-        if (empty($item)) {
+        $page = $this->pageRepository->find($pageId);
+        if (empty($page)) {
             return new ApiErrorResponse("invalid_page_id");
         }
 
-        $page = null;
-        foreach ($item->pages() as $pageItem) {
-            if ((string) $pageItem['page']->id() === $pageId) {
-                $page = $pageItem['page'];
-            }
+        $sitemap = $this->sitemapRepository->find($page->sitemapId());
+        if (empty($sitemap)) {
+            return new ApiErrorResponse("invalid_page_id");
         }
 
         $content = [];
@@ -82,7 +75,7 @@ final class CreateAction implements MiddlewareInterface
         }
 
         $result = $this->commandBus->command(CreateVersionCommand::class, [
-            'pageType' => $item->pageType()::serviceName(),
+            'pageType' => $sitemap->pageType(),
             'pageId' => (string) $page->id(),
             'createdBy' => $request->getAttribute(User::class, null)->id(),
             'content' => $content,

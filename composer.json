@@ -13,6 +13,7 @@
     ],
     "require": {
         "php": "^7.1",
+        "ext-json": "*",
         "cocur/slugify": "^3.2",
         "ixocreate/admin-package": "^0.3",
         "ixocreate/application": "^0.2",

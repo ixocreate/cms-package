@@ -11,8 +11,8 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Admin\Container;
+use Ixocreate\Cms\Admin\Item;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,23 +21,23 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ListAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var Container
      */
-    private $adminContainer;
+    private $container;
 
     /**
-     * ListAction constructor.
-     * @param AdminContainer $adminContainer
+     * @param Container $container
      */
-    public function __construct(AdminContainer $adminContainer)
+    public function __construct(Container $container)
     {
-        $this->adminContainer = $adminContainer;
+        $this->container = $container;
     }
 
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -50,37 +50,49 @@ class ListAction implements MiddlewareInterface
             $pageType = $request->getQueryParams()['pageType'];
         }
 
-        $result = [];
-        $iterator = new \RecursiveIteratorIterator($this->adminContainer, \RecursiveIteratorIterator::SELF_FIRST);
-        /** @var AdminItem $item */
-        foreach ($iterator as $item) {
-            if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
-                $result[] = [
-                    'id' => $item->pages()[$locale]['page']->id(),
-                    'name' => $this->receiveFullName($item, $locale),
-                ];
+        $collection = $this->container->search(function (Item $item) use ($locale, $pageType) {
+            if ($pageType !== null && !$item->structureItem()->pageType() !== $pageType) {
+                return false;
             }
+
+            if (!$item->hasPage($locale)) {
+                return false;
+            }
+
+            return true;
+        });
+
+
+        $result = [];
+
+        /** @var Item $item */
+        foreach ($collection as $item) {
+            $result[] = [
+                'id' => $item->structureItem()->pageId($locale),
+                'name' => $this->receiveFullName($item, $locale)
+            ];
         }
 
         return new ApiSuccessResponse($result);
     }
 
     /**
-     * @param AdminItem $item
+     * @param Item $item
      * @param string $locale
      * @return string
+     * @throws \Exception
      */
-    private function receiveFullName(AdminItem $item, string $locale): string
+    private function receiveFullName(Item $item, string $locale): string
     {
         $name = '';
         if (!empty($item->parent())) {
             $name .= $this->receiveFullName($item->parent(), $locale) . ' / ';
         }
 
-        if (!\array_key_exists($locale, $item->pages())) {
+        if (!$item->hasPage($locale)) {
             return ' --- ';
         }
 
-        return $name . $item->pages()[$locale]['page']->name();
+        return $name . $item->structureItem()->pageData($locale)['name'];
     }
 }

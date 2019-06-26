@@ -12,11 +12,13 @@ namespace Ixocreate\Cms\Action\Page;
 use Doctrine\Common\Collections\Criteria;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Admin\Container;
+use Ixocreate\Cms\Admin\Item;
 use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Schema\Builder\BuilderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,11 +27,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class DetailAction implements MiddlewareInterface
 {
-    /**
-     * @var AdminContainer
-     */
-    private $adminContainer;
-
     /**
      * @var Config
      */
@@ -44,61 +41,72 @@ final class DetailAction implements MiddlewareInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+    /**
+     * @var Container
+     */
+    private $container;
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
 
     /**
      * DetailAction constructor.
-     * @param AdminContainer $adminContainer
      * @param Config $config
      * @param BuilderInterface $schemaBuilder
      * @param PageVersionRepository $pageVersionRepository
+     * @param PageRepository $pageRepository
+     * @param Container $container
      */
     public function __construct(
-        AdminContainer $adminContainer,
         Config $config,
         BuilderInterface $schemaBuilder,
-        PageVersionRepository $pageVersionRepository
+        PageVersionRepository $pageVersionRepository,
+        PageRepository $pageRepository,
+        Container $container
     ) {
-        $this->adminContainer = $adminContainer;
         $this->config = $config;
         $this->schemaBuilder = $schemaBuilder;
         $this->pageVersionRepository = $pageVersionRepository;
+        $this->pageRepository = $pageRepository;
+        $this->container = $container;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute("id");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
 
-            return false;
+        /** @var Page $page */
+        $page = $this->pageRepository->find($pageId);
+        if (empty($page)) {
+            return new ApiErrorResponse("invalid_page_id");
+        }
+
+        /** @var Item $item */
+        $item = $this->container->find(function (Item $item) use ($page){
+            return ($item->structureItem()->sitemapId() === (string) $page->sitemapId());
         });
-
         if (empty($item)) {
             return new ApiErrorResponse("invalid_page_id");
         }
 
         $result = $item->jsonSerialize();
+        $result['hasChildren'] = (\count($result['children']) > 0);
+        unset($result['children']);
+        unset($result['childrenAllowed']);
 
-        $page = null;
-        $localizedPages = [];
-        foreach ($item->pages() as $locale =>  $pageItem) {
-            if ((string) $pageItem['page']->id() === $pageId) {
-                $page = $pageItem;
+        $result['localizedPages'] = [];
+        foreach ($result['pages'] as $locale => $pageData) {
+            if ($locale === $page->locale()) {
+                $result['page'] = $pageData;
                 continue;
             }
-            $localizedPages[$locale] = $pageItem;
+
+            $result['localizedPages'][$locale] = $pageData;
         }
         unset($result['pages']);
-        if (empty($page)) {
-            return new ApiErrorResponse("invalid_page_id");
-        }
 
-        $page['version'] = [
+        $result['page']['version'] = [
             'head' => null,
             'approved' => null,
         ];
@@ -111,7 +119,7 @@ final class DetailAction implements MiddlewareInterface
         if ($pageVersion->count() > 0) {
             /** @var PageVersion $pageVersion */
             $pageVersion = $pageVersion->current();
-            $page['version']['approved'] = (string) $pageVersion->id();
+            $result['page']['version']['approved'] = (string) $pageVersion->id();
         }
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('pageId', $page['page']->id()));
@@ -121,15 +129,8 @@ final class DetailAction implements MiddlewareInterface
         if ($pageVersion->count() > 0) {
             /** @var PageVersion $pageVersion */
             $pageVersion = $pageVersion->current();
-            $page['version']['head'] = (string) $pageVersion->id();
+            $result['page']['version']['head'] = (string) $pageVersion->id();
         }
-
-        $result['page'] = $page;
-        $result['localizedPages'] = $localizedPages;
-
-        $result['hasChildren'] = (\count($result['children']) > 0);
-        unset($result['children'], $result['childrenAllowed']);
-
 
         $navigation = $this->config->navigation();
         $navigation = \array_map(function ($value) use ($item) {

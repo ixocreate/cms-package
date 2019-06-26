@@ -101,4 +101,12 @@ final class Structure implements Iterator, Countable
     {
         return $this->parent;
     }
+
+    /**
+     * @return StructureStore
+     */
+    public function structureStore(): StructureStore
+    {
+        return $this->structureStore;
+    }
 }

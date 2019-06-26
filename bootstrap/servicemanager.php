@@ -34,3 +34,4 @@ $serviceManager->addFactory(CmsRouter::class, CmsRouterFactory::class);
 $serviceManager->addFactory(PageRoute::class);
 $serviceManager->addFactory(StructureBuilder::class, StructureBuilderFactory::class);
 $serviceManager->addFactory(Container::class, ContainerFactory::class);
+$serviceManager->addFactory(\Ixocreate\Cms\Tree\Container::class, \Ixocreate\Cms\Tree\Factory\ContainerFactory);

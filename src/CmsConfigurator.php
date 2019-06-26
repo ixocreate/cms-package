@@ -18,10 +18,6 @@ use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\PageProvider;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\Cms\Site\Admin\AdminSearchInterface;
-use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
-use Ixocreate\Cms\Site\Tree\SearchInterface;
-use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\Cms\Tree\Filter\FilterInterface;
 use Ixocreate\Cms\Tree\FilterManager;
 

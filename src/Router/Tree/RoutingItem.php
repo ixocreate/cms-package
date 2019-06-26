@@ -12,8 +12,6 @@ namespace Ixocreate\Cms\Router\Tree;
 use Ixocreate\Cms\Action\Frontend\RenderAction;
 use Ixocreate\Cms\Middleware\LoadPageContentMiddleware;
 use Ixocreate\Cms\Middleware\LoadPageMiddleware;
-use Ixocreate\Cms\Middleware\LoadPageTypeMiddleware;
-use Ixocreate\Cms\Middleware\LoadSitemapMiddleware;
 use Ixocreate\Cms\PageType\MiddlewarePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
@@ -75,8 +73,6 @@ final class RoutingItem extends AbstractItem
 
         $middleware = [
             LoadPageMiddleware::class,
-            LoadSitemapMiddleware::class,
-            LoadPageTypeMiddleware::class,
             LoadPageContentMiddleware::class,
         ];
 

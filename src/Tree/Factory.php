@@ -44,8 +44,6 @@ final class Factory implements FactoryInterface
     {
         $hash = $structureItem->structureKey();
 
-        //TODO Hash
-
         if (!\array_key_exists($hash, $this->itemCache)) {
             $this->itemCache[$hash] = new Item($structureItem, $this, $this->pageTypeSubManager, $this->filterManager, $filter);
         }

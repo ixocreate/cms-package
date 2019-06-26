@@ -15,7 +15,6 @@ use Ixocreate\Cache\CacheableSubManager;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\CompiledGeneratorRoutesCacheable;
 use Ixocreate\Cms\Cacheable\CompiledMatcherRoutesCacheable;
-use Ixocreate\Cms\Cacheable\RouteCollectionCacheable;
 use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
@@ -28,15 +27,10 @@ final class CmsRouterFactory implements FactoryInterface
      * @param ServiceManagerInterface $container
      * @param $requestedName
      * @param array|null $options
-     * @throws \Psr\Cache\InvalidArgumentException
      * @return CmsRouter|mixed
      */
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
-        $routeCollection = $container
-            ->get(CacheManager::class)
-            ->fetch($container->get(CacheableSubManager::class)->get(RouteCollectionCacheable::class));
-
         $middlewareFactory = new MiddlewareFactory(new MiddlewareContainer($container->get(MiddlewareSubManager::class)));
 
         return new CmsRouter(

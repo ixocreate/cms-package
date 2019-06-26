@@ -20,7 +20,6 @@ use Symfony\Component\Routing\Generator\CompiledUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Zend\Expressive\MiddlewareFactory;
@@ -44,18 +43,22 @@ final class CmsRouter implements RouterInterface
      * @var MiddlewareFactory
      */
     private $middlewareFactory;
+
     /**
      * @var ApplicationUri
      */
     private $applicationUri;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var CompiledGeneratorRoutesCacheable
      */
     private $compiledGeneratorRoutesCacheable;
+
     /**
      * @var CompiledMatcherRoutesCacheable
      */
@@ -69,7 +72,8 @@ final class CmsRouter implements RouterInterface
      * @param CompiledGeneratorRoutesCacheable $compiledGeneratorRoutesCacheable
      * @param CompiledMatcherRoutesCacheable $compiledMatcherRoutesCacheable
      */
-    public function __construct(MiddlewareFactory $middlewareFactory,
+    public function __construct(
+        MiddlewareFactory $middlewareFactory,
         ApplicationUri $applicationUri,
         CacheManager $cacheManager,
         CompiledGeneratorRoutesCacheable $compiledGeneratorRoutesCacheable,
@@ -92,6 +96,7 @@ final class CmsRouter implements RouterInterface
 
         return $this->generator;
     }
+
     /**
      * @param Route $route
      */
@@ -102,8 +107,8 @@ final class CmsRouter implements RouterInterface
 
     /**
      * @param Request $request
-     * @return RouteResult
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return RouteResult
      */
     public function match(Request $request): RouteResult
     {
@@ -129,7 +134,7 @@ final class CmsRouter implements RouterInterface
             Route::HTTP_METHOD_ANY,
             $routeMatch['_route']
         );
-        $route->setOptions(['pageId' => $routeMatch['pageId']]);
+        $route->setOptions(['pageId' => $routeMatch['pageId'], 'structureKey' => $routeMatch['structureKey']]);
         unset($routeMatch['_route'], $routeMatch['middleware']);
 
         return RouteResult::fromRoute($route, $routeMatch);
@@ -152,8 +157,8 @@ final class CmsRouter implements RouterInterface
      * @param Page $page
      * @param array $params
      * @param string $routePrefix
-     * @return string
      * @throws \Exception
+     * @return string
      */
     public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
     {

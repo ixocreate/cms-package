@@ -26,9 +26,9 @@ final class SlugReplacement implements ReplacementInterface
      * @param RouteSpecification $routeSpecification
      * @param string $locale
      * @param RoutingItem $item
-     * @return RouteSpecification
      * @throws \Exception
      * @throws \Psr\Cache\InvalidArgumentException
+     * @return RouteSpecification
      */
     public function replace(
         RouteSpecification $routeSpecification,

@@ -21,7 +21,6 @@ final class PageRoute
      */
     private $cmsRouter;
 
-
     public function __construct(CmsRouter $cmsRouter)
     {
         $this->cmsRouter = $cmsRouter;

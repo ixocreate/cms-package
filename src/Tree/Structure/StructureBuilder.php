@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Tree\Structure;
@@ -112,8 +118,8 @@ final class StructureBuilder
     {
         $data = [];
 
-        $filteredData = \array_filter($array, function ($key) use ($prefix){
-            return (\substr($key, 0, \strlen($prefix)) === $prefix);
+        $filteredData = \array_filter($array, function ($key) use ($prefix) {
+            return \mb_substr($key, 0, \mb_strlen($prefix)) === $prefix;
         }, ARRAY_FILTER_USE_KEY);
 
         foreach ($filteredData as $key => $value) {

@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Cacheable;
@@ -18,14 +24,17 @@ final class CompiledMatcherRoutesCacheable implements CacheableInterface
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var StructureBuilder
      */
     private $structureBuilder;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var ReplacementManager
      */
@@ -44,8 +53,8 @@ final class CompiledMatcherRoutesCacheable implements CacheableInterface
     }
 
     /**
-     * @return array
      * @throws \Exception
+     * @return array
      */
     public function uncachedResult()
     {

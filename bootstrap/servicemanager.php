@@ -33,5 +33,3 @@ $serviceManager->addSubManager(ReplacementManager::class);
 $serviceManager->addFactory(CmsRouter::class, CmsRouterFactory::class);
 $serviceManager->addFactory(PageRoute::class);
 $serviceManager->addFactory(StructureBuilder::class, StructureBuilderFactory::class);
-
-

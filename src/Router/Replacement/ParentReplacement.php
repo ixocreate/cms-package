@@ -36,7 +36,7 @@ final class ParentReplacement implements ReplacementInterface
     ): void {
         $check = false;
         foreach ($routeSpecification->uris() as $name => $uri) {
-            if (\strpos($uri, '${PARENT}') === false) {
+            if (\mb_strpos($uri, '${PARENT}') === false) {
                 continue;
             }
 

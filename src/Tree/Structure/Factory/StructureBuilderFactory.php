@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Tree\Structure\Factory;
@@ -10,7 +16,6 @@ use Ixocreate\ServiceManager\ServiceManagerInterface;
 
 final class StructureBuilderFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName

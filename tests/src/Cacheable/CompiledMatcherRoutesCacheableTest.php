@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Test\Cms\Cacheable;
@@ -59,7 +65,7 @@ class CompiledMatcherRoutesCacheableTest extends TestCase
         $replacementSubManager->method('replacementServices')->willReturn($replacements);
 
         $structureBuilder = $this->createMock(StructureBuilder::class);
-        $structureBuilder->method('build')->willReturnCallback(function (){
+        $structureBuilder->method('build')->willReturnCallback(function () {
             return (new StructureStore(include 'tree.php'))->structure();
         });
 

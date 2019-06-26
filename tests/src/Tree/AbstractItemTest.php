@@ -16,6 +16,8 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Tree\AbstractItem;
 use Ixocreate\Cms\Tree\ContainerInterface;
 use Ixocreate\Cms\Tree\Factory;
+use Ixocreate\Cms\Tree\Filter\CallableFilter;
+use Ixocreate\Cms\Tree\FilterManager;
 use Ixocreate\Cms\Tree\ItemInterface;
 use Ixocreate\Cms\Tree\Structure\StructureStore;
 use Ixocreate\Schema\Type\DateTimeType;
@@ -49,7 +51,10 @@ class AbstractItemTest extends TestCase
         $pageTypeSubManager = $this->createMock(PageTypeSubManager::class);
         $pageTypeSubManager->method('get')->willReturn($this->createMock(PageTypeInterface::class));
 
-        $factory = new Factory($pageTypeSubManager);
+        $filterManager = $this->createMock(FilterManager::class);
+        $filterManager->method('get')->willReturn(new CallableFilter());
+
+        $factory = new Factory($pageTypeSubManager, $filterManager);
 
         $this->item = $factory->createItem((new StructureStore(include 'tree.php'))->structure()->current());
     }

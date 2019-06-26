@@ -13,6 +13,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Tree\ContainerInterface;
 use Ixocreate\Cms\Tree\FactoryInterface;
+use Ixocreate\Cms\Tree\FilterManager;
 use Ixocreate\Cms\Tree\ItemInterface;
 use Ixocreate\Cms\Tree\Structure\Structure;
 use Ixocreate\Cms\Tree\Structure\StructureItem;
@@ -33,16 +34,21 @@ final class Factory implements FactoryInterface
      * @var ReplacementManager
      */
     private $replacementManager;
+    /**
+     * @var FilterManager
+     */
+    private $filterManager;
 
-    public function __construct(PageTypeSubManager $pageTypeSubManager, ReplacementManager $replacementManager)
+    public function __construct(PageTypeSubManager $pageTypeSubManager, ReplacementManager $replacementManager, FilterManager $filterManager)
     {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->replacementManager = $replacementManager;
+        $this->filterManager = $filterManager;
     }
 
     public function createContainer(Structure $structure, array $filter = []): ContainerInterface
     {
-        return new RoutingContainer($structure, $this, $filter);
+        return new RoutingContainer($structure, $this, $this->filterManager, $filter);
     }
 
     public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface
@@ -57,6 +63,7 @@ final class Factory implements FactoryInterface
                 $this,
                 $this->pageTypeSubManager,
                 $this->replacementManager,
+                $this->filterManager,
                 $filter
             );
         }

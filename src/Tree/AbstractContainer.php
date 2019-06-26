@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Tree;
 
+use Ixocreate\Cms\Tree\Filter\CallableFilter;
 use Ixocreate\Cms\Tree\Structure\Structure;
 use Ixocreate\Cms\Tree\Structure\StructureItem;
 use Ixocreate\Collection\Collection;
@@ -36,11 +37,16 @@ class AbstractContainer implements ContainerInterface
      * @var array
      */
     private $filter = [];
+    /**
+     * @var FilterManager
+     */
+    private $filterManager;
 
-    public function __construct(Structure $structure, FactoryInterface $factory, array $filter = [])
+    public function __construct(Structure $structure, FactoryInterface $factory, FilterManager $filterManager, array $filter = [])
     {
         $this->structure = $structure;
         $this->factory = $factory;
+        $this->filterManager = $filterManager;
         $this->filter = $filter;
     }
 
@@ -121,19 +127,34 @@ class AbstractContainer implements ContainerInterface
         return $this->current();
     }
 
+    private function normalizeFilter($filter, array $params = []): array
+    {
+        if (\is_callable($filter)) {
+            $params['callable'] = $filter;
+            $filter = CallableFilter::serviceName();
+        }
+
+        return [
+            $filter,
+            $params,
+        ];
+    }
+
+
     /**
-     * @param callable $callable
+     * @param string|callable $filter
      * @param array $params
      * @return ItemInterface|null
      */
-    public function find(callable $callable, array $params = []): ?ItemInterface
+    public function find($filter, array $params = []): ?ItemInterface
     {
+        list($filter, $params) = $this->normalizeFilter($filter, $params);
         $return = null;
 
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
 
         foreach ($iterator as $item) {
-            if ($callable($item) === true && $this->doFilter($item)) {
+            if ($this->filterManager->get($filter)->filter($item, $params) === true && $this->doFilter($item)) {
                 $return = $item;
                 break;
             }
@@ -143,13 +164,15 @@ class AbstractContainer implements ContainerInterface
     }
 
     /**
-     * @param callable $callable
+     * @param string|callable $filter
      * @param array $params
      * @return ContainerInterface
      */
-    public function where(callable $callable, array $params = []): ContainerInterface
+    public function where($filter, array $params = []): ContainerInterface
     {
-        $item = $this->find($callable, $params);
+        list($filter, $params) = $this->normalizeFilter($filter, $params);
+
+        $item = $this->find($filter, $params);
         if (empty($item)) {
             return $this->factory->createContainer(
                 $this->structure->only(function () {
@@ -165,7 +188,7 @@ class AbstractContainer implements ContainerInterface
 
         $sitemapIds = [];
         foreach ($iterator as $iteratorItem) {
-            if ($callable($iteratorItem) === true && $this->doFilter($iteratorItem)) {
+            if ($this->filterManager->get($filter)->filter($iteratorItem, $params) === true && $this->doFilter($iteratorItem)) {
                 $sitemapIds[$iteratorItem->structureItem()->sitemapId()] = true;
             }
         }
@@ -191,17 +214,18 @@ class AbstractContainer implements ContainerInterface
     }
 
     /**
-     * @param callable $callable
+     * @param string|callable $filter
      * @param array $params
      * @return CollectionInterface
      */
-    public function search(callable $callable, array $params = []): CollectionInterface
+    public function search($filter, array $params = []): CollectionInterface
     {
+        list($filter, $params) = $this->normalizeFilter($filter, $params);
         $items = [];
 
         $iterator = new \RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $item) {
-            if ($callable($item) === true && $this->doFilter($item)) {
+            if ($this->filterManager->get($filter)->filter($item, $params) === true && $this->doFilter($item)) {
                 $items[$item->structureItem()->sitemapId()] = $item;
             }
         }
@@ -211,18 +235,24 @@ class AbstractContainer implements ContainerInterface
 
     private function doFilter(ItemInterface $item): bool
     {
-        foreach ($this->filter as $filter) {
-            if ($filter($item) === false) {
+        foreach ($this->filter as $data) {
+            list($filter, $params) = $data;
+            if ($this->filterManager->get($filter)->filter($item, $params) === false) {
                 return false;
             }
         }
         return true;
     }
 
-    public function filter(callable $callable, array $params = []): ContainerInterface
+    /**
+     * @param string|callable $filter
+     * @param array $params
+     * @return ContainerInterface
+     */
+    public function filter($filter, array $params = []): ContainerInterface
     {
         $container = clone $this;
-        $container->filter[] = $callable;
+        $container->filter[] = $this->normalizeFilter($filter, $params);
 
         return $container;
     }

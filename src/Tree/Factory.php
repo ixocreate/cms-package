@@ -24,15 +24,20 @@ final class Factory implements FactoryInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+    /**
+     * @var FilterManager
+     */
+    private $filterManager;
 
-    public function __construct(PageTypeSubManager $pageTypeSubManager)
+    public function __construct(PageTypeSubManager $pageTypeSubManager, FilterManager $filterManager)
     {
         $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->filterManager = $filterManager;
     }
 
     public function createContainer(Structure $structure, array $filter = []): ContainerInterface
     {
-        return new Container($structure, $this, $filter);
+        return new Container($structure, $this, $this->filterManager, $filter);
     }
 
     public function createItem(StructureItem $structureItem, array $filter = []): ItemInterface
@@ -42,7 +47,7 @@ final class Factory implements FactoryInterface
         //TODO Hash
 
         if (!\array_key_exists($hash, $this->itemCache)) {
-            $this->itemCache[$hash] = new Item($structureItem, $this, $this->pageTypeSubManager, $filter);
+            $this->itemCache[$hash] = new Item($structureItem, $this, $this->pageTypeSubManager, $this->filterManager, $filter);
         }
 
         return $this->itemCache[$hash];

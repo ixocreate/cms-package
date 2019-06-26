@@ -14,6 +14,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Router\RouteCollection;
 use Ixocreate\Cms\Router\Tree\Factory;
+use Ixocreate\Cms\Tree\FilterManager;
 use Ixocreate\Cms\Tree\Structure\StructureBuilder;
 use Ixocreate\Intl\LocaleManager;
 use Symfony\Component\Routing\Matcher\Dumper\CompiledUrlMatcherDumper;
@@ -39,17 +40,23 @@ final class CompiledMatcherRoutesCacheable implements CacheableInterface
      * @var ReplacementManager
      */
     private $replacementManager;
+    /**
+     * @var FilterManager
+     */
+    private $filterManager;
 
     public function __construct(
         LocaleManager $localeManager,
         StructureBuilder $structureBuilder,
         PageTypeSubManager $pageTypeSubManager,
-        ReplacementManager $replacementManager
+        ReplacementManager $replacementManager,
+        FilterManager $filterManager
     ) {
         $this->localeManager = $localeManager;
         $this->structureBuilder = $structureBuilder;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->replacementManager = $replacementManager;
+        $this->filterManager = $filterManager;
     }
 
     /**
@@ -61,7 +68,7 @@ final class CompiledMatcherRoutesCacheable implements CacheableInterface
         return (new CompiledUrlMatcherDumper(
             (new RouteCollection($this->localeManager))
                 ->build(
-                    (new Factory($this->pageTypeSubManager, $this->replacementManager))
+                    (new Factory($this->pageTypeSubManager, $this->replacementManager, $this->filterManager))
                         ->createContainer($this->structureBuilder->build())
                 )
         ))->getCompiledRoutes();

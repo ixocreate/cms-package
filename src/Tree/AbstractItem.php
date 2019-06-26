@@ -36,13 +36,14 @@ abstract class AbstractItem extends AbstractContainer implements ItemInterface
         StructureItem $structureItem,
         FactoryInterface $factory,
         PageTypeSubManager $pageTypeSubManager,
+        FilterManager $filterManager,
         array $filter = []
     ) {
         $this->structureItem = $structureItem;
         $this->factory = $factory;
         $this->pageTypeSubManager = $pageTypeSubManager;
 
-        parent::__construct($this->structureItem()->structure(), $factory, $filter);
+        parent::__construct($this->structureItem()->structure(), $factory, $filterManager, $filter);
     }
 
     /**

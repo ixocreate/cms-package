@@ -15,6 +15,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\Replacement\ParentReplacement;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Router\Replacement\SlugReplacement;
+use Ixocreate\Cms\Tree\FilterManager;
 use Ixocreate\Cms\Tree\Structure\StructureBuilder;
 use Ixocreate\Cms\Tree\Structure\StructureStore;
 use Ixocreate\Intl\LocaleConfigurator;
@@ -57,6 +58,8 @@ class CompiledGeneratorRoutesCacheableTest extends TestCase
         $pageTypeSubManager = $this->createMock(PageTypeSubManager::class);
         $pageTypeSubManager->method('get')->willReturn($this->createMock(PageTypeInterface::class));
 
+        $filterManager = $this->createMock(FilterManager::class);
+
         $replacementSubManager = $this->createMock(ReplacementManager::class);
         $replacements = [
             new ParentReplacement(),
@@ -73,7 +76,8 @@ class CompiledGeneratorRoutesCacheableTest extends TestCase
             $localeManager,
             $structureBuilder,
             $pageTypeSubManager,
-            $replacementSubManager
+            $replacementSubManager,
+            $filterManager
         );
     }
 

@@ -22,6 +22,7 @@ use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Router\RouteSpecification;
 use Ixocreate\Cms\Tree\AbstractItem;
 use Ixocreate\Cms\Tree\FactoryInterface;
+use Ixocreate\Cms\Tree\FilterManager;
 
 final class RoutingItem extends AbstractItem
 {
@@ -40,12 +41,14 @@ final class RoutingItem extends AbstractItem
         FactoryInterface $factory,
         PageTypeSubManager $pageTypeSubManager,
         ReplacementManager $replacementManager,
+        FilterManager $filterManager,
         array $filter = []
     ) {
         parent::__construct(
             $structureItem,
             $factory,
             $pageTypeSubManager,
+            $filterManager,
             $filter
         );
         $this->replacementManager = $replacementManager;

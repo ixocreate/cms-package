@@ -13,6 +13,8 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Tree\AbstractContainer;
 use Ixocreate\Cms\Tree\Factory;
+use Ixocreate\Cms\Tree\Filter\CallableFilter;
+use Ixocreate\Cms\Tree\FilterManager;
 use Ixocreate\Cms\Tree\ItemInterface;
 use Ixocreate\Cms\Tree\Structure\StructureStore;
 use Ixocreate\Collection\CollectionInterface;
@@ -47,7 +49,10 @@ class AbstractContainerTest extends TestCase
         $pageTypeSubManager = $this->createMock(PageTypeSubManager::class);
         $pageTypeSubManager->method('get')->willReturn($this->createMock(PageTypeInterface::class));
 
-        $factory = new Factory($pageTypeSubManager);
+        $filterManager = $this->createMock(FilterManager::class);
+        $filterManager->method('get')->willReturn(new CallableFilter());
+
+        $factory = new Factory($pageTypeSubManager, $filterManager);
 
         $this->container = $factory->createContainer((new StructureStore(include 'tree.php'))->structure());
     }

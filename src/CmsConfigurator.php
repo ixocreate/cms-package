@@ -22,6 +22,8 @@ use Ixocreate\Cms\Site\Admin\AdminSearchInterface;
 use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Tree\Filter\FilterInterface;
+use Ixocreate\Cms\Tree\FilterManager;
 
 final class CmsConfigurator implements ConfiguratorInterface
 {
@@ -48,12 +50,7 @@ final class CmsConfigurator implements ConfiguratorInterface
     /**
      * @var SubManagerConfigurator
      */
-    private $treeSearchSubManagerConfigurator;
-
-    /**
-     * @var SubManagerConfigurator
-     */
-    private $adminSearchSubManagerConfigurator;
+    private $treeFilterSubManagerConfigurator;
 
     /**
      * @var SubManagerConfigurator
@@ -69,13 +66,9 @@ final class CmsConfigurator implements ConfiguratorInterface
             XmlSitemapProviderSubManager::class,
             XmlSitemapProviderInterface::class
         );
-        $this->treeSearchSubManagerConfigurator = new SubManagerConfigurator(
-            SearchSubManager::class,
-            SearchInterface::class
-        );
-        $this->adminSearchSubManagerConfigurator = new SubManagerConfigurator(
-            AdminSearchSubManager::class,
-            AdminSearchInterface::class
+        $this->treeFilterSubManagerConfigurator = new SubManagerConfigurator(
+            FilterManager::class,
+            FilterInterface::class
         );
         $this->replacementManagerConfigurator = new SubManagerConfigurator(
             ReplacementManager::class,
@@ -149,18 +142,9 @@ final class CmsConfigurator implements ConfiguratorInterface
      * @param string $name
      * @param string|null $factory
      */
-    public function addTreeSearchable(string $name, ?string $factory = null): void
+    public function addTreeFilter(string $name, ?string $factory = null): void
     {
-        $this->treeSearchSubManagerConfigurator->addService($name, $factory);
-    }
-
-    /**
-     * @param string $name
-     * @param string|null $factory
-     */
-    public function addAdminSearchable(string $name, ?string $factory = null): void
-    {
-        $this->adminSearchSubManagerConfigurator->addService($name, $factory);
+        $this->treeFilterSubManagerConfigurator->addService($name, $factory);
     }
 
     /**
@@ -181,8 +165,7 @@ final class CmsConfigurator implements ConfiguratorInterface
         $serviceRegistry->add(Config::class, new Config($this));
 
         $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
-        $this->treeSearchSubManagerConfigurator->registerService($serviceRegistry);
-        $this->adminSearchSubManagerConfigurator->registerService($serviceRegistry);
+        $this->treeFilterSubManagerConfigurator->registerService($serviceRegistry);
         $this->replacementManagerConfigurator->registerService($serviceRegistry);
     }
 }

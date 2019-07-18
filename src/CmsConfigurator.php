@@ -22,6 +22,7 @@ use Ixocreate\Cms\Site\Admin\AdminSearchInterface;
 use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Strategy\Full\Strategy;
 
 final class CmsConfigurator implements ConfiguratorInterface
 {
@@ -59,6 +60,11 @@ final class CmsConfigurator implements ConfiguratorInterface
      * @var SubManagerConfigurator
      */
     private $replacementManagerConfigurator;
+
+    /**
+     * @var string
+     */
+    private $strategy = Strategy::class;
 
     /**
      * CmsConfigurator constructor.
@@ -134,6 +140,22 @@ final class CmsConfigurator implements ConfiguratorInterface
     public function setRobotsTemplate(string $robotsTemplate)
     {
         $this->robotsTemplate = $robotsTemplate;
+    }
+
+    public function setStrategy(string $strategy): void
+    {
+        //TODO check
+        $this->strategy = $strategy;
+    }
+
+    public function enableFullStrategy(): void
+    {
+        $this->strategy = Strategy::class;
+    }
+
+    public function getStrategy(): string
+    {
+        return $this->strategy;
     }
 
     /**

@@ -30,6 +30,11 @@ final class Config implements SerializableServiceInterface
     private $robotsTemplate;
 
     /**
+     * @var
+     */
+    private $strategy;
+
+    /**
      * Config constructor.
      *
      * @param CmsConfigurator $configurator
@@ -39,6 +44,7 @@ final class Config implements SerializableServiceInterface
         $this->navigation = $configurator->getNavigation();
         $this->robotsNoIndex = $configurator->getRobotsNoIndex();
         $this->robotsTemplate = $configurator->getRobotsTemplate();
+        $this->strategy = $configurator->getStrategy();
     }
 
     /**
@@ -68,12 +74,21 @@ final class Config implements SerializableServiceInterface
     /**
      * @return string
      */
+    public function strategy(): string
+    {
+        return $this->strategy;
+    }
+
+    /**
+     * @return string
+     */
     public function serialize()
     {
         return \serialize([
             'navigation' => $this->navigation,
             'robotsNoIndex' => $this->robotsNoIndex,
             'robotsTemplate' => $this->robotsTemplate,
+            'strategy' => $this->strategy,
         ]);
     }
 
@@ -87,5 +102,6 @@ final class Config implements SerializableServiceInterface
         $this->navigation = $unserialized['navigation'];
         $this->robotsNoIndex = $unserialized['robotsNoIndex'];
         $this->robotsTemplate = $unserialized['robotsTemplate'];
+        $this->strategy = $unserialized['strategy'];
     }
 }

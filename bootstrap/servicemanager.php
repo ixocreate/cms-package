@@ -29,6 +29,8 @@ use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Strategy\Strategy;
+use Ixocreate\Cms\Strategy\StrategyFactory;
 
 /** @var ServiceManagerConfigurator $serviceManager */
 $serviceManager->addSubManager(PageTypeSubManager::class);
@@ -46,3 +48,6 @@ $serviceManager->addFactory(AdminContainer::class, AdminContainerFactory::class)
 $serviceManager->addService(DatabasePageLoader::class, DatabasePageLoaderFactory::class);
 $serviceManager->addService(DatabaseSitemapLoader::class, DatabaseSitemapLoaderFactory::class);
 $serviceManager->addService(StructureBuilder::class, StructureBuilderFactory::class);
+
+$serviceManager->addFactory(Strategy::class, StrategyFactory::class);
+$serviceManager->addFactory(\Ixocreate\Cms\Strategy\Full\Strategy::class, \Ixocreate\Cms\Strategy\Full\StrategyFactory::class);

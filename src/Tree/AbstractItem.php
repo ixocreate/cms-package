@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Tree;
 
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\Strategy\LoaderInterface;
 use Ixocreate\Cms\Strategy\StructureInterface;
@@ -134,12 +136,69 @@ abstract class AbstractItem implements ItemInterface
     }
 
     /**
+     * @return Sitemap
+     */
+    final public function sitemap(): Sitemap
+    {
+        return $this->structure()->sitemap();
+    }
+
+    /**
+     * @param string $locale
+     * @return bool
+     */
+    final public function hasPage(string $locale): bool
+    {
+        return $this->structure()->hasPage($locale);
+    }
+
+    /**
+     * @param string $locale
+     * @return Page
+     */
+    final public function page(string $locale): Page
+    {
+        return $this->structure()->page($locale);
+    }
+
+    /**
      * @param array $ids
      * @return ContainerInterface
      */
     final public function only(array $ids): ContainerInterface
     {
-        return $this->container()->only($ids);
+        $item = clone $this;
+        $item->container = $this->container()->only($ids);
+
+        return $item;
+    }
+
+    /**
+     * @param string $locale
+     * @return bool
+     */
+    final public function isOnline(string $locale): bool
+    {
+        if (!$this->hasPage($locale)) {
+            return false;
+        }
+
+        if (!$this->page($locale)->isOnline()) {
+            return false;
+        }
+
+        $parent = $this->parent();
+
+        if (empty($parent)) {
+            return true;
+        }
+
+        return $parent->isOnline($locale);
+    }
+
+    public function navigation(string $locale): array
+    {
+        return $this->structure()->navigation($locale);
     }
 
     /**

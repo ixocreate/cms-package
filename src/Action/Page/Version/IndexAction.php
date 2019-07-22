@@ -15,9 +15,8 @@ use Ixocreate\Admin\Repository\UserRepository;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,21 +39,24 @@ final class IndexAction implements MiddlewareInterface
      * @var UserRepository
      */
     private $userRepository;
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
 
     /**
      * IndexAction constructor.
-     * @param AdminContainer $adminContainer
      * @param PageVersionRepository $pageVersionRepository
      * @param UserRepository $userRepository
      */
     public function __construct(
-        AdminContainer $adminContainer,
         PageVersionRepository $pageVersionRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        PageRepository $pageRepository
     ) {
         $this->pageVersionRepository = $pageVersionRepository;
-        $this->adminContainer = $adminContainer;
         $this->userRepository = $userRepository;
+        $this->pageRepository = $pageRepository;
     }
 
     /**
@@ -65,18 +67,9 @@ final class IndexAction implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute("pageId");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
+        $page = $this->pageRepository->find($pageId);
 
-            return false;
-        });
-
-        if (empty($item)) {
+        if (empty($page)) {
             return new ApiErrorResponse("invalid_page_id");
         }
 

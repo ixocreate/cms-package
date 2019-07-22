@@ -11,8 +11,9 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Tree\AdminTreeFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,26 +22,35 @@ use Psr\Http\Server\RequestHandlerInterface;
 class IndexSubSitemapAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var SitemapRepository
      */
-    private $adminContainer;
+    private $sitemapRepository;
+    /**
+     * @var AdminTreeFactory
+     */
+    private $adminTreeFactory;
 
     public function __construct(
-        AdminContainer $adminContainer
+        SitemapRepository $sitemapRepository,
+        AdminTreeFactory $adminTreeFactory
     ) {
-        $this->adminContainer = $adminContainer;
+        $this->sitemapRepository = $sitemapRepository;
+        $this->adminTreeFactory = $adminTreeFactory;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $handle = $request->getAttribute("handle");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
-            return $item->sitemap()->handle() === $handle;
-        });
+        /** @var Sitemap $sitemap */
+        $sitemap = $this->sitemapRepository->findOneBy([
+            'handle' => $handle
+        ]);
 
-        if (empty($item)) {
+        if (empty($sitemap)) {
             return new ApiErrorResponse('invalid_handle');
         }
+
+        $item = $this->adminTreeFactory->createItem((string) $sitemap->id());
 
         return new ApiSuccessResponse([
             'items' => [$item],

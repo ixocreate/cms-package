@@ -11,8 +11,8 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Tree\AdminItem;
+use Ixocreate\Cms\Tree\AdminTreeFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,17 +21,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ListAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var AdminTreeFactory
      */
-    private $adminContainer;
+    private $adminTreeFactory;
 
     /**
      * ListAction constructor.
-     * @param AdminContainer $adminContainer
      */
-    public function __construct(AdminContainer $adminContainer)
+    public function __construct(AdminTreeFactory $adminTreeFactory)
     {
-        $this->adminContainer = $adminContainer;
+        $this->adminTreeFactory = $adminTreeFactory;
     }
 
     /**
@@ -50,13 +49,15 @@ class ListAction implements MiddlewareInterface
             $pageType = $request->getQueryParams()['pageType'];
         }
 
+
+
         $result = [];
-        $iterator = new \RecursiveIteratorIterator($this->adminContainer, \RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new \RecursiveIteratorIterator($this->adminTreeFactory->createRoot(), \RecursiveIteratorIterator::SELF_FIRST);
         /** @var AdminItem $item */
         foreach ($iterator as $item) {
-            if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
+            if ($item->hasPage($locale) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
                 $result[] = [
-                    'id' => $item->pages()[$locale]['page']->id(),
+                    'id' => $item->page($locale)->id(),
                     'name' => $this->receiveFullName($item, $locale),
                 ];
             }
@@ -77,10 +78,10 @@ class ListAction implements MiddlewareInterface
             $name .= $this->receiveFullName($item->parent(), $locale) . ' / ';
         }
 
-        if (!\array_key_exists($locale, $item->pages())) {
+        if (!$item->hasPage($locale)) {
             return ' --- ';
         }
 
-        return $name . $item->pages()[$locale]['page']->name();
+        return $name . $item->page($locale)->name();
     }
 }

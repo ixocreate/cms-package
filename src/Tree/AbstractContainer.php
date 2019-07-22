@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Tree;
 
 use ArrayIterator;
+use Closure;
 use Ixocreate\Cms\Strategy\LoaderInterface;
-use Ixocreate\Collection\ArrayCollection;
+use Ixocreate\Cms\Tree\Mutatable\CallbackMutatable;
+use Ixocreate\Cms\Tree\Searchable\CallbackSearchable;
+use Ixocreate\Collection\Collection;
 use Ixocreate\Collection\CollectionInterface;
 use RecursiveIteratorIterator;
 
@@ -100,6 +103,11 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function filter($searchable, array $params = []): ContainerInterface
     {
+        if ($searchable instanceof Closure) {
+            $params['callback'] = $searchable;
+            $searchable = CallbackSearchable::class;
+        }
+
         $mutationCollection = $this->mutationCollection->addFilter($searchable, $params);
 
         return $this->treeFactory->createContainer($this->ids, $mutationCollection);
@@ -112,6 +120,11 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function map($mutatable, array $params = []): ContainerInterface
     {
+        if ($mutatable instanceof Closure) {
+            $params['callback'] = $mutatable;
+            $mutatable = CallbackMutatable::class;
+        }
+
         $mutationCollection = $this->mutationCollection->addMap($mutatable, $params);
 
         return $this->treeFactory->createContainer($this->ids, $mutationCollection);
@@ -124,6 +137,11 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function where($searchable, array $params = []): ContainerInterface
     {
+        if ($searchable instanceof Closure) {
+            $params['callback'] = $searchable;
+            $searchable = CallbackSearchable::class;
+        }
+
         $item = $this->findOne($searchable, $params);
         if (empty($item)) {
             return $this->treeFactory->createContainer([], $this->mutationCollection);
@@ -142,7 +160,7 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function flatten(): CollectionInterface
     {
-        return new ArrayCollection(function () {
+        return new Collection(function () {
             $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
             /** @var ItemInterface $item */
             foreach ($iterator as $item) {
@@ -158,7 +176,12 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function find($searchable, array $params = []): CollectionInterface
     {
-        return new ArrayCollection(function () use ($searchable, $params){
+        if ($searchable instanceof Closure) {
+            $params['callback'] = $searchable;
+            $searchable = CallbackSearchable::class;
+        }
+
+        return new Collection(function () use ($searchable, $params){
             $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
             /** @var ItemInterface $item */
             foreach ($iterator as $item) {
@@ -176,6 +199,11 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function findOne($searchable, array $params = []): ?ItemInterface
     {
+        if ($searchable instanceof Closure) {
+            $params['callback'] = $searchable;
+            $searchable = CallbackSearchable::class;
+        }
+
         $foundItem = null;
 
         $iterator = new RecursiveIteratorIterator($this, RecursiveIteratorIterator::SELF_FIRST);
@@ -195,7 +223,7 @@ abstract class AbstractContainer implements ContainerInterface
      */
     final public function current()
     {
-        $item = $this->treeFactory->createItem($this->iterator()->current());
+        $item = $this->treeFactory->createItem($this->iterator()->current(), $this->mutationCollection);
 
         if ($this->mutationCollection->hasMap() === true) {
             foreach ($this->mutationCollection->map() as $map) {

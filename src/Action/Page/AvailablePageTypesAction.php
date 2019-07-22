@@ -11,11 +11,10 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
+use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -24,28 +23,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AvailablePageTypesAction implements MiddlewareInterface
 {
     /**
-     * @var DatabaseSitemapLoader
-     */
-    private $databaseSitemapLoader;
-
-    /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
 
     /**
-     * @var AdminContainer
+     * @var SitemapRepository
      */
-    private $adminContainer;
+    private $sitemapRepository;
 
+    /**
+     * AvailablePageTypesAction constructor.
+     * @param PageTypeSubManager $pageTypeSubManager
+     * @param SitemapRepository $sitemapRepository
+     */
     public function __construct(
-        DatabaseSitemapLoader $databaseSitemapLoader,
         PageTypeSubManager $pageTypeSubManager,
-        AdminContainer $adminContainer
+        SitemapRepository $sitemapRepository
     ) {
-        $this->databaseSitemapLoader = $databaseSitemapLoader;
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->adminContainer = $adminContainer;
+        $this->sitemapRepository = $sitemapRepository;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -54,20 +51,18 @@ class AvailablePageTypesAction implements MiddlewareInterface
         $parentPageType = null;
 
         if (!empty($parentSitemapId)) {
-            /** @var AdminItem $item */
-            $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($parentSitemapId) {
-                return (string) $item->sitemap()->id() === $parentSitemapId;
-            });
+            /** @var Sitemap $sitemap */
+            $sitemap = $this->sitemapRepository->find($parentSitemapId);
 
-            if (empty($item)) {
+            if (empty($sitemap)) {
                 return new ApiErrorResponse("invalid_parentSitemapId");
             }
 
-            $parentPageType = $item->pageType()::serviceName();
+            $parentPageType = $sitemap->pageType();
         }
 
         $result = [];
-        $allowedPageTypes = $this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles(), $parentPageType);
+        $allowedPageTypes = $this->pageTypeSubManager->allowedPageTypes($this->sitemapRepository->receiveUsedHandles(), $parentPageType);
         foreach ($allowedPageTypes as $allowedPageType) {
             /** @var PageTypeInterface $allowedPageType */
             $allowedPageType = $this->pageTypeSubManager->get($allowedPageType);

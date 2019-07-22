@@ -18,11 +18,13 @@ use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Seo\Sitemap\PageProvider;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderInterface;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
-use Ixocreate\Cms\Site\Admin\AdminSearchInterface;
-use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
 use Ixocreate\Cms\Site\Tree\SearchInterface;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\Cms\Strategy\Full\Strategy;
+use Ixocreate\Cms\Tree\Mutatable\MutatableInterface;
+use Ixocreate\Cms\Tree\Mutatable\MutatableSubManager;
+use Ixocreate\Cms\Tree\Searchable\SearchableInterface;
+use Ixocreate\Cms\Tree\Searchable\SearchableSubManager;
 
 final class CmsConfigurator implements ConfiguratorInterface
 {
@@ -54,17 +56,22 @@ final class CmsConfigurator implements ConfiguratorInterface
     /**
      * @var SubManagerConfigurator
      */
-    private $adminSearchSubManagerConfigurator;
-
-    /**
-     * @var SubManagerConfigurator
-     */
     private $replacementManagerConfigurator;
 
     /**
      * @var string
      */
     private $strategy = Strategy::class;
+
+    /**
+     * @var SubManagerConfigurator
+     */
+    private $mutatableSubManagerConfigurator;
+
+    /**
+     * @var SubManagerConfigurator
+     */
+    private $searchablehSubManagerConfigurator;
 
     /**
      * CmsConfigurator constructor.
@@ -79,10 +86,15 @@ final class CmsConfigurator implements ConfiguratorInterface
             SearchSubManager::class,
             SearchInterface::class
         );
-        $this->adminSearchSubManagerConfigurator = new SubManagerConfigurator(
-            AdminSearchSubManager::class,
-            AdminSearchInterface::class
+        $this->mutatableSubManagerConfigurator = new SubManagerConfigurator(
+            MutatableSubManager::class,
+            MutatableInterface::class
         );
+        $this->searchablehSubManagerConfigurator = new SubManagerConfigurator(
+            SearchableSubManager::class,
+            SearchableInterface::class
+        );
+
         $this->replacementManagerConfigurator = new SubManagerConfigurator(
             ReplacementManager::class,
             ReplacementInterface::class
@@ -144,7 +156,6 @@ final class CmsConfigurator implements ConfiguratorInterface
 
     public function setStrategy(string $strategy): void
     {
-        //TODO check
         $this->strategy = $strategy;
     }
 
@@ -180,9 +191,18 @@ final class CmsConfigurator implements ConfiguratorInterface
      * @param string $name
      * @param string|null $factory
      */
-    public function addAdminSearchable(string $name, ?string $factory = null): void
+    public function addSearchable(string $name, ?string $factory = null): void
     {
-        $this->adminSearchSubManagerConfigurator->addService($name, $factory);
+        $this->searchablehSubManagerConfigurator->addService($name, $factory);
+    }
+
+    /**
+     * @param string $name
+     * @param string|null $factory
+     */
+    public function addMutatable(string $name, ?string $factory = null): void
+    {
+        $this->mutatableSubManagerConfigurator->addService($name, $factory);
     }
 
     /**
@@ -204,7 +224,8 @@ final class CmsConfigurator implements ConfiguratorInterface
 
         $this->xmlSitemapSubManagerConfigurator->registerService($serviceRegistry);
         $this->treeSearchSubManagerConfigurator->registerService($serviceRegistry);
-        $this->adminSearchSubManagerConfigurator->registerService($serviceRegistry);
         $this->replacementManagerConfigurator->registerService($serviceRegistry);
+        $this->mutatableSubManagerConfigurator->registerService($serviceRegistry);
+        $this->searchablehSubManagerConfigurator->registerService($serviceRegistry);
     }
 }

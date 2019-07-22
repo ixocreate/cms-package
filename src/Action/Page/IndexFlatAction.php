@@ -11,8 +11,13 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Tree\AdminItem;
+use Ixocreate\Cms\Tree\AdminTreeFactory;
+use Ixocreate\Cms\Tree\MutationCollection;
+use Ixocreate\Collection\Collection;
+use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,46 +25,70 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class IndexFlatAction implements MiddlewareInterface
 {
+
     /**
-     * @var AdminContainer
+     * @var SitemapRepository
      */
-    private $adminContainer;
+    private $sitemapRepository;
+    /**
+     * @var AdminTreeFactory
+     */
+    private $adminTreeFactory;
+    /**
+     * @var LocaleManager
+     */
+    private $localeManager;
 
     public function __construct(
-        AdminContainer $adminContainer
+        SitemapRepository $sitemapRepository,
+        AdminTreeFactory $adminTreeFactory,
+        LocaleManager $localeManager
     ) {
-        $this->adminContainer = $adminContainer;
+        $this->sitemapRepository = $sitemapRepository;
+        $this->adminTreeFactory = $adminTreeFactory;
+        $this->localeManager = $localeManager;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $handle = $request->getAttribute('handle');
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
-            return $item->sitemap()->handle() === $handle;
-        });
+        /** @var Sitemap $sitemap */
+        $sitemap = $this->sitemapRepository->findOneBy([
+            'handle' => $handle
+        ]);
 
-        if (empty($item)) {
+        if (empty($sitemap)) {
             return new ApiErrorResponse('invalid_handle');
         }
 
-        $children = $item->children();
+        $item = $this->adminTreeFactory->createItem((string) $sitemap->id(), new MutationCollection());
+
+        $children = new Collection(
+            $item->below()->flatten()->toArray()
+        );
 
         if (!empty($request->getQueryParams()['search'])) {
             $search = $request->getQueryParams()['search'];
             $children = $children->filter(function (AdminItem $item) use ($search) {
-                foreach ($item->pages() as $padeData) {
-                    if (\mb_stripos($padeData['page']->name(), $search) !== false) {
-                        return true;
+                $check = false;
+                foreach ($this->localeManager->all() as $locale) {
+                    $locale = $locale['locale'];
+                    if (!$item->hasPage($locale)) {
+                        continue;
+                    }
+
+                    $page = $item->page($locale);
+                    if (\mb_stripos($page->name(), $search) !== false) {
+                        $check = true;
+                        break;
                     }
                 }
 
-                return false;
+                return $check;
             });
         }
 
         $count = $children->count();
-        $children = $item->flatten();
-
         $offset = 0;
         $limit = 0;
         if (!empty($request->getQueryParams()['offset'])) {
@@ -73,12 +102,12 @@ class IndexFlatAction implements MiddlewareInterface
             }
         }
 
-        $children = $children->paginate($limit, $offset);
+        $children = $children->slice($offset, $limit);
 
         return new ApiSuccessResponse([
-            'items' => $children->jsonSerialize(),
+            'items' => \array_values($children->toArray()),
             'meta' => [
-                'parentSitemapId' => $item->sitemap()->id(),
+                'parentSitemapId' => $sitemap->id(),
                 'count' => $count,
             ],
         ]);

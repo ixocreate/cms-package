@@ -68,16 +68,39 @@ final class Structure implements StructureInterface
      */
     public function sitemap(): Sitemap
     {
-        //TODO
+        return new Sitemap([
+            'id' => $this->id(),
+            'parentId' => $this->data[0][0],
+            'nestedLeft' => $this->data[0][1],
+            'nestedRight' => $this->data[0][2],
+            'pageType' => $this->data[0][3],
+            'handle' => $this->data[0][4],
+        ]);
     }
 
     /**
      * @param string $locale
      * @return Page
+     * @throws \Psr\Cache\InvalidArgumentException
      */
     public function page(string $locale): Page
     {
-        //TODO
+        foreach ($this->data[1] as $pageData) {
+            if ($pageData[0] === $locale) {
+                return $this->cacheManager->fetch($this->pageCacheable->withPageId($pageData[1]));
+            }
+        }
+    }
+
+    public function hasPage(string $locale): bool
+    {
+        foreach ($this->data[1] as $pageData) {
+            if ($pageData[0] === $locale) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -87,6 +110,7 @@ final class Structure implements StructureInterface
     public function navigation(string $locale): array
     {
         if (empty($this->navigation[$locale])) {
+            $this->navigation[$locale] = [];
             foreach ($this->data[2] as $navigationData) {
                 if ($navigationData[0] === $locale) {
                     continue;
@@ -104,7 +128,7 @@ final class Structure implements StructureInterface
      */
     public function handle(): ?string
     {
-        //TODO
+        return $this->data[0][4];
     }
 
     /**
@@ -112,7 +136,7 @@ final class Structure implements StructureInterface
      */
     public function pageType(): string
     {
-        //TODO
+        return $this->data[0][3];
     }
 
     /**
@@ -125,7 +149,7 @@ final class Structure implements StructureInterface
 
     public function parent(): ?string
     {
-        //TODO
+        return $this->data[0][0];
     }
 
     public function level(): int

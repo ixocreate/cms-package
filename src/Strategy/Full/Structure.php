@@ -84,11 +84,31 @@ final class Structure implements StructureInterface
 
     /**
      * @param string $locale
+     * @return bool
+     */
+    public function hasPage(string $locale): bool
+    {
+        if (!empty($this->pages[$locale])) {
+            return true;
+        }
+
+        foreach ($this->data[1] as $page) {
+            if ($page->locale() !== $locale) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $locale
      * @return array
      */
     public function navigation(string $locale): array
     {
         if (empty($this->navigation[$locale])) {
+            $this->navigation[$locale] = [];
             foreach ($this->data[2] as $navigationData) {
                 if ($navigationData[0] === $locale) {
                     continue;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Strategy\Full;
+namespace Ixocreate\Cms\Strategy\Essential;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Strategy\StrategyInterface;
@@ -9,7 +9,7 @@ use Ixocreate\Cms\Strategy\StructureInterface;
 
 final class Strategy implements StrategyInterface
 {
-    public const CACHE_KEY = 'strategy.full';
+    public const CACHE_KEY = 'strategy.essential';
 
     /**
      * @var Loader

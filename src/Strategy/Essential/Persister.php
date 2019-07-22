@@ -7,9 +7,11 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Ixocreate\Cache\CacheInterface;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Strategy\PersisterInterface;
 use SplFixedArray;
 
-final class Persister
+final class Persister implements PersisterInterface
 {
     /**
      * @var EntityManagerInterface
@@ -30,7 +32,7 @@ final class Persister
         $this->cache = $cache;
     }
 
-    public function persist(): void
+    public function persistSitemap(): void
     {
         list($root, $tree) = $this->createSitemapTree();
         $this->createPageData($tree);
@@ -137,5 +139,15 @@ final class Persister
                 $tree[$item['sitemapId']]['navigation'][$item['locale']] = $navigation[$item['id']];
             }
         }
+    }
+
+    public function persistNavigation(Page $page): void
+    {
+        $this->persistSitemap();
+    }
+
+    public function persistPage(Page $page): void
+    {
+
     }
 }

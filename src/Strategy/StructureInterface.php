@@ -20,6 +20,12 @@ interface StructureInterface
 
     /**
      * @param string $locale
+     * @return bool
+     */
+    public function hasPage(string $locale): bool;
+
+    /**
+     * @param string $locale
      * @return Page
      */
     public function page(string $locale): Page;

@@ -9,7 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
-use Ixocreate\Cache\CacheInterface;
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -53,11 +54,15 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
      * @var EventDispatcher
      */
     private $eventDispatcher;
-
     /**
-     * @var CacheInterface
+     * @var CacheManager
      */
-    private $cache;
+    private $cacheManager;
+    /**
+     * @var PageVersionCacheable
+     */
+    private $pageVersionCacheable;
+
 
     /**
      * CreateVersionCommand constructor.
@@ -67,7 +72,8 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
      * @param SitemapRepository $sitemapRepository
      * @param PageTypeSubManager $pageTypeSubManager
      * @param EventDispatcher $eventDispatcher
-     * @param CacheInterface $cms
+     * @param CacheManager $cacheManager
+     * @param PageVersionCacheable $pageVersionCacheable
      */
     public function __construct(
         PageVersionRepository $pageVersionRepository,
@@ -75,14 +81,16 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
         SitemapRepository $sitemapRepository,
         PageTypeSubManager $pageTypeSubManager,
         EventDispatcher $eventDispatcher,
-        CacheInterface $cms
+        CacheManager $cacheManager,
+        PageVersionCacheable $pageVersionCacheable
     ) {
         $this->pageVersionRepository = $pageVersionRepository;
         $this->pageRepository = $pageRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->eventDispatcher = $eventDispatcher;
-        $this->cache = $cms;
+        $this->cacheManager = $cacheManager;
+        $this->pageVersionCacheable = $pageVersionCacheable;
     }
 
     /**
@@ -135,7 +143,10 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
         $pageVersion = $this->pageVersionRepository->save($pageVersion);
 
         if ($this->dataValue("approve") === true) {
-            $this->cache->clear();
+            $this->cacheManager->fetch(
+                $this->pageVersionCacheable->withPageId((string)$page->id()),
+                true
+            );
         }
 
         $pageEvent = new PageEvent(

@@ -46,10 +46,22 @@ interface ItemInterface extends ContainerInterface
     public function hasPage(string $locale): bool;
 
     /**
+     * @param string $pageId
+     * @return bool
+     */
+    public function hasPageId(string $pageId): bool;
+
+    /**
      * @param string $locale
      * @return Page
      */
     public function page(string $locale): Page;
+
+    /**
+     * @param string $pageId
+     * @return Page
+     */
+    public function pageById(string $pageId): Page;
 
     /**
      * @param string $locale

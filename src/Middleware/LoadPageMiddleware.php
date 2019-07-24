@@ -10,9 +10,8 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Middleware;
 
 use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
-use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Tree\MutationCollection;
+use Ixocreate\Cms\Tree\TreeFactory;
 use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -33,28 +32,20 @@ final class LoadPageMiddleware implements MiddlewareInterface
     private $notFoundHandler;
 
     /**
-     * @var PageCacheable
+     * @var TreeFactory
      */
-    private $pageCacheable;
-
-    /**
-     * @var CacheManager
-     */
-    private $cacheManager;
+    private $treeFactory;
 
     /**
      * LoadPageMiddleware constructor.
-     * @param PageCacheable $pageCacheable
-     * @param CacheManager $cacheManager
      * @param LocaleManager $localeManager
      * @param NotFoundHandler $notFoundHandler
      */
-    public function __construct(PageCacheable $pageCacheable, CacheManager $cacheManager, LocaleManager $localeManager, NotFoundHandler $notFoundHandler)
+    public function __construct(TreeFactory $treeFactory, LocaleManager $localeManager, NotFoundHandler $notFoundHandler)
     {
+        $this->treeFactory = $treeFactory;
         $this->localeManager = $localeManager;
         $this->notFoundHandler = $notFoundHandler;
-        $this->pageCacheable = $pageCacheable;
-        $this->cacheManager = $cacheManager;
     }
 
     /**
@@ -67,23 +58,33 @@ final class LoadPageMiddleware implements MiddlewareInterface
         $routeResult = $request->getAttribute(RouteResult::class);
 
         $pageId = $routeResult->getMatchedRoute()->getOptions()['pageId'];
+        $sitemapId = $routeResult->getMatchedRoute()->getOptions()['sitemapId'];
 
-        $cacheable = $this->pageCacheable->withPageId($pageId);
-        /** @var Page $page */
-        $page = $this->cacheManager->fetch($cacheable);
-
-        if (!($page instanceof Page)) {
+        try {
+            $item = $this->treeFactory->createItem($sitemapId, new MutationCollection());
+        } catch (\Exception $e) {
             return $this->notFoundHandler->process($request, $handler);
         }
 
-        if (!$page->isOnline()) {
+        if (empty($item)) {
+            return $this->notFoundHandler->process($request, $handler);
+        }
+
+        if (!$item->hasPageId($pageId)) {
+            return $this->notFoundHandler->process($request, $handler);
+        }
+
+        $page = $item->pageById($pageId);
+
+        if (!$item->isOnline($page->locale())) {
             return $this->notFoundHandler->process($request, $handler);
         }
 
         $this->localeManager->acceptLocale($page->locale());
 
         $request = $request->withPage($page);
-
+        $request = $request->withSitemap($item->sitemap());
+        $request = $request->withPageType($item->pageType());
         return $handler->handle($request);
     }
 }

@@ -20,17 +20,20 @@ use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Cms\Router\Factory\CmsRouterFactory;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Router\Tree\RoutingTreeFactory;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
+use Ixocreate\Cms\Strategy\CacheHelper;
 use Ixocreate\Cms\Strategy\Strategy;
 use Ixocreate\Cms\Strategy\StrategyFactory;
 use Ixocreate\Cms\Tree\AdminTreeFactory;
 use Ixocreate\Cms\Tree\Mutatable\MutatableSubManager;
 use Ixocreate\Cms\Tree\Searchable\SearchableSubManager;
+use Ixocreate\Cms\Tree\TreeFactory;
 
 /** @var ServiceManagerConfigurator $serviceManager */
 $serviceManager->addSubManager(PageTypeSubManager::class);
@@ -49,8 +52,11 @@ $serviceManager->addService(DatabasePageLoader::class, DatabasePageLoaderFactory
 $serviceManager->addService(DatabaseSitemapLoader::class, DatabaseSitemapLoaderFactory::class);
 $serviceManager->addService(StructureBuilder::class, StructureBuilderFactory::class);
 
+$serviceManager->addFactory(CacheHelper::class);
 $serviceManager->addFactory(Strategy::class, StrategyFactory::class);
 $serviceManager->addFactory(AdminTreeFactory::class, \Ixocreate\Cms\Tree\Factory\AdminTreeFactory::class);
+$serviceManager->addFactory(TreeFactory::class, \Ixocreate\Cms\Tree\Factory\TreeFactory::class);
+$serviceManager->addFactory(RoutingTreeFactory::class, \Ixocreate\Cms\Router\Tree\Factory\RoutingTreeFactory::class);
 $serviceManager->addFactory(\Ixocreate\Cms\Strategy\Full\Strategy::class, \Ixocreate\Cms\Strategy\Full\StrategyFactory::class);
 $serviceManager->addFactory(\Ixocreate\Cms\Strategy\Essential\Strategy::class, \Ixocreate\Cms\Strategy\Essential\StrategyFactory::class);
-$serviceManager->addFactory(\Ixocreate\Cms\Strategy\Admin\Strategy::class, \Ixocreate\Cms\Strategy\Admin\StrategyFactory::class);
+$serviceManager->addFactory(\Ixocreate\Cms\Strategy\Database\Strategy::class, \Ixocreate\Cms\Strategy\Database\StrategyFactory::class);

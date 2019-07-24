@@ -5,23 +5,19 @@ namespace Ixocreate\Cms\Tree;
 
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Strategy\Database\Strategy;
+use Ixocreate\Cms\Strategy\StrategyInterface;
 use Ixocreate\Cms\Tree\Mutatable\MutatableInterface;
 use Ixocreate\Cms\Tree\Mutatable\MutatableSubManager;
 use Ixocreate\Cms\Tree\Searchable\SearchableInterface;
 use Ixocreate\Cms\Tree\Searchable\SearchableSubManager;
-use Ixocreate\Intl\LocaleManager;
 
-final class AdminTreeFactory implements TreeFactoryInterface
+final class TreeFactory implements TreeFactoryInterface
 {
     /**
-     * @var Strategy
+     * @var StrategyInterface
      */
     private $strategy;
-    /**
-     * @var LocaleManager
-     */
-    private $localeManager;
+
     /**
      * @var PageTypeSubManager
      */
@@ -36,14 +32,12 @@ final class AdminTreeFactory implements TreeFactoryInterface
     private $searchableSubManager;
 
     public function __construct(
-        Strategy $strategy,
-        LocaleManager $localeManager,
+        StrategyInterface $strategy,
         PageTypeSubManager $pageTypeSubManager,
         MutatableSubManager $mutatableSubManager,
         SearchableSubManager $searchableSubManager
     ) {
         $this->strategy = $strategy;
-        $this->localeManager = $localeManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->mutatableSubManager = $mutatableSubManager;
         $this->searchableSubManager = $searchableSubManager;
@@ -67,12 +61,11 @@ final class AdminTreeFactory implements TreeFactoryInterface
      */
     public function createItem(string $id, MutationCollection $mutationCollection): ItemInterface
     {
-        return new AdminItem(
+        return new Item(
             $id,
             $mutationCollection,
             $this,
-            $this->strategy,
-            $this->localeManager
+            $this->strategy
         );
     }
 
@@ -83,10 +76,10 @@ final class AdminTreeFactory implements TreeFactoryInterface
      */
     public function createContainer(array $ids, MutationCollection $mutationCollection): ContainerInterface
     {
-        return new AdminContainer(
+        return new Container(
             $ids,
             $mutationCollection,
-             $this,
+            $this,
             $this->strategy
         );
     }

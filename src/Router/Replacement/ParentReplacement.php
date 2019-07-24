@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Router\Tree\RoutingItem;
 
 final class ParentReplacement implements ReplacementInterface
 {
@@ -27,31 +27,40 @@ final class ParentReplacement implements ReplacementInterface
      * @param string $locale
      * @param RoutingItem $routingItem
      * @throws \Exception
-     * @return RouteSpecification
+     * @return void
      */
     public function replace(
         RouteSpecification $routeSpecification,
         string $locale,
         RoutingItem $routingItem
-    ): RouteSpecification {
+    ): void {
+        $check = false;
+        foreach ($routeSpecification->uris() as $name => $uri) {
+            if (\mb_strpos($uri, '${PARENT}') === false) {
+                continue;
+            }
+
+            $check = true;
+            break;
+        }
+
+        if ($check === false) {
+            return;
+        }
+
+        foreach ($routeSpecification->uris() as $name => $uri) {
+            $routeSpecification->addUri(\str_replace('${PARENT}', '', $uri), $name);
+        }
+
         if (empty($routingItem->parent())) {
-            return $this->updateRouteSpecification($routeSpecification, "");
+            return;
         }
 
         $parentRouting = $routingItem->parent()->pageRoute($locale);
         if (empty($parentRouting)) {
-            return $this->updateRouteSpecification($routeSpecification, "");
+            return;
         }
 
-        return $this->updateRouteSpecification($routeSpecification, $parentRouting->uri(RouteSpecification::NAME_INHERITANCE));
-    }
-
-    private function updateRouteSpecification(RouteSpecification $routeSpecification, string $replace): RouteSpecification
-    {
-        foreach ($routeSpecification->uris() as $name => $uri) {
-            $routeSpecification = $routeSpecification->withUri(\str_replace('${PARENT}', $replace, $uri), $name);
-        }
-
-        return $routeSpecification;
+        $parentRouting->addChild($routeSpecification);
     }
 }

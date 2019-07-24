@@ -11,8 +11,10 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Tree\AdminItem;
 use Ixocreate\Cms\Tree\AdminTreeFactory;
+use Ixocreate\Cms\Tree\MutationCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -24,13 +26,18 @@ class ListAction implements MiddlewareInterface
      * @var AdminTreeFactory
      */
     private $adminTreeFactory;
+    /**
+     * @var SitemapRepository
+     */
+    private $sitemapRepository;
 
     /**
      * ListAction constructor.
      */
-    public function __construct(AdminTreeFactory $adminTreeFactory)
+    public function __construct(AdminTreeFactory $adminTreeFactory, SitemapRepository $sitemapRepository)
     {
         $this->adminTreeFactory = $adminTreeFactory;
+        $this->sitemapRepository = $sitemapRepository;
     }
 
     /**
@@ -49,13 +56,20 @@ class ListAction implements MiddlewareInterface
             $pageType = $request->getQueryParams()['pageType'];
         }
 
+        $conditions = [];
 
+        if ($pageType !== null) {
+            $conditions['pageType'] = $pageType;
+        }
+
+        $items = $this->sitemapRepository->findBy($conditions, ['nestedLeft' => 'ASC']);
 
         $result = [];
-        $iterator = new \RecursiveIteratorIterator($this->adminTreeFactory->createRoot(), \RecursiveIteratorIterator::SELF_FIRST);
         /** @var AdminItem $item */
-        foreach ($iterator as $item) {
-            if ($item->hasPage($locale) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
+        foreach ($items as $item) {
+            $item = $this->adminTreeFactory->createItem((string) $item->id(), new MutationCollection());
+
+            if ($item->hasPage($locale)) {
                 $result[] = [
                     'id' => $item->page($locale)->id(),
                     'name' => $this->receiveFullName($item, $locale),

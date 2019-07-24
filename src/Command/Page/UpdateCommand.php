@@ -9,15 +9,12 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
-use Ixocreate\Cache\CacheInterface;
-use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Strategy\CacheHelper;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Filter\FilterableInterface;
@@ -46,26 +43,10 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
      * @var NavigationRepository
      */
     private $navigationRepository;
-
     /**
-     * @var CacheManager
+     * @var CacheHelper
      */
-    private $cacheManager;
-
-    /**
-     * @var PageCacheable
-     */
-    private $pageCacheable;
-
-    /**
-     * @var StructureCacheable
-     */
-    private $structureCacheable;
-
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
+    private $cacheHelper;
 
     /**
      * CreateCommand constructor.
@@ -74,34 +55,25 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
      * @param CommandBus $commandBus
      * @param Config $config
      * @param NavigationRepository $navigationRepository
-     * @param CacheInterface $cms
-     * @param CacheManager $cacheManager
-     * @param PageCacheable $pageCacheable
-     * @param StructureCacheable $structureCacheable
+     * @param CacheHelper $cacheHelper
      */
     public function __construct(
         PageRepository $pageRepository,
         CommandBus $commandBus,
         Config $config,
         NavigationRepository $navigationRepository,
-        CacheInterface $cms,
-        CacheManager $cacheManager,
-        PageCacheable $pageCacheable,
-        StructureCacheable $structureCacheable
+        CacheHelper $cacheHelper
     ) {
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->config = $config;
         $this->navigationRepository = $navigationRepository;
-        $this->cache = $cms;
-        $this->cacheManager = $cacheManager;
-        $this->pageCacheable = $pageCacheable;
-        $this->structureCacheable = $structureCacheable;
+        $this->cacheHelper = $cacheHelper;
     }
 
     /**
-     * @throws \Psr\Cache\InvalidArgumentException
      * @return bool
+     * @throws \Exception
      */
     public function execute(): bool
     {
@@ -109,7 +81,6 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         $page = $this->pageRepository->find($this->dataValue("pageId"));
 
         $updated = false;
-        $clearCache = false;
         if ($this->dataValue('name') !== false) {
             $updated = true;
             $page = $page->with("name", $this->dataValue('name'));
@@ -138,7 +109,6 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
 
         if ($this->dataValue('slug') !== false) {
             $updated = true;
-            $clearCache = true;
             $this->commandBus->command(SlugCommand::class, [
                 'name' => (string)$this->dataValue('slug'),
                 'pageId' => (string)$page->id(),
@@ -163,19 +133,17 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
                 $this->navigationRepository->save($navigationEntity);
             }
 
-            $this->cacheManager->fetch($this->structureCacheable, true);
+            $this->cacheHelper = $this->cacheHelper->doNavigation($page);
         }
 
         if ($updated === true) {
             $page = $page->with('updatedAt', new \DateTime());
-            $this->pageRepository->save($page);
+            $page = $this->pageRepository->save($page);
 
-            if ($clearCache) {
-                $this->cache->clear();
-            } else {
-                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
-            }
+            $this->cacheHelper = $this->cacheHelper->doPage($page);
         }
+
+        $this->cacheHelper->handle();
 
         return true;
     }

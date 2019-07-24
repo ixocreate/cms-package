@@ -23,6 +23,11 @@ final class Persister implements PersisterInterface
     private $cache;
 
     /**
+     * @var bool
+     */
+    private $alreadyPersisted = false;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param CacheInterface $cache
      */
@@ -34,6 +39,11 @@ final class Persister implements PersisterInterface
 
     public function persistSitemap(): void
     {
+        if ($this->alreadyPersisted === true) {
+            return;
+        }
+        $this->alreadyPersisted = true;
+
         list($root, $tree) = $this->createSitemapTree();
         $this->createPageData($tree);
 

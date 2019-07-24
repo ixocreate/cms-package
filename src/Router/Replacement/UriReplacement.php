@@ -11,7 +11,7 @@ namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Router\Tree\RoutingItem;
 
 final class UriReplacement implements ReplacementInterface
 {
@@ -42,22 +42,17 @@ final class UriReplacement implements ReplacementInterface
      * @param RouteSpecification $routeSpecification
      * @param string $locale
      * @param RoutingItem $item
-     * @return RouteSpecification
      */
     public function replace(
         RouteSpecification $routeSpecification,
         string $locale,
         RoutingItem $item
-    ): RouteSpecification {
+    ): void {
         foreach ($routeSpecification->uris() as $name => $uri) {
             if (!empty(\preg_match('/\${URI:([a-z0-9-_]*)}/i', $uri, $matches))) {
                 $projectUri = $this->projectUri->getPossibleUri($matches[1]);
-                $routeSpecification = $routeSpecification->withUri(\preg_replace('/\${URI:([a-z0-9-_]*)}/i', $projectUri, $uri), $name);
+                $routeSpecification->addUri(\preg_replace('/\${URI:([a-z0-9-_]*)}/i', $projectUri, $uri), $name);
             }
         }
-
-
-
-        return $routeSpecification;
     }
 }

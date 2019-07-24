@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
+use Symfony\Component\Routing\Route;
+
 final class RouteSpecification
 {
     public const NAME_MAIN = "*";
@@ -29,6 +31,21 @@ final class RouteSpecification
      * @var array
      */
     private $middleware = [];
+
+    /**
+     * @var array
+     */
+    private $children = [];
+
+    /**
+     * @var bool
+     */
+    private $isRoot = true;
+
+    /**
+     * @var string
+     */
+    private $sitemapId;
 
     /**
      * @param string $name
@@ -66,13 +83,12 @@ final class RouteSpecification
      * @param string $name
      * @return RouteSpecification
      */
-    public function withUri(string $uri, string $name = self::NAME_MAIN): RouteSpecification
+    public function addUri(string $uri, string $name = self::NAME_MAIN): RouteSpecification
     {
         $uri = \rtrim($uri, "/");
-        $routeSpecification = clone $this;
-        $routeSpecification->uris[$name] = $uri;
+        $this->uris[$name] = $uri;
 
-        return $routeSpecification;
+        return $this;
     }
 
     /**
@@ -87,12 +103,27 @@ final class RouteSpecification
      * @param string $pageId
      * @return RouteSpecification
      */
-    public function withPageId(string $pageId): RouteSpecification
+    public function setPageId(string $pageId): RouteSpecification
     {
-        $routeSpecification = clone $this;
-        $routeSpecification->pageId = $pageId;
+        $this->pageId = $pageId;
 
-        return $routeSpecification;
+        return $this;
+    }
+
+    public function sitemapId(): string
+    {
+        return $this->sitemapId;
+    }
+
+    /**
+     * @param string $sitemapId
+     * @return RouteSpecification
+     */
+    public function setSitemapId(string $sitemapId): RouteSpecification
+    {
+        $this->sitemapId = $sitemapId;
+
+        return $this;
     }
 
     /**
@@ -107,11 +138,79 @@ final class RouteSpecification
      * @param array $middleware
      * @return RouteSpecification
      */
-    public function withMiddleware(array $middleware): RouteSpecification
+    public function setMiddleware(array $middleware): RouteSpecification
     {
-        $routeSpecification = clone $this;
-        $routeSpecification->middleware = $middleware;
+        $this->middleware = $middleware;
 
-        return $routeSpecification;
+        return $this;
+    }
+
+    public function addChild(RouteSpecification $routeSpecification): void
+    {
+        $routeSpecification->setRoot(false);
+        $this->children[] = $routeSpecification;
+    }
+
+    public function children(): array
+    {
+        return $this->children;
+    }
+
+    public function setRoot(bool $root): void
+    {
+        $this->isRoot = $root;
+    }
+
+    public function isRoot(): bool
+    {
+        return $this->isRoot;
+    }
+
+    public function addToRouteCollection(\Symfony\Component\Routing\RouteCollection $routeCollection, $locale): void
+    {
+        foreach ($this->uris() as $name => $uri) {
+            if ($name === self::NAME_INHERITANCE) {
+                continue;
+            }
+
+            $routePrefix = 'page.';
+            if ($name !== RouteSpecification::NAME_MAIN) {
+                $routePrefix .= $name . '.';
+            }
+
+            $uriParts = \parse_url($uri);
+
+            $routeObj = new Route(($uriParts['path']) ?? '/');
+            if (!empty($uriParts['host'])) {
+                $routeObj->setHost($uriParts['host']);
+                $routeObj->setSchemes($uriParts['scheme']);
+            }
+
+            $routeObj->setDefault('pageId', $this->pageId());
+            $routeObj->setDefault('locale', $locale);
+            $routeObj->setDefault('sitemapId', $this->sitemapId());
+            $routeObj->setDefault('middleware', $this->middleware());
+
+            $routeName = $routePrefix . $this->pageId();
+            $routeCollection->add($routeName, $routeObj);
+        }
+
+        if (\count($this->children()) > 0) {
+            \var_dump("test");
+            $subRouteCollection = new \Symfony\Component\Routing\RouteCollection();
+            $prefix = $this->uri(self::NAME_INHERITANCE);
+
+
+            /** @var RouteSpecification $routeSpecification */
+            foreach ($this->children() as $routeSpecification) {
+                $routeSpecification->addToRouteCollection($subRouteCollection, $locale);
+            }
+
+            if (!empty($prefix)) {
+                $subRouteCollection->addPrefix($prefix);
+            }
+
+            $routeCollection->addCollection($subRouteCollection);
+        }
     }
 }

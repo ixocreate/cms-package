@@ -1,27 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Tree;
+namespace Ixocreate\Cms\Router\Tree;
 
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Strategy\Database\Strategy;
+use Ixocreate\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Strategy\StrategyInterface;
+use Ixocreate\Cms\Tree\ContainerInterface;
+use Ixocreate\Cms\Tree\ItemInterface;
 use Ixocreate\Cms\Tree\Mutatable\MutatableInterface;
 use Ixocreate\Cms\Tree\Mutatable\MutatableSubManager;
+use Ixocreate\Cms\Tree\MutationCollection;
 use Ixocreate\Cms\Tree\Searchable\SearchableInterface;
 use Ixocreate\Cms\Tree\Searchable\SearchableSubManager;
-use Ixocreate\Intl\LocaleManager;
+use Ixocreate\Cms\Tree\TreeFactoryInterface;
 
-final class AdminTreeFactory implements TreeFactoryInterface
+final class RoutingTreeFactory implements TreeFactoryInterface
 {
     /**
-     * @var Strategy
+     * @var StrategyInterface
      */
     private $strategy;
-    /**
-     * @var LocaleManager
-     */
-    private $localeManager;
     /**
      * @var PageTypeSubManager
      */
@@ -34,19 +34,23 @@ final class AdminTreeFactory implements TreeFactoryInterface
      * @var SearchableSubManager
      */
     private $searchableSubManager;
+    /**
+     * @var ReplacementManager
+     */
+    private $replacementManager;
 
     public function __construct(
-        Strategy $strategy,
-        LocaleManager $localeManager,
+        StrategyInterface $strategy,
+        ReplacementManager $replacementManager,
         PageTypeSubManager $pageTypeSubManager,
         MutatableSubManager $mutatableSubManager,
         SearchableSubManager $searchableSubManager
     ) {
         $this->strategy = $strategy;
-        $this->localeManager = $localeManager;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->mutatableSubManager = $mutatableSubManager;
         $this->searchableSubManager = $searchableSubManager;
+        $this->replacementManager = $replacementManager;
     }
 
     /**
@@ -67,12 +71,12 @@ final class AdminTreeFactory implements TreeFactoryInterface
      */
     public function createItem(string $id, MutationCollection $mutationCollection): ItemInterface
     {
-        return new AdminItem(
+        return new RoutingItem(
             $id,
             $mutationCollection,
             $this,
             $this->strategy,
-            $this->localeManager
+            $this->replacementManager
         );
     }
 
@@ -83,7 +87,7 @@ final class AdminTreeFactory implements TreeFactoryInterface
      */
     public function createContainer(array $ids, MutationCollection $mutationCollection): ContainerInterface
     {
-        return new AdminContainer(
+        return new RoutingContainer(
             $ids,
             $mutationCollection,
              $this,

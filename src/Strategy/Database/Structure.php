@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Strategy\Admin;
+namespace Ixocreate\Cms\Strategy\Database;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -76,9 +76,33 @@ final class Structure implements StructureInterface
         return $this->pages[$locale];
     }
 
+    public function pageById(string $pageId): Page
+    {
+        foreach ($this->pages as $page) {
+            if ((string) $page->id() === $pageId) {
+                return $page;
+            }
+        }
+    }
+
     public function hasPage(string $locale): bool
     {
         return \array_key_exists($locale, $this->pages);
+    }
+
+    /**
+     * @param string $pageId
+     * @return bool
+     */
+    public function hasPageId(string $pageId): bool
+    {
+        foreach ($this->pages as $page) {
+            if ((string) $page->id() === $pageId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -116,7 +140,11 @@ final class Structure implements StructureInterface
 
     public function parent(): ?string
     {
-        return $this->sitemap()->parentId();
+        if (empty($this->sitemap()->parentId())) {
+            return null;
+        }
+
+        return (string) $this->sitemap()->parentId();
     }
 
     public function level(): int

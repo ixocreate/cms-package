@@ -17,6 +17,8 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Strategy\CacheHelper;
+use Ixocreate\Cms\Strategy\Strategy;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Filter\FilterableInterface;
@@ -55,11 +57,10 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
      * @var Connection
      */
     private $master;
-
     /**
-     * @var CacheInterface
+     * @var CacheHelper
      */
-    private $cache;
+    private $cacheHelper;
 
     /**
      * CreateCommand constructor.
@@ -70,7 +71,7 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
      * @param Connection $master
-     * @param CacheInterface $cms
+     * @param CacheHelper $cacheHelper
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -79,7 +80,7 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
         LocaleManager $localeManager,
         CommandBus $commandBus,
         Connection $master,
-        CacheInterface $cms
+        CacheHelper $cacheHelper
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -87,7 +88,7 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->master = $master;
-        $this->cache = $cms;
+        $this->cacheHelper = $cacheHelper;
     }
 
     /**
@@ -120,7 +121,10 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
                 'pageId' => (string)$page->id(),
             ]);
 
-            $this->cache->clear();
+            $this->cacheHelper
+                ->doSitemap()
+                ->doPage($page)
+                ->handle();
         });
         return true;
     }

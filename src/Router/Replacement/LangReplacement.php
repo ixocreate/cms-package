@@ -11,7 +11,7 @@ namespace Ixocreate\Cms\Router\Replacement;
 
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
+use Ixocreate\Cms\Router\Tree\RoutingItem;
 use Ixocreate\Intl\LocaleManager;
 
 final class LangReplacement implements ReplacementInterface
@@ -49,32 +49,30 @@ final class LangReplacement implements ReplacementInterface
         RouteSpecification $routeSpecification,
         string $locale,
         RoutingItem $routingItem
-    ): RouteSpecification {
+    ): void {
         $lang = \Locale::getPrimaryLanguage($locale);
 
         foreach ($routeSpecification->uris() as $name => $uri) {
-            $routeSpecification = $routeSpecification->withUri(\str_replace('${LANG}', $lang, $uri), $name);
+            $routeSpecification->addUri(\str_replace('${LANG}', $lang, $uri), $name);
         }
 
         foreach ($routeSpecification->uris() as $name => $uri) {
             if ($this->localeManager->defaultLocale() === $locale) {
-                $routeSpecification = $routeSpecification->withUri(\str_replace('${LANG:no-default}', "", $uri), $name);
+                $routeSpecification->addUri(\str_replace('${LANG:no-default}', "", $uri), $name);
                 continue;
             }
 
-            $routeSpecification = $routeSpecification->withUri(\str_replace('${LANG:no-default}', $lang, $uri), $name);
+            $routeSpecification->addUri(\str_replace('${LANG:no-default}', $lang, $uri), $name);
         }
 
         foreach ($routeSpecification->uris() as $name => $uri) {
             if (!($routingItem->pageType() instanceof RootPageTypeInterface) || $this->localeManager->defaultLocale() !== $locale) {
-                $routeSpecification = $routeSpecification->withUri(\str_replace('${LANG:no-root-default}', $lang, $uri), $name);
+                $routeSpecification->addUri(\str_replace('${LANG:no-root-default}', $lang, $uri), $name);
                 continue;
             }
 
-            $routeSpecification = $routeSpecification->withUri(\str_replace('${LANG:no-root-default}', "", $uri), $name);
-            $routeSpecification = $routeSpecification->withUri(\str_replace('${LANG:no-root-default}', $lang, $uri), RouteSpecification::NAME_INHERITANCE);
+            $routeSpecification->addUri(\str_replace('${LANG:no-root-default}', "", $uri), $name);
+            $routeSpecification->addUri(\str_replace('${LANG:no-root-default}', $lang, $uri), RouteSpecification::NAME_INHERITANCE);
         }
-
-        return $routeSpecification;
     }
 }

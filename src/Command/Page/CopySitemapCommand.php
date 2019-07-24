@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -19,6 +18,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Strategy\CacheHelper;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Filter\FilterableInterface;
@@ -65,9 +65,9 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
     private $pageVersionRepository;
 
     /**
-     * @var CacheInterface
+     * @var CacheHelper
      */
-    private $cache;
+    private $cacheHelper;
 
     /**
      * CreateCommand constructor.
@@ -79,7 +79,7 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
      * @param CommandBus $commandBus
      * @param Connection $master
      * @param PageVersionRepository $pageVersionRepository
-     * @param CacheInterface $cms
+     * @param CacheHelper $cacheHelper
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -89,7 +89,7 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
         CommandBus $commandBus,
         Connection $master,
         PageVersionRepository $pageVersionRepository,
-        CacheInterface $cms
+        CacheHelper $cacheHelper
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -98,7 +98,7 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
         $this->commandBus = $commandBus;
         $this->master = $master;
         $this->pageVersionRepository = $pageVersionRepository;
-        $this->cache = $cms;
+        $this->cacheHelper = $cacheHelper;
     }
 
     /**
@@ -138,6 +138,8 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                 $criteria['locale'] = $this->dataValue('locales');
             }
 
+            $this->cacheHelper->doSitemap()->handle();
+
             $pages = $this->pageRepository->findBy($criteria);
 
             foreach ($pages as $referencePage) {
@@ -161,7 +163,7 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                     ]);
 
                     /** @var Page $page */
-                    $this->pageRepository->save($page);
+                    $page = $this->pageRepository->save($page);
 
                     $this->commandBus->command(SlugCommand::class, [
                         'name' => (string)$page->name(),
@@ -176,7 +178,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                         'createdBy' => $this->dataValue('createdBy'),
                     ]);
 
-                    $this->cache->clear();
                 }
             }
         });

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\HandlePageTypeInterface;
@@ -18,6 +17,7 @@ use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Strategy\CacheHelper;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Ixocreate\Filter\FilterableInterface;
@@ -56,11 +56,10 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
      * @var Connection
      */
     private $master;
-
     /**
-     * @var CacheInterface
+     * @var CacheHelper
      */
-    private $cache;
+    private $cacheHelper;
 
     /**
      * CreateCommand constructor.
@@ -71,7 +70,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
      * @param Connection $master
-     * @param CacheInterface $cms
+     * @param CacheHelper $cacheHelper
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -80,7 +79,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         LocaleManager $localeManager,
         CommandBus $commandBus,
         Connection $master,
-        CacheInterface $cms
+        CacheHelper $cacheHelper
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -88,7 +87,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->master = $master;
-        $this->cache = $cms;
+        $this->cacheHelper = $cacheHelper;
     }
 
     /**
@@ -137,7 +136,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
                 'pageId' => (string)$page->id(),
             ]);
 
-            $this->cache->clear();
+            $this->cacheHelper->doSitemap()->doPage($page);
         });
 
         return true;

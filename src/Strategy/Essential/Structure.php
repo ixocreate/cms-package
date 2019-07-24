@@ -86,16 +86,36 @@ final class Structure implements StructureInterface
     public function page(string $locale): Page
     {
         foreach ($this->data[1] as $pageData) {
-            if ($pageData[0] === $locale) {
-                return $this->cacheManager->fetch($this->pageCacheable->withPageId($pageData[1]));
+            if ($pageData[1] === $locale) {
+                return $this->cacheManager->fetch($this->pageCacheable->withPageId($pageData[0]));
             }
         }
+    }
+
+    public function pageById(string $pageId): Page
+    {
+        foreach ($this->data[1] as $pageData) {
+            if ($pageData[0] === $pageId) {
+                return $this->cacheManager->fetch($this->pageCacheable->withPageId($pageData[0]));
+            }
+        }
+    }
+
+    public function hasPageId(string $pageId): bool
+    {
+        foreach ($this->data[1] as $pageData) {
+            if ($pageData[0] === $pageId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function hasPage(string $locale): bool
     {
         foreach ($this->data[1] as $pageData) {
-            if ($pageData[0] === $locale) {
+            if ($pageData[1] === $locale) {
                 return true;
             }
         }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Strategy\Admin;
+namespace Ixocreate\Cms\Strategy\Database;
 
 use Ixocreate\Cache\CacheSubManager;
 use Ixocreate\Cms\Repository\NavigationRepository;

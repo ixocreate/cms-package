@@ -7,6 +7,8 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Ixocreate\Cache\CacheInterface;
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Strategy\PersisterInterface;
 use SplFixedArray;
@@ -21,15 +23,27 @@ final class Persister implements PersisterInterface
      * @var CacheInterface
      */
     private $cache;
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+    /**
+     * @var PageCacheable
+     */
+    private $pageCacheable;
 
     /**
      * @param EntityManagerInterface $entityManager
      * @param CacheInterface $cache
+     * @param CacheManager $cacheManager
+     * @param PageCacheable $pageCacheable
      */
-    public function __construct(EntityManagerInterface $entityManager, CacheInterface $cache)
+    public function __construct(EntityManagerInterface $entityManager, CacheInterface $cache, CacheManager $cacheManager, PageCacheable $pageCacheable)
     {
         $this->entityManager = $entityManager;
         $this->cache = $cache;
+        $this->cacheManager = $cacheManager;
+        $this->pageCacheable = $pageCacheable;
     }
 
     public function persistSitemap(): void
@@ -54,7 +68,7 @@ final class Persister implements PersisterInterface
             $root,
              $list
         ]);
-        $this->cache->put('structure.full', $data);
+        $this->cache->put(Strategy::CACHE_KEY, $data);
     }
 
     private function createSitemapTree()
@@ -120,7 +134,7 @@ final class Persister implements PersisterInterface
         }
         unset($result);
 
-        $sql = "SELECT * FROM cms_page";
+        $sql = "SELECT id, sitemapId, locale FROM cms_page";
         $rm = new ResultSetMapping();
         $rm->addScalarResult('id', 'id', 'string');
         $rm->addScalarResult('sitemapId', 'sitemapId', 'string');
@@ -148,6 +162,9 @@ final class Persister implements PersisterInterface
 
     public function persistPage(Page $page): void
     {
-
+        $this->cacheManager->fetch(
+            $this->pageCacheable->withPageId((string) $page->id()),
+            true
+        );
     }
 }

@@ -11,12 +11,12 @@ namespace Ixocreate\Cms\Action\Sitemap;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Strategy\CacheHelper;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -33,23 +33,25 @@ class MoveAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
-
     /**
-     * @var CacheInterface
+     * @var CacheHelper
      */
-    private $cache;
+    private $cacheHelper;
 
     /**
      * SortAction constructor.
      * @param SitemapRepository $sitemapRepository
      * @param PageTypeSubManager $pageTypeSubManager
-     * @param CacheInterface $cms
+     * @param CacheHelper $cacheHelper
      */
-    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, CacheInterface $cms)
-    {
+    public function __construct(
+        SitemapRepository $sitemapRepository,
+        PageTypeSubManager $pageTypeSubManager,
+        CacheHelper $cacheHelper
+    ) {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->cache = $cms;
+        $this->cacheHelper = $cacheHelper;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -120,7 +122,7 @@ class MoveAction implements MiddlewareInterface
             $this->sitemapRepository->moveAsPreviousSibling($sitemap, $sibling);
         }
 
-        $this->cache->clear();
+        $this->cacheHelper->doSitemap()->handle();
 
         return new ApiSuccessResponse();
     }

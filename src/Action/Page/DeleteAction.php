@@ -11,12 +11,12 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\OldRedirectRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Strategy\Strategy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -45,17 +45,22 @@ class DeleteAction implements MiddlewareInterface
     private $oldRedirectRepository;
 
     /**
-     * @var CacheInterface
+     * @var Strategy
      */
-    private $cache;
+    private $strategy;
 
-    public function __construct(PageRepository $pageRepository, PageVersionRepository $pageVersionRepository, SitemapRepository $sitemapRepository, OldRedirectRepository $oldRedirectRepository, CacheInterface $cms)
-    {
+    public function __construct(
+        PageRepository $pageRepository,
+        PageVersionRepository $pageVersionRepository,
+        SitemapRepository $sitemapRepository,
+        OldRedirectRepository $oldRedirectRepository,
+        Strategy $strategy
+    ) {
         $this->pageRepository = $pageRepository;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->sitemapRepository = $sitemapRepository;
         $this->oldRedirectRepository = $oldRedirectRepository;
-        $this->cache = $cms;
+        $this->strategy = $strategy;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -87,7 +92,7 @@ class DeleteAction implements MiddlewareInterface
             $this->sitemapRepository->remove($sitemap);
         }
 
-        $this->cache->clear();
+        $this->strategy->persistSitemap();
 
         return new ApiSuccessResponse();
     }

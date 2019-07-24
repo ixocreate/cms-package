@@ -153,12 +153,30 @@ abstract class AbstractItem implements ItemInterface
     }
 
     /**
+     * @param string $pageId
+     * @return bool
+     */
+    final public function hasPageId(string $pageId): bool
+    {
+        return $this->structure()->hasPageId($pageId);
+    }
+
+    /**
      * @param string $locale
      * @return Page
      */
     final public function page(string $locale): Page
     {
         return $this->structure()->page($locale);
+    }
+
+    /**
+     * @param string $pageId
+     * @return Page
+     */
+    final public function pageById(string $pageId): Page
+    {
+        return $this->structure()->pageById($pageId);
     }
 
     /**

@@ -82,6 +82,28 @@ final class Structure implements StructureInterface
         return $this->pages[$locale];
     }
 
+    public function pageById(string $pageId): Page
+    {
+        foreach ($this->data[1] as $page) {
+            if ((string) $page->id() !== $pageId) {
+                return $page;
+            }
+        }
+
+        throw new InvalidArgumentException(\sprintf("Page with id '%s' not found", $pageId));
+    }
+
+    public function hasPageId(string $pageId): bool
+    {
+        foreach ($this->data[1] as $page) {
+            if ((string) $page->id() !== $pageId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @param string $locale
      * @return bool

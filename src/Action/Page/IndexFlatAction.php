@@ -9,10 +9,17 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
 
+use Doctrine\ORM\Query;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
+use Ixocreate\Cms\Repository\PageRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,44 +28,37 @@ use Psr\Http\Server\RequestHandlerInterface;
 class IndexFlatAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var SitemapRepository
      */
-    private $adminContainer;
+    private $sitemapRepository;
 
-    public function __construct(
-        AdminContainer $adminContainer
-    ) {
-        $this->adminContainer = $adminContainer;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
+
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
+    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, PageRepository $pageRepository) {
+        $this->sitemapRepository = $sitemapRepository;
+        $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->pageRepository = $pageRepository;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $handle = $request->getAttribute('handle');
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
-            return $item->sitemap()->handle() === $handle;
-        });
 
-        if (empty($item)) {
+        $parentSitemap = $this->sitemapRepository->findOneBy(['handle' => $handle]);
+        if (empty($parentSitemap)) {
             return new ApiErrorResponse('invalid_handle');
         }
 
-        $children = $item->children();
-
-        if (!empty($request->getQueryParams()['search'])) {
-            $search = $request->getQueryParams()['search'];
-            $children = $children->filter(function (AdminItem $item) use ($search) {
-                foreach ($item->pages() as $padeData) {
-                    if (\mb_stripos($padeData['page']->name(), $search) !== false) {
-                        return true;
-                    }
-                }
-
-                return false;
-            });
-        }
-
-        $count = $children->count();
-        $children = $item->flatten();
+        $query = $this->sitemapRepository->createQuery('SELECT COUNT(s) FROM ' . Sitemap::class . ' s WHERE s.parentId = :parentId');
+        $count = $query->execute(['parentId' => (string)$parentSitemap->id()], Query::HYDRATE_SINGLE_SCALAR);
 
         $offset = 0;
         $limit = 0;
@@ -73,12 +73,48 @@ class IndexFlatAction implements MiddlewareInterface
             }
         }
 
-        $children = $children->paginate($limit, $offset);
+        $query = $this->sitemapRepository->createQuery('SELECT s FROM ' . Sitemap::class . ' s LEFT JOIN ' . Page::class . ' p WITH (s.id = p.sitemapId) WHERE s.parentId = :parentId ORDER BY p.releasedAt DESC');
+        $query->setMaxResults($limit);
+        $query->setFirstResult($offset);
+        $result = $query->execute(['parentId' => (string)$parentSitemap->id()]);
+
+        $items = [];
+        foreach ($result as $item) {
+            /** @var Sitemap $item */
+            /** @var PageTypeInterface $pageType */
+            $pageType = $this->pageTypeSubManager->get($item->pageType());
+
+            $pages = [];
+            $pageResult = $this->pageRepository->findBy(['sitemapId' => (string)$item->id()]);
+            foreach ($pageResult as $page) {
+                /** @var Page $page */
+                $pages[$page->locale()] = [
+                    'page' => $page,
+                    'url' => null,
+                    'isOnline' => $page->isOnline(),
+                ];
+            }
+
+            $items[] = [
+                'sitemap' => $item,
+                'pages' => $pages,
+                'handle' => $item->handle(),
+                'childrenAllowed' => !empty($pageType->allowedChildren()),
+                'pageType' => [
+                    'name' => $pageType->serviceName(),
+                    'label' => $pageType->label(),
+                    'allowedChildren' => [],
+                    'isRoot' => $pageType instanceof RootPageTypeInterface,
+                    'terminal' => $pageType instanceof TerminalPageTypeInterface,
+                ],
+                'children' => [],
+            ];
+        }
 
         return new ApiSuccessResponse([
-            'items' => $children->jsonSerialize(),
+            'items' => $items,
             'meta' => [
-                'parentSitemapId' => $item->sitemap()->id(),
+                'parentSitemapId' => $parentSitemap->id(),
                 'count' => $count,
             ],
         ]);

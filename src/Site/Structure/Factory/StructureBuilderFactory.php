@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Structure\Factory;
 
+use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Database\EntityManager\Factory\EntityManagerSubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
@@ -25,7 +26,8 @@ final class StructureBuilderFactory implements FactoryInterface
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
         return new StructureBuilder(
-            $container->get(EntityManagerSubManager::class)->get('master')
+            $container->get(EntityManagerSubManager::class)->get('master'),
+            $container->get(PageTypeSubManager::class)
         );
     }
 }

@@ -157,7 +157,7 @@ final class RoutingItem implements \RecursiveIterator, \Countable
      */
     public function pageType(): PageTypeInterface
     {
-        return $this->pageTypeSubManager->get($this->sitemap()->pageType());
+        return $this->pageTypeSubManager->get($this->structureItem()->pageType());
     }
 
     /**

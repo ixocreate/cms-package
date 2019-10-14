@@ -9,11 +9,13 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Admin;
 
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
 use Ixocreate\Cms\Site\Admin\Search\AdminCallableSearch;
 use Ixocreate\Cms\Site\Admin\Search\AdminHandleSearch;
 use Ixocreate\Cms\Site\Admin\Search\AdminMaxLevelSearch;
 use Ixocreate\Cms\Site\Admin\Search\AdminMinLevelSearch;
 use Ixocreate\Cms\Site\Admin\Search\AdminNavigationSearch;
+use Ixocreate\Cms\Site\Structure\StructureItem;
 use RecursiveIteratorIterator;
 
 class AdminContainer implements AdminContainerInterface, \JsonSerializable
@@ -47,10 +49,25 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
      */
     public function __construct($structureItems, AdminSearchSubManager $searchSubManager, AdminItemFactory $itemFactory, AdminItem $parent = null)
     {
-        $this->iterator = new \ArrayIterator($structureItems);
         $this->itemFactory = $itemFactory;
+        $this->iterator = new \ArrayIterator($structureItems);
         $this->searchSubManager = $searchSubManager;
         $this->parent = $parent;
+    }
+
+    private function cleanup(array $structureItems): array
+    {
+        $newItems = [];
+        /** @var StructureItem $structureItem */
+        foreach ($structureItems as $structureItem) {
+            if ($this->itemFactory->pageTypeSubManager()->get($structureItem->pageType()) instanceof TerminalPageTypeInterface) {
+                $structureItem = $structureItem->withChildrenInfo([]);
+            }
+
+            $newItems[] = $structureItem;
+        }
+
+        return $newItems;
     }
 
     /**

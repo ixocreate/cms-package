@@ -80,4 +80,9 @@ final class AdminItemFactory
             $parent
         );
     }
+
+    public function pageTypeSubManager(): PageTypeSubManager
+    {
+        return $this->pageTypeSubManager;
+    }
 }

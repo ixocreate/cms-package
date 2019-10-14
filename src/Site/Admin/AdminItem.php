@@ -135,7 +135,7 @@ class AdminItem implements AdminContainerInterface, \JsonSerializable
      */
     public function pageType(): PageTypeInterface
     {
-        return $this->pageTypeSubManager->get($this->sitemap()->pageType());
+        return $this->pageTypeSubManager->get($this->structureItem()->pageType());
     }
 
     /**

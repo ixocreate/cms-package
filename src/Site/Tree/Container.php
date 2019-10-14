@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Tree;
 
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
+use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
 use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
 use Ixocreate\Cms\Site\Tree\Search\MaxLevelSearch;
@@ -41,9 +43,24 @@ class Container implements ContainerInterface
      */
     public function __construct($structureItems, SearchSubManager $searchSubManager, ItemFactory $itemFactory)
     {
-        $this->iterator = new \ArrayIterator($structureItems);
         $this->itemFactory = $itemFactory;
+        $this->iterator = new \ArrayIterator($this->cleanup($structureItems));
         $this->searchSubManager = $searchSubManager;
+    }
+
+    private function cleanup(array $structureItems): array
+    {
+        $newItems = [];
+        /** @var StructureItem $structureItem */
+        foreach ($structureItems as $structureItem) {
+            if ($this->itemFactory->pageTypeSubManager()->get($structureItem->pageType()) instanceof TerminalPageTypeInterface) {
+                $structureItem = $structureItem->withChildrenInfo([]);
+            }
+
+            $newItems[] = $structureItem;
+        }
+
+        return $newItems;
     }
 
     /**

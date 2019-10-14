@@ -1,60 +1,41 @@
 <?php
-/**
- * @link https://github.com/ixocreate
- * @copyright IXOLIT GmbH
- * @license MIT License
- */
-
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Cacheable;
+namespace Ixocreate\Cms\Router;
 
-use Ixocreate\Cache\CacheableInterface;
 use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\PageCacheable;
+use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
-use Ixocreate\Cms\Router\RouteSpecification;
-use Ixocreate\Cms\Router\RoutingItem;
-use Ixocreate\Cms\Site\Structure\Structure;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\Intl\LocaleManager;
 use RecursiveIteratorIterator;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 
-final class RouteCollectionCacheable implements CacheableInterface
+final class RouteCollection
 {
-    /**
-     * @var StructureCacheable
-     */
-    private $structureCacheable;
-
     /**
      * @var LocaleManager
      */
     private $localeManager;
-
     /**
      * @var PageCacheable
      */
     private $pageCacheable;
-
     /**
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
-
     /**
      * @var CacheManager
      */
     private $cacheManager;
-
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
-
     /**
      * @var ReplacementManager
      */
@@ -64,19 +45,7 @@ final class RouteCollectionCacheable implements CacheableInterface
      */
     private $structureBuilder;
 
-    /**
-     * SitemapCacheable constructor.
-     * @param StructureCacheable $structureCacheable
-     * @param LocaleManager $localeManager
-     * @param PageCacheable $pageCacheable
-     * @param SitemapCacheable $sitemapCacheable
-     * @param CacheManager $cacheManager
-     * @param PageTypeSubManager $pageTypeSubManager
-     * @param ReplacementManager $replacementManager
-     * @param StructureBuilder $structureBuilder
-     */
     public function __construct(
-        StructureCacheable $structureCacheable,
         LocaleManager $localeManager,
         PageCacheable $pageCacheable,
         SitemapCacheable $sitemapCacheable,
@@ -85,7 +54,6 @@ final class RouteCollectionCacheable implements CacheableInterface
         ReplacementManager $replacementManager,
         StructureBuilder $structureBuilder
     ) {
-        $this->structureCacheable = $structureCacheable;
         $this->localeManager = $localeManager;
         $this->pageCacheable = $pageCacheable;
         $this->sitemapCacheable = $sitemapCacheable;
@@ -95,34 +63,33 @@ final class RouteCollectionCacheable implements CacheableInterface
         $this->structureBuilder = $structureBuilder;
     }
 
-    /**
-     * @throws \Psr\Cache\InvalidArgumentException
-     * @return mixed
-     */
-    public function uncachedResult()
+    public function build(): \Symfony\Component\Routing\RouteCollection
     {
         $structure = $this->structureBuilder->build();
 
-        $routeCollection = new RouteCollection();
+        $structureItem = new StructureItem(
+            'root',
+            $structure->structureLoader()
+        );
 
-        foreach ($structure->structure() as $structureItem) {
-            $routerItem = new RoutingItem(
-                $structureItem,
-                $this->pageCacheable,
-                $this->sitemapCacheable,
-                $this->cacheManager,
-                $this->pageTypeSubManager,
-                $this->localeManager,
-                $this->replacementManager
-            );
+        $routeCollection = new \Symfony\Component\Routing\RouteCollection();
 
-            $this->handleRoutingItem($routerItem, $routeCollection);
-        }
+        $routerItem = new RoutingItem(
+            $structureItem,
+            $this->pageCacheable,
+            $this->sitemapCacheable,
+            $this->cacheManager,
+            $this->pageTypeSubManager,
+            $this->localeManager,
+            $this->replacementManager
+        );
+
+        $this->handleRoutingItem($routerItem, $routeCollection);
 
         return $routeCollection;
     }
 
-    private function handleRoutingItem(RoutingItem $routerItem, RouteCollection $routeCollection): void
+    private function handleRoutingItem(RoutingItem $routerItem, \Symfony\Component\Routing\RouteCollection $routeCollection): void
     {
         $iterator = new \RecursiveIteratorIterator($routerItem, RecursiveIteratorIterator::SELF_FIRST);
         /** @var RoutingItem $routingItem */
@@ -160,29 +127,5 @@ final class RouteCollectionCacheable implements CacheableInterface
                 }
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function cacheName(): string
-    {
-        return 'cms';
-    }
-
-    /**
-     * @return string
-     */
-    public function cacheKey(): string
-    {
-        return 'routing';
-    }
-
-    /**
-     * @return int
-     */
-    public function cacheTtl(): int
-    {
-        return 3600;
     }
 }

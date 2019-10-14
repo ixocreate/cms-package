@@ -20,12 +20,14 @@ use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Cms\Router\Factory\CmsRouterFactory;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
+use Ixocreate\Cms\Router\RouteCollection;
 use Ixocreate\Cms\Seo\Sitemap\XmlSitemapProviderSubManager;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
 use Ixocreate\Cms\Site\Admin\Factory\AdminContainerFactory;
 use Ixocreate\Cms\Site\Structure\Factory\StructureBuilderFactory;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Cms\Site\Structure\StructureLoader;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Factory\ContainerFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
@@ -40,9 +42,11 @@ $serviceManager->addSubManager(ReplacementManager::class);
 
 $serviceManager->addFactory(CmsRouter::class, CmsRouterFactory::class);
 $serviceManager->addFactory(PageRoute::class);
+$serviceManager->addFactory(RouteCollection::class);
 $serviceManager->addFactory(Container::class, ContainerFactory::class);
 $serviceManager->addFactory(AdminContainer::class, AdminContainerFactory::class);
 
 $serviceManager->addService(DatabasePageLoader::class, DatabasePageLoaderFactory::class);
 $serviceManager->addService(DatabaseSitemapLoader::class, DatabaseSitemapLoaderFactory::class);
 $serviceManager->addService(StructureBuilder::class, StructureBuilderFactory::class);
+$serviceManager->addService(StructureLoader::class);

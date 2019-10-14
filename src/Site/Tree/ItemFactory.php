@@ -97,4 +97,9 @@ final class ItemFactory
             $this->pageRoute
         );
     }
+
+    public function pageTypeSubManager(): PageTypeSubManager
+    {
+        return $this->pageTypeSubManager;
+    }
 }

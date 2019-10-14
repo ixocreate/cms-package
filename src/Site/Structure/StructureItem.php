@@ -45,21 +45,29 @@ final class StructureItem
      * @var int
      */
     private $level;
+    /**
+     * @var StructureLoader
+     */
+    private $structureLoader;
+
+    /**
+     * @var string
+     */
+    private $pageType;
 
     public function __construct(
-        string $sitemapId,
-        ?string $handle,
-        array $pages,
-        array $navigation,
-        array $childrenInfo,
-        int $level
+        string $id,
+        StructureLoader $structureLoader
     ) {
-        $this->sitemapId = $sitemapId;
-        $this->handle = $handle;
-        $this->pages = $pages;
-        $this->navigation = $navigation;
-        $this->childrenInfo = $childrenInfo;
-        $this->level = $level;
+        $item = $structureLoader->get($id);
+        $this->sitemapId = $id;
+        $this->handle = $item['handle'];
+        $this->pages = $item['pages'];
+        $this->navigation = $item['navigation'];
+        $this->childrenInfo = $item['children'];
+        $this->level = $item['level'];
+        $this->pageType = $item['pageType'];
+        $this->structureLoader = $structureLoader;
     }
 
     public function sitemapId(): string
@@ -87,6 +95,11 @@ final class StructureItem
         return $this->level;
     }
 
+    public function pageType(): string
+    {
+        return $this->pageType;
+    }
+
     public function children(): array
     {
         if ($this->children === null) {
@@ -100,12 +113,8 @@ final class StructureItem
                 }
 
                 $this->children[] = new StructureItem(
-                    $item['sitemapId'],
-                    $item['handle'],
-                    $item['pages'],
-                    $item['navigation'],
-                    $item['children'],
-                    $this->level() + 1
+                    $item,
+                    $this->structureLoader
                 );
             }
         }

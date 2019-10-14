@@ -9,50 +9,39 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Structure;
 
-use Serializable;
 
-final class Structure implements Serializable
+final class Structure
 {
     /**
      * @var array
      */
-    private $structure = [];
+    private $ids = [];
+    /**
+     * @var StructureLoader
+     */
+    private $structureLoader;
 
-    public function __construct(array $structure)
+    public function __construct(array $ids, StructureLoader $structureLoader)
     {
-        $this->structure = $structure;
+        $this->ids = $ids;
+        $this->structureLoader = $structureLoader;
     }
 
     public function structure(): array
     {
         $structureItems = [];
-        foreach ($this->structure as $item) {
+        foreach ($this->ids as $id) {
             $structureItems[] = new StructureItem(
-                $item['sitemapId'],
-                $item['handle'],
-                $item['pages'],
-                $item['navigation'],
-                $item['children'],
-                0
+                $id,
+                $this->structureLoader
             );
         }
 
         return $structureItems;
     }
 
-    /**
-     * @return string
-     */
-    public function serialize()
+    public function structureLoader(): StructureLoader
     {
-        return \serialize($this->structure);
-    }
-
-    /**
-     * @param string $serialized
-     */
-    public function unserialize($serialized)
-    {
-        $this->structure = \unserialize($serialized);
+        return $this->structureLoader;
     }
 }

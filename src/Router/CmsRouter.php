@@ -10,9 +10,15 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Router;
 
 use Ixocreate\Application\Uri\ApplicationUri;
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\CompiledGeneratorRoutesCacheable;
+use Ixocreate\Cms\Cacheable\CompiledMatcherRoutesCacheable;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Generator\CompiledUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -29,7 +35,7 @@ final class CmsRouter implements RouterInterface
     private $routes;
 
     /**
-     * @var UrlGenerator
+     * @var UrlGeneratorInterface
      */
     private $generator;
 
@@ -37,20 +43,53 @@ final class CmsRouter implements RouterInterface
      * @var MiddlewareFactory
      */
     private $middlewareFactory;
+    /**
+     * @var ApplicationUri
+     */
+    private $applicationUri;
+    /**
+     * @var CacheManager
+     */
+    private $cacheManager;
+    /**
+     * @var CompiledGeneratorRoutesCacheable
+     */
+    private $compiledGeneratorRoutesCacheable;
+    /**
+     * @var CompiledMatcherRoutesCacheable
+     */
+    private $compiledMatcherRoutesCacheable;
 
     /**
      * CmsRouter constructor.
-     * @param RouteCollection $routes
      * @param MiddlewareFactory $middlewareFactory
      * @param ApplicationUri $applicationUri
+     * @param CacheManager $cacheManager
+     * @param CompiledGeneratorRoutesCacheable $compiledGeneratorRoutesCacheable
+     * @param CompiledMatcherRoutesCacheable $compiledMatcherRoutesCacheable
      */
-    public function __construct(RouteCollection $routes, MiddlewareFactory $middlewareFactory, ApplicationUri $applicationUri)
-    {
-        $this->routes = $routes;
-        $context = new RequestContext('', 'GET', $applicationUri->getMainUri()->getHost(), $applicationUri->getMainUri()->getScheme());
-        $this->generator = new UrlGenerator($this->routes, $context);
-
+    public function __construct(
+        MiddlewareFactory $middlewareFactory,
+        ApplicationUri $applicationUri,
+        CacheManager $cacheManager,
+        CompiledGeneratorRoutesCacheable $compiledGeneratorRoutesCacheable,
+        CompiledMatcherRoutesCacheable $compiledMatcherRoutesCacheable
+    ) {
         $this->middlewareFactory = $middlewareFactory;
+        $this->applicationUri = $applicationUri;
+        $this->cacheManager = $cacheManager;
+        $this->compiledGeneratorRoutesCacheable = $compiledGeneratorRoutesCacheable;
+        $this->compiledMatcherRoutesCacheable = $compiledMatcherRoutesCacheable;
+    }
+
+    private function generator(): UrlGeneratorInterface
+    {
+        if ($this->generator === null) {
+            $context = new RequestContext('', 'GET', $this->applicationUri->getMainUri()->getHost(), $this->applicationUri->getMainUri()->getScheme());
+            $routes = $this->cacheManager->fetch($this->compiledGeneratorRoutesCacheable);
+            $this->generator = new CompiledUrlGenerator($routes, $context);
+        }
+        return $this->generator;
     }
 
     /**
@@ -78,7 +117,8 @@ final class CmsRouter implements RouterInterface
             $request->getUri()->getScheme()
         );
 
-        $matcher = new UrlMatcher($this->routes, $context);
+        $routes = $this->cacheManager->fetch($this->compiledMatcherRoutesCacheable);
+        $matcher = new CompiledUrlMatcher($routes, $context);
 
         try {
             $routeMatch = $matcher->match($request->getUri()->getPath());
@@ -87,12 +127,14 @@ final class CmsRouter implements RouterInterface
         }
 
         $route = new Route(
-            $this->routes->get($routeMatch['_route'])->getPath(),
+            $request->getUri()->getPath(),
             $this->middlewareFactory->pipeline($routeMatch['middleware']),
             Route::HTTP_METHOD_ANY,
             $routeMatch['_route']
         );
-        $route->setOptions(['pageId' => $routeMatch['pageId']]);
+        $route->setOptions([
+            'pageId' => $routeMatch['pageId']
+        ]);
         unset($routeMatch['_route'], $routeMatch['middleware']);
 
         return RouteResult::fromRoute($route, $routeMatch);
@@ -107,7 +149,7 @@ final class CmsRouter implements RouterInterface
      */
     public function generateUri(string $name, array $substitutions = [], array $options = []): string
     {
-        $path = $this->generator->generate($name, $substitutions, UrlGenerator::ABSOLUTE_URL);
+        $path = $this->generator()->generate($name, $substitutions, UrlGenerator::ABSOLUTE_URL);
         return (string) $path;
     }
 }

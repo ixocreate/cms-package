@@ -72,7 +72,7 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
 
         $sitemap = $this->cacheManager->fetch($cacheable);
 
-        $container = $this->container
+        /*$container = $this->container
             ->filter(OnlineSearch::class, ['locale' => $page->locale()])
             ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
             ->flatten();
@@ -83,7 +83,8 @@ final class LoadSitemapMiddleware implements MiddlewareInterface
 
         if (empty($item)) {
             return $this->notFoundHandler->process($request, $handler);
-        }
+        }*/
+        //TODO CHECK RECURSICE PARENT ONLINE STATUS
 
         $request = $request->withSitemap($sitemap);
 

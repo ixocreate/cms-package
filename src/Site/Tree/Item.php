@@ -137,7 +137,7 @@ class Item implements ContainerInterface
      */
     public function pageType(): PageTypeInterface
     {
-        return $this->pageTypeSubManager->get($this->sitemap()->pageType());
+        return $this->pageTypeSubManager->get($this->structureItem()->pageType());
     }
 
     /**
@@ -215,9 +215,26 @@ class Item implements ContainerInterface
         return $this->structureItem->handle();
     }
 
-    public function navigation(): array
+    public function navigation(string $locale = null): array
     {
-        return $this->structureItem()->navigation();
+        if ($locale === null) {
+            $locale = \Locale::getDefault();
+        }
+
+        $pages = $this->structureItem()->pages();
+        if (empty($pages[$locale])) {
+            return [];
+        }
+
+        $page = $pages[$locale];
+
+        $navigation = $this->structureItem()->navigation();
+
+        if (empty($navigation[$page])) {
+            return [];
+        }
+
+        return $navigation[$page];
     }
 
     /**

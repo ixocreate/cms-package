@@ -71,6 +71,14 @@ class AdminContainer implements AdminContainerInterface, \JsonSerializable
     }
 
     /**
+     * @return AdminItemFactory
+     */
+    public function itemFactory(): AdminItemFactory
+    {
+        return $this->itemFactory;
+    }
+
+    /**
      * @return mixed
      */
     public function current()

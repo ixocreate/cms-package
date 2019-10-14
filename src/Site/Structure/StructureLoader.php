@@ -30,14 +30,15 @@ final class StructureLoader
         $this->sitemapRepository = $sitemapRepository;
     }
 
-    public function get(string $id)
+    public function get(string $id, bool $force = false)
     {
         if ($id === "root") {
             return $this->loadRoot();
         }
 
         return $this->cacheManager->fetch(
-            $this->structureItemCacheable->withId($id)
+            $this->structureItemCacheable->withId($id),
+            $force
         );
     }
 

@@ -14,9 +14,12 @@ use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Site\Structure\StructureItem;
+use Ixocreate\Cms\Site\Structure\StructureLoader;
 use Ixocreate\Schema\Builder\BuilderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,6 +47,14 @@ final class DetailAction implements MiddlewareInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+    /**
+     * @var StructureLoader
+     */
+    private $structureLoader;
 
     /**
      * DetailAction constructor.
@@ -51,32 +62,36 @@ final class DetailAction implements MiddlewareInterface
      * @param Config $config
      * @param BuilderInterface $schemaBuilder
      * @param PageVersionRepository $pageVersionRepository
+     * @param PageRepository $pageRepository
+     * @param StructureLoader $structureLoader
      */
     public function __construct(
         AdminContainer $adminContainer,
         Config $config,
         BuilderInterface $schemaBuilder,
-        PageVersionRepository $pageVersionRepository
+        PageVersionRepository $pageVersionRepository,
+        PageRepository $pageRepository,
+        StructureLoader $structureLoader
     ) {
         $this->adminContainer = $adminContainer;
         $this->config = $config;
         $this->schemaBuilder = $schemaBuilder;
         $this->pageVersionRepository = $pageVersionRepository;
+        $this->pageRepository = $pageRepository;
+        $this->structureLoader = $structureLoader;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute("id");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
+        $page = $this->pageRepository->find($pageId);
+        if (empty($page)) {
+            return new ApiErrorResponse("invalid_page_id");
+        }
 
-            return false;
-        });
+        $structureItem = new StructureItem((string) $page->sitemapId(), $this->structureLoader);
+
+        $item = $this->adminContainer->itemFactory()->create($structureItem);
 
         if (empty($item)) {
             return new ApiErrorResponse("invalid_page_id");

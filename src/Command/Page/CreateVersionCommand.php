@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Page;
 
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -55,11 +54,6 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     private $eventDispatcher;
 
     /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
      * CreateVersionCommand constructor.
      *
      * @param PageVersionRepository $pageVersionRepository
@@ -67,26 +61,22 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
      * @param SitemapRepository $sitemapRepository
      * @param PageTypeSubManager $pageTypeSubManager
      * @param EventDispatcher $eventDispatcher
-     * @param CacheInterface $cms
      */
     public function __construct(
         PageVersionRepository $pageVersionRepository,
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository,
         PageTypeSubManager $pageTypeSubManager,
-        EventDispatcher $eventDispatcher,
-        CacheInterface $cms
+        EventDispatcher $eventDispatcher
     ) {
         $this->pageVersionRepository = $pageVersionRepository;
         $this->pageRepository = $pageRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->eventDispatcher = $eventDispatcher;
-        $this->cache = $cms;
     }
 
     /**
-     * @throws \Psr\Cache\InvalidArgumentException
      * @return bool
      */
     public function execute(): bool
@@ -133,10 +123,6 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
 
         /** @var PageVersion $pageVersion */
         $pageVersion = $this->pageVersionRepository->save($pageVersion);
-
-        if ($this->dataValue("approve") === true) {
-            $this->cache->clear();
-        }
 
         $pageEvent = new PageEvent(
             $sitemap,

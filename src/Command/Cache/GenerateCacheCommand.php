@@ -146,7 +146,7 @@ ORDER BY node.nestedLeft";
         foreach ($flat as $key => $item) {
             $cachable = $this->structureItemCacheable->withId($key);
 
-            $this->cacheSubManager->get($cachable->cacheName())->put(
+            $this->cacheSubManager->get('cms_store')->put(
                $cachable->cacheKey(),
                $item,
                $cachable->cacheTtl()

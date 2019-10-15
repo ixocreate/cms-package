@@ -1,10 +1,4 @@
 <?php
-/**
- * @link https://github.com/ixocreate
- * @copyright IXOLIT GmbH
- * @license MIT License
- */
-
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Tree\Factory;
@@ -17,14 +11,14 @@ use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 
-final class ContainerFactory implements FactoryInterface
+final class ItemFactoryFactory implements FactoryInterface
 {
+
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName
@@ -34,15 +28,21 @@ final class ContainerFactory implements FactoryInterface
     public function __invoke(ServiceManagerInterface $container, $requestedName, array $options = null)
     {
         $cachemanager = $container->get(CacheManager::class);
-        $structureCacheable = $container->get(CacheableSubManager::class)->get(StructureCacheable::class);
+        $pageCacheable = $container->get(CacheableSubManager::class)->get(PageCacheable::class);
+        $sitemapCacheable = $container->get(CacheableSubManager::class)->get(SitemapCacheable::class);
+        $pageVersionCacheable = $container->get(CacheableSubManager::class)->get(PageVersionCacheable::class);
+        $pageTypeSubManager = $container->get(PageTypeSubManager::class);
         $searchSubManager = $container->get(SearchSubManager::class);
+        $pageRoute = $container->get(PageRoute::class);
 
-        $itemFactory = $container->get(ItemFactory::class);
-
-        return new Container(
-            $cachemanager->fetch($structureCacheable),
+        return new ItemFactory(
+            $pageCacheable,
+            $sitemapCacheable,
+            $pageVersionCacheable,
+            $cachemanager,
+            $pageTypeSubManager,
             $searchSubManager,
-            $itemFactory
+            $pageRoute
         );
     }
 }

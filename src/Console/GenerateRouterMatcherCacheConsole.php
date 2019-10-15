@@ -58,6 +58,7 @@ class GenerateRouterMatcherCacheConsole extends Command implements CommandInterf
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         \ini_set('memory_limit', '2048M');
+        \set_time_limit(0);
 
         $routeCollection = $this->routeCollection->build();
 

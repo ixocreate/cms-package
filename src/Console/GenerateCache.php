@@ -34,12 +34,15 @@ class GenerateCache extends Command implements CommandInterface
         $baseCommand = PHP_BINARY . ' '.  \getcwd() . '/' . $_SERVER['SCRIPT_FILENAME'];
 
         $process = new Process($baseCommand . ' cms:generate-structure-cache');
+        $process->setTimeout(null);
         $process->run();
 
         $process = new Process($baseCommand . ' cms:generate-router-matcher-cache');
+        $process->setTimeout(null);
         $process->run();
 
         $process = new Process($baseCommand . ' cms:generate-router-generator-cache');
+        $process->setTimeout(null);
         $process->run();
     }
 }

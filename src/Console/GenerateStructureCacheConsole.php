@@ -45,6 +45,8 @@ class GenerateStructureCacheConsole extends Command implements CommandInterface
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        \set_time_limit(0);
+
         $this->commandBus->command(GenerateCacheCommand::class, []);
     }
 }

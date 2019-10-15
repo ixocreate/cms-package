@@ -12,7 +12,9 @@ use Ixocreate\Cache\CacheableSubManager;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\CompiledGeneratorRoutesCacheable;
 use Ixocreate\Cms\Cacheable\CompiledMatcherRoutesCacheable;
+use Ixocreate\Cms\Repository\RouteMatchRepository;
 use Ixocreate\Cms\Router\CmsRouter;
+use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 use Zend\Expressive\MiddlewareContainer;
@@ -33,7 +35,8 @@ final class CmsRouterFactory implements FactoryInterface
             $container->get(ApplicationUri::class),
             $container->get(CacheManager::class),
             $container->get(CacheableSubManager::class)->get(CompiledGeneratorRoutesCacheable::class),
-            $container->get(CacheableSubManager::class)->get(CompiledMatcherRoutesCacheable::class)
+            $container->get(CacheableSubManager::class)->get(CompiledMatcherRoutesCacheable::class),
+            $container->get(RepositorySubManager::class)->get(RouteMatchRepository::class)
         );
     }
 }

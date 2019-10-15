@@ -57,6 +57,9 @@ class GenerateRouterGeneratorCacheConsole extends Command implements CommandInte
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        \ini_set('memory_limit', '2048M');
+        \set_time_limit(0);
+
         $routeCollection = $this->routeCollection->build();
 
         $this->cacheManager->fetch(

@@ -110,7 +110,7 @@ final class StructureItemCacheable implements CacheableInterface
      */
     public function cacheName(): string
     {
-        return 'cms_store';
+        return 'cms';
     }
 
     /**

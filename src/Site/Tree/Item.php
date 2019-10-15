@@ -110,13 +110,20 @@ class Item implements ContainerInterface
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->searchSubManager = $searchSubManager;
         $this->pageRoute = $pageRoute;
+    }
 
-        $this->container = new Container($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
+    private function container(): Container
+    {
+        if (empty($this->container)) {
+            $this->container = new Container($this->structureItem->children(), $this->searchSubManager, $this->itemFactory);
+        }
+
+        return $this->container;
     }
 
     public function count()
     {
-        return $this->container->count();
+        return $this->container()->count();
     }
 
     public function structureItem(): StructureItem
@@ -247,7 +254,7 @@ class Item implements ContainerInterface
             return false;
         }
 
-        if ((string) $this->sitemap()->id() === (string) $currentSitemap->id()) {
+        if ((string) $this->structureItem()->sitemapId() === (string) $currentSitemap->id()) {
             return true;
         }
 
@@ -265,7 +272,7 @@ class Item implements ContainerInterface
      */
     public function filter($filter, array $params = []): ContainerInterface
     {
-        return $this->container->filter($filter, $params);
+        return $this->container()->filter($filter, $params);
     }
 
     /**
@@ -274,7 +281,7 @@ class Item implements ContainerInterface
      */
     public function withMaxLevel(int $level): ContainerInterface
     {
-        return $this->container->withMaxLevel($level);
+        return $this->container()->withMaxLevel($level);
     }
 
     /**
@@ -283,7 +290,7 @@ class Item implements ContainerInterface
      */
     public function withNavigation(string $navigation): ContainerInterface
     {
-        return $this->container->withNavigation($navigation);
+        return $this->container()->withNavigation($navigation);
     }
 
     /**
@@ -293,7 +300,7 @@ class Item implements ContainerInterface
      */
     public function where($filter, array $params = []): ContainerInterface
     {
-        return $this->container->where($filter, $params);
+        return $this->container()->where($filter, $params);
     }
 
     /**
@@ -302,7 +309,7 @@ class Item implements ContainerInterface
      */
     public function withMinLevel(int $level): ContainerInterface
     {
-        return $this->container->withMinLevel($level);
+        return $this->container()->withMinLevel($level);
     }
 
     /**
@@ -310,7 +317,7 @@ class Item implements ContainerInterface
      */
     public function flatten(): ContainerInterface
     {
-        return $this->container->flatten();
+        return $this->container()->flatten();
     }
 
     /**
@@ -320,7 +327,7 @@ class Item implements ContainerInterface
      */
     public function find($filter, array $params = []): ?Item
     {
-        return $this->container->find($filter, $params);
+        return $this->container()->find($filter, $params);
     }
 
     /**
@@ -329,7 +336,7 @@ class Item implements ContainerInterface
      */
     public function findByHandle(string $handle): ?Item
     {
-        return $this->container->findByHandle($handle);
+        return $this->container()->findByHandle($handle);
     }
 
     /**
@@ -338,12 +345,12 @@ class Item implements ContainerInterface
      */
     public function sort(callable $callable): ContainerInterface
     {
-        return $this->container->sort($callable);
+        return $this->container()->sort($callable);
     }
 
     public function paginate(int $limit, int $offset = 0): ContainerInterface
     {
-        $this->container->paginate($limit, $offset);
+        $this->container()->paginate($limit, $offset);
     }
 
     /**
@@ -351,7 +358,7 @@ class Item implements ContainerInterface
      */
     public function current()
     {
-        return $this->container->current();
+        return $this->container()->current();
     }
 
     /**
@@ -359,7 +366,7 @@ class Item implements ContainerInterface
      */
     public function next()
     {
-        $this->container->next();
+        $this->container()->next();
     }
 
     /**
@@ -367,7 +374,7 @@ class Item implements ContainerInterface
      */
     public function key()
     {
-        return $this->container->key();
+        return $this->container()->key();
     }
 
     /**
@@ -375,7 +382,7 @@ class Item implements ContainerInterface
      */
     public function valid()
     {
-        return $this->container->valid();
+        return $this->container()->valid();
     }
 
     /**
@@ -383,7 +390,7 @@ class Item implements ContainerInterface
      */
     public function rewind()
     {
-        $this->container->rewind();
+        $this->container()->rewind();
     }
 
     /**
@@ -391,7 +398,7 @@ class Item implements ContainerInterface
      */
     public function hasChildren()
     {
-        return $this->container->hasChildren();
+        return $this->container()->hasChildren();
     }
 
     /**
@@ -399,6 +406,6 @@ class Item implements ContainerInterface
      */
     public function getChildren()
     {
-        return $this->container->getChildren();
+        return $this->container()->getChildren();
     }
 }

@@ -9,13 +9,15 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Template;
 
+use Ixocreate\Cache\CacheManager;
+use Ixocreate\Cms\Cacheable\StructureItemCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\Structure\StructureLoader;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
-use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
-use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
+use Ixocreate\Cms\Site\Tree\ItemFactory;
 use Ixocreate\Template\Extension\ExtensionInterface;
 
 final class PageUrlExtension implements ExtensionInterface
@@ -35,6 +37,7 @@ final class PageUrlExtension implements ExtensionInterface
      *
      * @param PageRoute $pageRoute
      * @param Container $container
+     * @param ItemFactory $itemFactory
      */
     public function __construct(
         PageRoute $pageRoute,
@@ -95,25 +98,24 @@ final class PageUrlExtension implements ExtensionInterface
             return '';
         }
 
-
         $page = $item->page($locale);
 
         if (!$page->isOnline()) {
             return '';
         }
 
-        $container = $this->container
-            ->filter(OnlineSearch::class, ['locale' => $locale])
-            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
-            ->flatten();
-
-        $item = $container->find(function (Item $item) use ($sitemap) {
-            return (string) $item->sitemap()->id() === (string) $sitemap->id();
-        });
-
-        if (empty($item)) {
-            return '';
-        }
+//        $container = $this->container
+//            ->filter(OnlineSearch::class, ['locale' => $locale])
+//            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
+//            ->flatten();
+//
+//        $item = $container->find(function (Item $item) use ($sitemap) {
+//            return (string) $item->sitemap()->id() === (string) $sitemap->id();
+//        });
+//
+//        if (empty($item)) {
+//            return '';
+//        }
 
         return $this->fromPage($page, $params);
     }
@@ -145,18 +147,18 @@ final class PageUrlExtension implements ExtensionInterface
             return $this->fromHandle($defaultHandle, [], $locale);
         }
 
-        $container = $this->container
-            ->filter(OnlineSearch::class, ['locale' => $locale])
-            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
-            ->flatten();
-
-        $item = $container->find(function (Item $item) use ($sitemap) {
-            return (string) $item->sitemap()->id() === (string) $sitemap->id();
-        });
-
-        if (empty($item)) {
-            return $this->fromHandle($defaultHandle, [], $locale);
-        }
+//        $container = $this->container
+//            ->filter(OnlineSearch::class, ['locale' => $locale])
+//            ->filter(ActiveSearch::class, ['sitemap' => $sitemap])
+//            ->flatten();
+//
+//        $item = $container->find(function (Item $item) use ($sitemap) {
+//            return (string) $item->sitemap()->id() === (string) $sitemap->id();
+//        });
+//
+//        if (empty($item)) {
+//            return $this->fromHandle($defaultHandle, [], $locale);
+//        }
 
         return $this->fromPage($page, []);
     }

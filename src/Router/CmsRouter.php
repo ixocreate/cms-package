@@ -13,6 +13,8 @@ use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\CompiledGeneratorRoutesCacheable;
 use Ixocreate\Cms\Cacheable\CompiledMatcherRoutesCacheable;
+use Ixocreate\Cms\Entity\RouteMatch;
+use Ixocreate\Cms\Repository\RouteMatchRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\CompiledUrlGenerator;
@@ -59,6 +61,10 @@ final class CmsRouter implements RouterInterface
      * @var CompiledMatcherRoutesCacheable
      */
     private $compiledMatcherRoutesCacheable;
+    /**
+     * @var RouteMatchRepository
+     */
+    private $routeMatchRepository;
 
     /**
      * CmsRouter constructor.
@@ -73,13 +79,15 @@ final class CmsRouter implements RouterInterface
         ApplicationUri $applicationUri,
         CacheManager $cacheManager,
         CompiledGeneratorRoutesCacheable $compiledGeneratorRoutesCacheable,
-        CompiledMatcherRoutesCacheable $compiledMatcherRoutesCacheable
+        CompiledMatcherRoutesCacheable $compiledMatcherRoutesCacheable,
+        RouteMatchRepository $routeMatchRepository
     ) {
         $this->middlewareFactory = $middlewareFactory;
         $this->applicationUri = $applicationUri;
         $this->cacheManager = $cacheManager;
         $this->compiledGeneratorRoutesCacheable = $compiledGeneratorRoutesCacheable;
         $this->compiledMatcherRoutesCacheable = $compiledMatcherRoutesCacheable;
+        $this->routeMatchRepository = $routeMatchRepository;
     }
 
     private function generator(): UrlGeneratorInterface
@@ -117,27 +125,39 @@ final class CmsRouter implements RouterInterface
             $request->getUri()->getScheme()
         );
 
-        $routes = $this->cacheManager->fetch($this->compiledMatcherRoutesCacheable);
-        $matcher = new CompiledUrlMatcher($routes, $context);
+        // check
+        /** @var RouteMatch $routeMatch */
+        $routeMatch = $this->routeMatchRepository->find((string)$request->getUri());
 
-        try {
-            $routeMatch = $matcher->match($request->getUri()->getPath());
-        } catch (ResourceNotFoundException $e) {
-            return RouteResult::fromRouteFailure(Route::HTTP_METHOD_ANY);
+        if ($routeMatch === null) {
+            $routes = $this->cacheManager->fetch($this->compiledMatcherRoutesCacheable);
+            $matcher = new CompiledUrlMatcher($routes, $context);
+
+            try {
+                $routeMatchData = $matcher->match($request->getUri()->getPath());
+            } catch (ResourceNotFoundException $e) {
+                return RouteResult::fromRouteFailure(Route::HTTP_METHOD_ANY);
+            }
+        } else {
+            $routeMatchData = [
+                'middleware' => $routeMatch->middleware(),
+                'pageId' => $routeMatch->pageId(),
+                '_route' => 'page.' . $routeMatch->pageId(),
+            ];
         }
 
         $route = new Route(
             $request->getUri()->getPath(),
-            $this->middlewareFactory->pipeline($routeMatch['middleware']),
+            $this->middlewareFactory->pipeline($routeMatchData['middleware']),
             Route::HTTP_METHOD_ANY,
-            $routeMatch['_route']
+            $routeMatchData['_route']
         );
         $route->setOptions([
-            'pageId' => $routeMatch['pageId']
+            'pageId' => $routeMatchData['pageId']
         ]);
-        unset($routeMatch['_route'], $routeMatch['middleware']);
+        unset($routeMatchData['_route'], $routeMatchData['middleware']);
 
-        return RouteResult::fromRoute($route, $routeMatch);
+        return RouteResult::fromRoute($route, $routeMatchData);
     }
 
     /**
@@ -149,7 +169,23 @@ final class CmsRouter implements RouterInterface
      */
     public function generateUri(string $name, array $substitutions = [], array $options = []): string
     {
-        $path = $this->generator()->generate($name, $substitutions, UrlGenerator::ABSOLUTE_URL);
+        $type = '*';
+        $parts = \explode('.', $name);
+        if (\count($parts) == 2) {
+            $pageId = $parts[1];
+        } else {
+            $type = $parts[1];
+            $pageId = $parts[2];
+        }
+
+        /** @var RouteMatch $routeMatch */
+        $routeMatch = $this->routeMatchRepository->findOneBy(['pageId' => $pageId, 'type' => $type]);
+        if ($routeMatch === null) {
+            $path = $this->generator()->generate($name, $substitutions, UrlGenerator::ABSOLUTE_URL);
+        } else {
+            $path = $routeMatch->url();
+        }
+
         return (string) $path;
     }
 }

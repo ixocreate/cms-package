@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
+use Ixocreate\Cms\Entity\RouteMatch;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\RouteMatchRepository;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
 use Ixocreate\Cms\Site\Structure\StructureItem;
@@ -44,6 +47,14 @@ final class RouteCollection
      * @var StructureBuilder
      */
     private $structureBuilder;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+    /**
+     * @var RouteMatchRepository
+     */
+    private $routeMatchRepository;
 
     public function __construct(
         LocaleManager $localeManager,
@@ -52,7 +63,9 @@ final class RouteCollection
         CacheManager $cacheManager,
         PageTypeSubManager $pageTypeSubManager,
         ReplacementManager $replacementManager,
-        StructureBuilder $structureBuilder
+        StructureBuilder $structureBuilder,
+        EntityManagerInterface $master,
+        RouteMatchRepository $routeMatchRepository
     ) {
         $this->localeManager = $localeManager;
         $this->pageCacheable = $pageCacheable;
@@ -61,6 +74,8 @@ final class RouteCollection
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->replacementManager = $replacementManager;
         $this->structureBuilder = $structureBuilder;
+        $this->entityManager = $master;
+        $this->routeMatchRepository = $routeMatchRepository;
     }
 
     public function build(): \Symfony\Component\Routing\RouteCollection
@@ -84,13 +99,8 @@ final class RouteCollection
             $this->replacementManager
         );
 
-        $this->handleRoutingItem($routerItem, $routeCollection);
+        $routeMatches = [];
 
-        return $routeCollection;
-    }
-
-    private function handleRoutingItem(RoutingItem $routerItem, \Symfony\Component\Routing\RouteCollection $routeCollection): void
-    {
         $iterator = new \RecursiveIteratorIterator($routerItem, RecursiveIteratorIterator::SELF_FIRST);
         /** @var RoutingItem $routingItem */
         foreach ($iterator as $routingItem) {
@@ -102,6 +112,16 @@ final class RouteCollection
                 }
                 foreach ($routeSpecification->uris() as $name => $uri) {
                     if ($name === RouteSpecification::NAME_INHERITANCE) {
+                        continue;
+                    }
+
+                    if (\strpos($uri, '{') === false) {
+                        $routeMatches[] = new RouteMatch([
+                            'url' => (string) $uri,
+                            'type' => $name,
+                            'pageId' => (string) $routeSpecification->pageId(),
+                            'middleware' => (empty($routeSpecification->middleware())) ? [] : $routeSpecification->middleware(),
+                        ]);
                         continue;
                     }
 
@@ -127,5 +147,16 @@ final class RouteCollection
                 }
             }
         }
+
+        $this->entityManager->transactional(function() use ($routeMatches){
+            $dql = 'DELETE FROM ' . RouteMatch::class . ' r WHERE r.url IS NOT NULL';
+            $this->routeMatchRepository->createQuery($dql)->execute();
+
+            foreach ($routeMatches as $routeMatch) {
+                $this->routeMatchRepository->save($routeMatch);
+            }
+        });
+
+        return $routeCollection;
     }
 }

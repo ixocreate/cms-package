@@ -125,9 +125,13 @@ final class CmsRouter implements RouterInterface
             $request->getUri()->getScheme()
         );
 
-        // check
+        $uri = (string) $request->getUri();
+        if ($request->getUri()->getPath() === '/') {
+            $uri = (string) $request->getUri()->withPath('');
+        }
+
         /** @var RouteMatch $routeMatch */
-        $routeMatch = $this->routeMatchRepository->find((string)$request->getUri());
+        $routeMatch = $this->routeMatchRepository->find($uri);
 
         if ($routeMatch === null) {
             $routes = $this->cacheManager->fetch($this->compiledMatcherRoutesCacheable);

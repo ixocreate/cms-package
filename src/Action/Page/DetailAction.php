@@ -51,6 +51,7 @@ final class DetailAction implements MiddlewareInterface
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var StructureLoader
      */

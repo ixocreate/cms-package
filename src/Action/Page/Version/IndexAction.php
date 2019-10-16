@@ -15,9 +15,8 @@ use Ixocreate\Admin\Repository\UserRepository;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,14 +26,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class IndexAction implements MiddlewareInterface
 {
     /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
+    /**
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
-
-    /**
-     * @var AdminContainer
-     */
-    private $adminContainer;
 
     /**
      * @var UserRepository
@@ -43,17 +42,17 @@ final class IndexAction implements MiddlewareInterface
 
     /**
      * IndexAction constructor.
-     * @param AdminContainer $adminContainer
+     * @param PageRepository $pageRepository
      * @param PageVersionRepository $pageVersionRepository
      * @param UserRepository $userRepository
      */
     public function __construct(
-        AdminContainer $adminContainer,
+        PageRepository $pageRepository,
         PageVersionRepository $pageVersionRepository,
         UserRepository $userRepository
     ) {
+        $this->pageRepository = $pageRepository;
         $this->pageVersionRepository = $pageVersionRepository;
-        $this->adminContainer = $adminContainer;
         $this->userRepository = $userRepository;
     }
 
@@ -64,20 +63,12 @@ final class IndexAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $pageId = $request->getAttribute("pageId");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
+        $pageId = $request->getAttribute('pageId');
 
-            return false;
-        });
+        $page = $this->pageRepository->find($pageId);
 
-        if (empty($item)) {
-            return new ApiErrorResponse("invalid_page_id");
+        if ($page === null) {
+            return new ApiErrorResponse('invalid_page_id');
         }
 
         $userResult = $this->userRepository->findAll();

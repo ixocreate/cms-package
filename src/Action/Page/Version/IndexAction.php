@@ -66,7 +66,6 @@ final class IndexAction implements MiddlewareInterface
         $pageId = $request->getAttribute('pageId');
 
         $page = $this->pageRepository->find($pageId);
-
         if ($page === null) {
             return new ApiErrorResponse('invalid_page_id');
         }

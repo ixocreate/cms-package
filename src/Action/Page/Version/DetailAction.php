@@ -14,9 +14,8 @@ use Ixocreate\Admin\Repository\UserRepository;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,14 +25,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class DetailAction implements MiddlewareInterface
 {
     /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+
+    /**
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
-
-    /**
-     * @var AdminContainer
-     */
-    private $adminContainer;
 
     /**
      * @var UserRepository
@@ -42,17 +41,17 @@ final class DetailAction implements MiddlewareInterface
 
     /**
      * DetailAction constructor.
-     * @param AdminContainer $adminContainer
+     * @param PageRepository $pageRepository
      * @param PageVersionRepository $pageVersionRepository
      * @param UserRepository $userRepository
      */
     public function __construct(
-        AdminContainer $adminContainer,
+        PageRepository $pageRepository,
         PageVersionRepository $pageVersionRepository,
         UserRepository $userRepository
     ) {
+        $this->pageRepository = $pageRepository;
         $this->pageVersionRepository = $pageVersionRepository;
-        $this->adminContainer = $adminContainer;
         $this->userRepository = $userRepository;
     }
 
@@ -63,21 +62,12 @@ final class DetailAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $versionId = $request->getAttribute("id");
-        $pageId = $request->getAttribute("pageId");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
+        $versionId = $request->getAttribute('id');
+        $pageId = $request->getAttribute('pageId');
 
-            return false;
-        });
-
-        if (empty($item)) {
-            return new ApiErrorResponse("invalid_page_id");
+        $page = $this->pageRepository->find($pageId);
+        if ($page === null) {
+            return new ApiErrorResponse('invalid_page_id');
         }
 
         $userResult = $this->userRepository->findAll();
@@ -85,12 +75,12 @@ final class DetailAction implements MiddlewareInterface
 
         /** @var PageVersion $pageVersion */
         $pageVersion = $this->pageVersionRepository->find($versionId);
-        if (empty($item)) {
-            return new ApiErrorResponse("invalid_page_version_id");
+        if (empty($pageVersion)) {
+            return new ApiErrorResponse('invalid_page_version_id');
         }
 
         if ((string) $pageVersion->pageId() !== $pageId) {
-            return new ApiErrorResponse("invalid_page_version_id");
+            return new ApiErrorResponse('invalid_page_version_id');
         }
 
         $user = [

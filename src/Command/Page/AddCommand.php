@@ -120,7 +120,7 @@ final class AddCommand extends AbstractCommand implements ValidatableInterface, 
                 'pageId' => (string)$page->id(),
             ]);
 
-            $this->cache->clear();
+            //$this->cache->clear();
         });
         return true;
     }

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -64,11 +63,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
     private $pageVersionRepository;
 
     /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
      * @var Page
      */
     private $toPage;
@@ -88,7 +82,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
      * @param CommandBus $commandBus
      * @param Connection $master
      * @param PageVersionRepository $pageVersionRepository
-     * @param CacheInterface $cms
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -97,8 +90,7 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
         LocaleManager $localeManager,
         CommandBus $commandBus,
         Connection $master,
-        PageVersionRepository $pageVersionRepository,
-        CacheInterface $cms
+        PageVersionRepository $pageVersionRepository
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -107,7 +99,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
         $this->commandBus = $commandBus;
         $this->master = $master;
         $this->pageVersionRepository = $pageVersionRepository;
-        $this->cache = $cms;
     }
 
     /**
@@ -184,8 +175,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
                     'createdBy' => $this->dataValue('createdBy'),
                 ]);
             }
-
-            $this->cache->clear();
         });
 
         return true;

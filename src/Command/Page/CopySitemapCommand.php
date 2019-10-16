@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -65,11 +64,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
     private $pageVersionRepository;
 
     /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
      * CreateCommand constructor.
      *
      * @param PageTypeSubManager $pageTypeSubManager
@@ -79,7 +73,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
      * @param CommandBus $commandBus
      * @param Connection $master
      * @param PageVersionRepository $pageVersionRepository
-     * @param CacheInterface $cms
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -88,8 +81,7 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
         LocaleManager $localeManager,
         CommandBus $commandBus,
         Connection $master,
-        PageVersionRepository $pageVersionRepository,
-        CacheInterface $cms
+        PageVersionRepository $pageVersionRepository
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -98,7 +90,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
         $this->commandBus = $commandBus;
         $this->master = $master;
         $this->pageVersionRepository = $pageVersionRepository;
-        $this->cache = $cms;
     }
 
     /**
@@ -175,8 +166,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                         'approve' => true,
                         'createdBy' => $this->dataValue('createdBy'),
                     ]);
-
-                    $this->cache->clear();
                 }
             }
         });

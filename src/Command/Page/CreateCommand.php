@@ -58,11 +58,6 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
     private $master;
 
     /**
-     * @var CacheInterface
-     */
-    private $cache;
-
-    /**
      * CreateCommand constructor.
      *
      * @param PageTypeSubManager $pageTypeSubManager
@@ -71,7 +66,6 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
      * @param Connection $master
-     * @param CacheInterface $cms
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -79,8 +73,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         PageRepository $pageRepository,
         LocaleManager $localeManager,
         CommandBus $commandBus,
-        Connection $master,
-        CacheInterface $cms
+        Connection $master
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -88,7 +81,6 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->master = $master;
-        $this->cache = $cms;
     }
 
     /**
@@ -136,8 +128,6 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
                 'name' => (string)$page->name(),
                 'pageId' => (string)$page->id(),
             ]);
-
-            $this->cache->clear();
         });
 
         return true;

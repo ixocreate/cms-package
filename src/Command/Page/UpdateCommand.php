@@ -170,11 +170,11 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
             $page = $page->with('updatedAt', new \DateTime());
             $this->pageRepository->save($page);
 
-            if ($clearCache) {
-                $this->cache->clear();
-            } else {
-                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
-            }
+//            if ($clearCache) {
+//                $this->cache->clear();
+//            } else {
+//                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
+//            }
         }
 
         return true;

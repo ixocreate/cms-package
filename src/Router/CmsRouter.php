@@ -125,7 +125,7 @@ final class CmsRouter implements RouterInterface
             $request->getUri()->getScheme()
         );
 
-        $uri = (string) $request->getUri();
+        $uri = (string) $request->getUri()->withQuery('');
         if ($request->getUri()->getPath() === '/') {
             $uri = (string) $request->getUri()->withPath('');
         }

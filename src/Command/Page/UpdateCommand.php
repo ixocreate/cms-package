@@ -173,7 +173,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
 //            if ($clearCache) {
 //                $this->cache->clear();
 //            } else {
-//                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
+                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
 //            }
         }
 

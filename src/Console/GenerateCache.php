@@ -31,7 +31,7 @@ class GenerateCache extends Command implements CommandInterface
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $baseCommand = PHP_BINARY . ' '.  \getcwd() . '/' . $_SERVER['SCRIPT_FILENAME'];
+        $baseCommand = PHP_BINARY . ' ' . \getcwd() . '/' . \basename($_SERVER['SCRIPT_FILENAME']);
 
         $process = new Process($baseCommand . ' cms:generate-structure-cache');
         $process->setTimeout(null);

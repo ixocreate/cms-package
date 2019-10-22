@@ -147,10 +147,11 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         }
 
         if ($this->dataValue('navigation') !== null) {
+            $updated = true;
             $queryBuilder = $this->navigationRepository->createQueryBuilder();
-            $queryBuilder->delete(Navigation::class, "nav")
-                ->where("nav.pageId = :pageId")
-                ->setParameter("pageId", (string)$page->id());
+            $queryBuilder->delete(Navigation::class, 'nav')
+                ->where('nav.pageId = :pageId')
+                ->setParameter('pageId', (string)$page->id());
             $queryBuilder->getQuery()->execute();
 
             foreach ($this->dataValue('navigation') as $nav) {
@@ -173,7 +174,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
 //            if ($clearCache) {
 //                $this->cache->clear();
 //            } else {
-                $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
+            $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
 //            }
         }
 

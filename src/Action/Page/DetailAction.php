@@ -84,18 +84,18 @@ final class DetailAction implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $pageId = $request->getAttribute("id");
+        $pageId = $request->getAttribute('id');
         $page = $this->pageRepository->find($pageId);
         if (empty($page)) {
-            return new ApiErrorResponse("invalid_page_id");
+            return new ApiErrorResponse('invalid_page_id');
         }
 
-        $structureItem = new StructureItem((string) $page->sitemapId(), $this->structureLoader);
+        $structureItem = new StructureItem((string) $page->sitemapId(), $this->structureLoader, true);
 
         $item = $this->adminContainer->itemFactory()->create($structureItem);
 
         if (empty($item)) {
-            return new ApiErrorResponse("invalid_page_id");
+            return new ApiErrorResponse('invalid_page_id');
         }
 
         $result = $item->jsonSerialize();
@@ -111,7 +111,7 @@ final class DetailAction implements MiddlewareInterface
         }
         unset($result['pages']);
         if (empty($page)) {
-            return new ApiErrorResponse("invalid_page_id");
+            return new ApiErrorResponse('invalid_page_id');
         }
 
         $page['version'] = [
@@ -147,12 +147,12 @@ final class DetailAction implements MiddlewareInterface
         unset($result['children'], $result['childrenAllowed']);
 
 
-        $navigation = $this->config->navigation();
-        $navigation = \array_map(function ($value) use ($item) {
-            $value['active'] = (\in_array($value['name'], $item->navigation()));
+        $navigationDef = $this->config->navigation();
+        $navigation = $item->navigation();
+        $result['navigation'] = \array_map(function ($value) use ($item, $navigation, $pageId) {
+            $value['active'] = (!empty($navigation[$pageId]) && \in_array($value['name'], $navigation[$pageId]));
             return $value;
-        }, $navigation);
-        $result['navigation'] = $navigation;
+        }, $navigationDef);
 
         $result['schema'] = $item->pageType()->provideSchema('', $this->schemaBuilder);
 

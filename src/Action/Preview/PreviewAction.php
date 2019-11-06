@@ -22,7 +22,6 @@ use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Request\CmsRequest;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Schema\Type\SchemaType;
 use Ixocreate\Schema\Type\Type;
 use Psr\Http\Message\ResponseInterface;
@@ -50,14 +49,17 @@ final class PreviewAction implements MiddlewareInterface
      * @var MiddlewareSubManager
      */
     private $middlewareSubManager;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var PageTypeSubManager
      */

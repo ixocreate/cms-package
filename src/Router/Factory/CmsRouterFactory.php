@@ -4,8 +4,11 @@
  * @copyright IXOLIT GmbH
  * @license MIT License
  */
+
 declare(strict_types=1);
+
 namespace Ixocreate\Cms\Router\Factory;
+
 use Ixocreate\Application\Http\Middleware\MiddlewareSubManager;
 use Ixocreate\Application\Uri\ApplicationUri;
 use Ixocreate\Cache\CacheableSubManager;
@@ -19,6 +22,7 @@ use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 use Zend\Expressive\MiddlewareContainer;
 use Zend\Expressive\MiddlewareFactory;
+
 final class CmsRouterFactory implements FactoryInterface
 {
     /**

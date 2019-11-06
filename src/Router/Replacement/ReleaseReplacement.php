@@ -34,7 +34,6 @@ final class ReleaseReplacement implements ReplacementInterface
         RoutingItem $item
     ): RouteSpecification {
         foreach ($routeSpecification->uris() as $name => $uri) {
-
             if (!empty(\preg_match('/\${RELEASE:([a-zA-Z0-9-_\/]*)}/i', $uri, $matches))) {
                 $page = $item->page($locale);
                 $date = $page->releasedAt()->format($matches[1]);

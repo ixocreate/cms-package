@@ -25,10 +25,12 @@ final class StructureBuilder
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var StructureLoader
      */
@@ -45,7 +47,7 @@ final class StructureBuilder
     public function build(): Structure
     {
         $dql = 'SELECT node.id
-FROM '.Sitemap::class.' AS node
+FROM ' . Sitemap::class . ' AS node
 WHERE node.parentId IS NULL
 ORDER BY node.nestedLeft';
         $query = $this->sitemapRepository->createQuery($dql);

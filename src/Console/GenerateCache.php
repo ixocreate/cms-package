@@ -20,7 +20,8 @@ class GenerateCache extends Command implements CommandInterface
     /**
      * GenerateRoutingConsole constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(self::getCommandName());
     }
 

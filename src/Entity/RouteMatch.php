@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
 
 declare(strict_types=1);
 
@@ -19,22 +24,28 @@ final class RouteMatch implements EntityInterface, DatabaseEntityInterface
     use EntityTrait;
 
     private $url;
+
     private $type;
+
     private $pageId;
+
     private $middleware;
 
     public function url(): string
     {
         return $this->url;
     }
+
     public function type(): string
     {
         return $this->type;
     }
+
     public function pageId(): UuidType
     {
         return $this->pageId;
     }
+
     public function middleware(): array
     {
         return $this->middleware;
@@ -59,6 +70,4 @@ final class RouteMatch implements EntityInterface, DatabaseEntityInterface
         $builder->createField('pageId', UuidType::serviceName())->nullable(false)->build();
         $builder->createField('middleware', Type::JSON)->build();
     }
-
 }
-

@@ -45,6 +45,7 @@ final class StructureItem
      * @var int
      */
     private $level;
+
     /**
      * @var StructureLoader
      */

@@ -186,7 +186,6 @@ class ContainerTest extends TestCase
                 ),
                 $applicationUri
             )
-
         );
 
         return new Container($this->generateStructure()->structure(), $searchSubManager, $itemFactory);

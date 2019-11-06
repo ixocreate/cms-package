@@ -98,7 +98,7 @@ class ListAction implements MiddlewareInterface
              */
             if ($term = $request->getQueryParams()['term'] ?? null) {
                 $pageName = $item->pages()[$locale]['page']->name();
-                if (\strpos(\strtolower($pageName), \strtolower($term)) === false) {
+                if (\mb_strpos(\mb_strtolower($pageName), \mb_strtolower($term)) === false) {
                     continue;
                 }
             }

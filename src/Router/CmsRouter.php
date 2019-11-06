@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Generator\CompiledUrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Zend\Expressive\MiddlewareFactory;
@@ -45,22 +44,27 @@ final class CmsRouter implements RouterInterface
      * @var MiddlewareFactory
      */
     private $middlewareFactory;
+
     /**
      * @var ApplicationUri
      */
     private $applicationUri;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var CompiledGeneratorRoutesCacheable
      */
     private $compiledGeneratorRoutesCacheable;
+
     /**
      * @var CompiledMatcherRoutesCacheable
      */
     private $compiledMatcherRoutesCacheable;
+
     /**
      * @var RouteMatchRepository
      */
@@ -157,7 +161,7 @@ final class CmsRouter implements RouterInterface
             $routeMatchData['_route']
         );
         $route->setOptions([
-            'pageId' => $routeMatchData['pageId']
+            'pageId' => $routeMatchData['pageId'],
         ]);
         unset($routeMatchData['_route'], $routeMatchData['middleware']);
 

@@ -11,12 +11,7 @@ namespace Ixocreate\Cms\Site\Tree\Factory;
 
 use Ixocreate\Cache\CacheableSubManager;
 use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\PageCacheable;
-use Ixocreate\Cms\Cacheable\PageVersionCacheable;
-use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Cacheable\StructureCacheable;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
 use Ixocreate\Cms\Site\Tree\SearchSubManager;

@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
 
 declare(strict_types=1);
 
@@ -9,7 +14,6 @@ use Ixocreate\Database\Repository\AbstractRepository;
 
 final class RouteMatchRepository extends AbstractRepository
 {
-
     /**
      * @return string
      */
@@ -18,4 +22,3 @@ final class RouteMatchRepository extends AbstractRepository
         return RouteMatch::class;
     }
 }
-

@@ -15,9 +15,7 @@ use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;
 use Ixocreate\Cms\Router\RouteSpecification;
 use Ixocreate\Cms\Router\RoutingItem;
-use Ixocreate\Cms\Site\Structure\Structure;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
-use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\Intl\LocaleManager;
 use RecursiveIteratorIterator;
 use Symfony\Component\Routing\Route;
@@ -59,6 +57,7 @@ final class RouteCollectionCacheable implements CacheableInterface
      * @var ReplacementManager
      */
     private $replacementManager;
+
     /**
      * @var StructureBuilder
      */

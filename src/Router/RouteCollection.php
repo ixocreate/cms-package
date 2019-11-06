@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router;
@@ -23,34 +29,42 @@ final class RouteCollection
      * @var LocaleManager
      */
     private $localeManager;
+
     /**
      * @var PageCacheable
      */
     private $pageCacheable;
+
     /**
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
+
     /**
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var ReplacementManager
      */
     private $replacementManager;
+
     /**
      * @var StructureBuilder
      */
     private $structureBuilder;
+
     /**
      * @var EntityManagerInterface
      */
     private $entityManager;
+
     /**
      * @var RouteMatchRepository
      */
@@ -115,7 +129,7 @@ final class RouteCollection
                         continue;
                     }
 
-                    if (\strpos($uri, '{') === false) {
+                    if (\mb_strpos($uri, '{') === false) {
                         $routeMatches[] = new RouteMatch([
                             'url' => (string) $uri,
                             'type' => $name,
@@ -148,7 +162,7 @@ final class RouteCollection
             }
         }
 
-        $this->entityManager->transactional(function() use ($routeMatches){
+        $this->entityManager->transactional(function () use ($routeMatches) {
             $dql = 'DELETE FROM ' . RouteMatch::class . ' r WHERE r.url IS NOT NULL';
             $this->routeMatchRepository->createQuery($dql)->execute();
 

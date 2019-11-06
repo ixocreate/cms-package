@@ -23,6 +23,7 @@ class GenerateRouterMatcherCacheConsole extends Command implements CommandInterf
      * @var RouteCollection
      */
     private $routeCollection;
+
     /**
      * @var CacheManager
      */

@@ -23,14 +23,17 @@ final class StructureItemCacheable implements CacheableInterface
      * @var string;
      */
     private $id;
+
     /**
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var NavigationRepository
      */

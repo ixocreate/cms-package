@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Structure;
 
-
 final class Structure
 {
     /**
      * @var array
      */
     private $ids = [];
+
     /**
      * @var StructureLoader
      */

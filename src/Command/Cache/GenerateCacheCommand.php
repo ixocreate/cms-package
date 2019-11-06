@@ -1,9 +1,14 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Command\Structure;
 
-use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -14,15 +19,16 @@ use Ixocreate\CommandBus\Command\AbstractCommand;
 
 final class GenerateCacheCommand extends AbstractCommand
 {
-
     /**
      * @var SitemapCacheable
      */
     private $sitemapCacheable;
+
     /**
      * @var StructureItemCacheable
      */
     private $structureItemCacheable;
+
     /**
      * @var CacheSubManager
      */
@@ -147,9 +153,9 @@ ORDER BY node.nestedLeft";
             $cachable = $this->structureItemCacheable->withId($key);
 
             $this->cacheSubManager->get('cms_store')->put(
-               $cachable->cacheKey(),
-               $item,
-               $cachable->cacheTtl()
+                $cachable->cacheKey(),
+                $item,
+                $cachable->cacheTtl()
             );
 
             unset($flat[$key]);

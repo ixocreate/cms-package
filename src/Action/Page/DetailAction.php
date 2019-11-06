@@ -17,7 +17,6 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
 use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\Cms\Site\Structure\StructureLoader;
 use Ixocreate\Schema\Builder\BuilderInterface;
@@ -47,6 +46,7 @@ final class DetailAction implements MiddlewareInterface
      * @var PageVersionRepository
      */
     private $pageVersionRepository;
+
     /**
      * @var PageRepository
      */

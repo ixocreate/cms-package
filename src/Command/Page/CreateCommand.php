@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Command\Page;
 
 use Doctrine\DBAL\Driver\Connection;
-use Ixocreate\Cache\CacheInterface;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\HandlePageTypeInterface;

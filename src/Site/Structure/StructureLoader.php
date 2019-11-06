@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Structure;
@@ -14,10 +20,12 @@ final class StructureLoader
      * @var CacheManager
      */
     private $cacheManager;
+
     /**
      * @var StructureItemCacheable
      */
     private $structureItemCacheable;
+
     /**
      * @var SitemapRepository
      */
@@ -45,7 +53,7 @@ final class StructureLoader
     public function loadRoot()
     {
         $dql = 'SELECT node.id
-FROM '.Sitemap::class.' AS node
+FROM ' . Sitemap::class . ' AS node
 WHERE node.parentId IS NULL
 ORDER BY node.nestedLeft';
         $query = $this->sitemapRepository->createQuery($dql);

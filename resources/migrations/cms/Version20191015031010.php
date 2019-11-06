@@ -1,4 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Migration;
 
@@ -23,6 +30,5 @@ final class Version20191015031010 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         $schema->dropTable("cms_route_match");
-
     }
 }

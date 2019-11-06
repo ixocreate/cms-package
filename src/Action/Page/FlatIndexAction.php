@@ -42,7 +42,8 @@ class FlatIndexAction implements MiddlewareInterface
      */
     private $pageRepository;
 
-    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, PageRepository $pageRepository) {
+    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, PageRepository $pageRepository)
+    {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->pageRepository = $pageRepository;

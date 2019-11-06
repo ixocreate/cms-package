@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Tree\Factory;
@@ -8,7 +14,6 @@ use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Cacheable\PageVersionCacheable;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
-use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Tree\ItemFactory;
@@ -18,7 +23,6 @@ use Ixocreate\ServiceManager\ServiceManagerInterface;
 
 final class ItemFactoryFactory implements FactoryInterface
 {
-
     /**
      * @param ServiceManagerInterface $container
      * @param $requestedName

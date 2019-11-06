@@ -9,12 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Template;
 
-use Ixocreate\Cache\CacheManager;
-use Ixocreate\Cms\Cacheable\StructureItemCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Router\PageRoute;
-use Ixocreate\Cms\Site\Structure\StructureLoader;
 use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
 use Ixocreate\Cms\Site\Tree\ItemFactory;

@@ -9,13 +9,20 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Link;
 
+use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Schema\Link\LinkInterface;
+use Ixocreate\Schema\Link\LinkListInterface;
 
-final class SitemapLink implements LinkInterface
+final class SitemapLink implements LinkInterface, LinkListInterface
 {
+    /**
+     * @var AdminConfig
+     */
+    private $adminConfig;
+
     /**
      * @var PageRepository
      */
@@ -33,29 +40,48 @@ final class SitemapLink implements LinkInterface
 
     /**
      * MediaLink constructor.
+     *
      * @param PageRepository $pageRepository
      * @param PageRoute $pageRoute
+     * @param AdminConfig $adminConfig
      */
-    public function __construct(PageRepository $pageRepository, PageRoute $pageRoute)
-    {
+    public function __construct(
+        AdminConfig $adminConfig,
+        PageRepository $pageRepository,
+        PageRoute $pageRoute
+    ) {
+        $this->adminConfig = $adminConfig;
         $this->pageRepository = $pageRepository;
         $this->pageRoute = $pageRoute;
+    }
+
+    public static function serviceName(): string
+    {
+        return 'sitemap';
     }
 
     /**
      * @return string
      */
-    public function serialize()
+    public function label(): string
     {
-        return \serialize($this->page);
+        return 'Sitemap';
     }
 
     /**
-     * @param string $serialized
+     * @return string
      */
-    public function unserialize($serialized)
+    public function listUrl(): string
     {
-        $this->page = \unserialize($serialized);
+        return \rtrim((string)$this->adminConfig->uri()->getPath(), '/') . '/api/page/list';
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLocales(): bool
+    {
+        return true;
     }
 
     /**
@@ -82,14 +108,6 @@ final class SitemapLink implements LinkInterface
         }
 
         return $clone;
-    }
-
-    /**
-     * @return string
-     */
-    public function label(): string
-    {
-        return 'Sitemap';
     }
 
     /**
@@ -132,8 +150,19 @@ final class SitemapLink implements LinkInterface
         return (string) $this->page->id();
     }
 
-    public static function serviceName(): string
+    /**
+     * @return string
+     */
+    public function serialize()
     {
-        return 'sitemap';
+        return \serialize($this->page);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $this->page = \unserialize($serialized);
     }
 }

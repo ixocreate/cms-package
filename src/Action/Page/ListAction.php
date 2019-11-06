@@ -43,16 +43,17 @@ class ListAction implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!\array_key_exists('locale', $request->getQueryParams())) {
+        $locale = $request->getQueryParams()['locale'] ?? '';
+        if (empty($locale)) {
             return new ApiErrorResponse('invalid locale');
         }
-        $locale = $request->getQueryParams()['locale'];
-        $pageType = null;
-        if (!empty($request->getQueryParams()['pageType'])) {
-            $pageType = $request->getQueryParams()['pageType'];
-        }
 
-        $result = [];
+        $pageType = $request->getQueryParams()['pageType'] ?? null;
+
+        /**
+         * TODO: make this an actual query instead of iterating the whole tree/container/structure/...
+         */
+        $items = [];
         $iterator = new \RecursiveIteratorIterator($this->adminContainer, \RecursiveIteratorIterator::SELF_FIRST);
         $terminalIgnoreDepth = 0;
         $ignoringChildren = false;
@@ -62,11 +63,11 @@ class ListAction implements MiddlewareInterface
             /**
              * lift ignoring children flag as soon as we're out the children's depth again
              */
-            if($ignoringChildren && $terminalIgnoreDepth === $iterator->getDepth()) {
+            if ($ignoringChildren && $terminalIgnoreDepth === $iterator->getDepth()) {
                 $ignoringChildren = false;
             }
 
-            if($ignoringChildren) {
+            if ($ignoringChildren) {
                 continue;
             }
 
@@ -79,6 +80,13 @@ class ListAction implements MiddlewareInterface
             }
 
             /**
+             * exclude pages that are not of the requested page type
+             */
+            if ($pageType !== null && $item->pageType()::serviceName() !== $pageType) {
+                continue;
+            }
+
+            /**
              * exclude pages that do not have the requested locale
              */
             if (!\array_key_exists($locale, $item->pages())) {
@@ -86,21 +94,22 @@ class ListAction implements MiddlewareInterface
             }
 
             /**
-             * exclude pages that are not of the requested page type
+             * cheap "like" search
              */
-            if ($pageType !== null && $item->pageType()::serviceName() !== $pageType) {
-                continue;
+            if ($term = $request->getQueryParams()['term'] ?? null) {
+                $pageName = $item->pages()[$locale]['page']->name();
+                if (\strpos(\strtolower($pageName), \strtolower($term)) === false) {
+                    continue;
+                }
             }
 
-            $result[] = [
+            $items[] = [
                 'id' => $item->pages()[$locale]['page']->id(),
                 'name' => $this->receiveFullName($item, $locale),
-                'pageType' => $item->pageType()::serviceName(),
-                'terminal' => $item->pageType() instanceof TerminalPageTypeInterface,
             ];
         }
 
-        return new ApiSuccessResponse($result);
+        return new ApiSuccessResponse($items);
     }
 
     /**

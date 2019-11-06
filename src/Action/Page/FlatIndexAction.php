@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class IndexFlatAction implements MiddlewareInterface
+class FlatIndexAction implements MiddlewareInterface
 {
     /**
      * @var SitemapRepository
@@ -52,46 +52,28 @@ class IndexFlatAction implements MiddlewareInterface
     {
         $handle = $request->getAttribute('handle');
 
-        $search = (isset($request->getQueryParams()['search']))? '%'.$request->getQueryParams()['search'].'%' : null;
-
         $parentSitemap = $this->sitemapRepository->findOneBy(['handle' => $handle]);
         if (empty($parentSitemap)) {
             return new ApiErrorResponse('invalid_handle');
         }
 
-        if ($search == null){
-            $query = $this->sitemapRepository->createQuery('SELECT COUNT(s) FROM ' . Sitemap::class . ' s WHERE s.parentId = :parentId');
-            $count = $query->execute(['parentId' => (string)$parentSitemap->id()], Query::HYDRATE_SINGLE_SCALAR);
-            $query = $this->sitemapRepository->createQuery('SELECT s FROM ' . Sitemap::class . ' s LEFT JOIN ' . Page::class . ' p WITH (s.id = p.sitemapId) WHERE s.parentId = :parentId ORDER BY p.releasedAt DESC');
-        } else {
-            $query = $this->sitemapRepository->createQuery('SELECT COUNT(s) FROM ' . Sitemap::class . ' s LEFT JOIN ' . Page::class . ' p WITH (s.id = p.sitemapId) WHERE s.parentId = :parentId AND p.name LIKE :search ');
-            $count = $query->execute(['parentId' => (string)$parentSitemap->id(), 'search' => $search], Query::HYDRATE_SINGLE_SCALAR);
-            $query = $this->sitemapRepository->createQuery('SELECT s FROM ' . Sitemap::class . ' s LEFT JOIN ' . Page::class . ' p WITH (s.id = p.sitemapId) WHERE s.parentId = :parentId AND p.name LIKE :search ORDER BY p.releasedAt DESC');
+        /**
+         * assemble query
+         * searchable page name
+         */
+        $parameters = ['parentId' => (string)$parentSitemap->id()];
+        $dql = 'FROM ' . Sitemap::class . ' s LEFT JOIN ' . Page::class . ' p WITH (s.id = p.sitemapId) WHERE s.parentId = :parentId';
+        if ($search = $request->getQueryParams()['search'] ?? null) {
+            $parameters += ['search' => '%' . $search . '%'];
+            $dql .= ' AND p.name LIKE :search';
         }
-
-
-        $offset = 0;
-        $limit = 0;
-        if (!empty($request->getQueryParams()['offset'])) {
-            $offset = \min((int) $request->getQueryParams()['offset'], $count);
-        }
-
-        if (!empty($request->getQueryParams()['limit'])) {
-            $limit = \min(25, (int) $request->getQueryParams()['limit']);
-            if (empty($limit)) {
-                $limit = 25;
-            }
-        }
-
-        $query->setMaxResults($limit);
-        $query->setFirstResult($offset);
-
-        if ($search == null){
-            $result = $query->execute(['parentId' => (string)$parentSitemap->id()]);
-        }
-        if ($search != null){
-            $result = $query->execute(['parentId' => (string)$parentSitemap->id(), 'search' => $search]);
-        }
+        $dql .= ' ORDER BY p.releasedAt DESC';
+        $count = $this->sitemapRepository->createQuery('SELECT COUNT(s) ' . $dql)
+            ->execute($parameters, Query::HYDRATE_SINGLE_SCALAR);
+        $query = $this->sitemapRepository->createQuery('SELECT s ' . $dql);
+        $query->setMaxResults(\min(25, (int)($request->getQueryParams()['limit'] ?? 25)));
+        $query->setFirstResult(\min((int)($request->getQueryParams()['offset'] ?? 0), $count));
+        $result = $query->execute($parameters);
 
         $items = [];
         foreach ($result as $item) {

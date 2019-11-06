@@ -1,6 +1,16 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.5...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.19...develop)
+
+## [v0.3.19 (2019-11-06)](https://github.com/ixocreate/cms-package/compare/0.3.18...0.3.19)
+### Added
+- FlatListAction for link select options retrieval
+- List link types in CMS config provider
+### Changed
+- Omit terminal pages' children in sitemap link options list 
+- SitemapLink implements LinkListInterface
+
+## ...
 
 ## [v0.3.5 (2019-05-29)](https://github.com/ixocreate/cms-package/compare/0.3.4...0.3.5)
 ### Changed

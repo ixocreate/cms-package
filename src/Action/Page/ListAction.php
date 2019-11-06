@@ -11,6 +11,7 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminItem;
 use Psr\Http\Message\ResponseInterface;
@@ -27,6 +28,7 @@ class ListAction implements MiddlewareInterface
 
     /**
      * ListAction constructor.
+     *
      * @param AdminContainer $adminContainer
      */
     public function __construct(AdminContainer $adminContainer)
@@ -52,14 +54,50 @@ class ListAction implements MiddlewareInterface
 
         $result = [];
         $iterator = new \RecursiveIteratorIterator($this->adminContainer, \RecursiveIteratorIterator::SELF_FIRST);
+        $terminalIgnoreDepth = 0;
+        $ignoringChildren = false;
         /** @var AdminItem $item */
         foreach ($iterator as $item) {
-            if (\array_key_exists($locale, $item->pages()) && ($pageType === null || $item->pageType()::serviceName() === $pageType)) {
-                $result[] = [
-                    'id' => $item->pages()[$locale]['page']->id(),
-                    'name' => $this->receiveFullName($item, $locale),
-                ];
+
+            /**
+             * lift ignoring children flag as soon as we're out the children's depth again
+             */
+            if($ignoringChildren && $terminalIgnoreDepth === $iterator->getDepth()) {
+                $ignoringChildren = false;
             }
+
+            if($ignoringChildren) {
+                continue;
+            }
+
+            /**
+             * set flags to exclude children of terminal page types (flat lists)
+             */
+            if ($item->pageType() instanceof TerminalPageTypeInterface) {
+                $terminalIgnoreDepth = $iterator->getDepth();
+                $ignoringChildren = true;
+            }
+
+            /**
+             * exclude pages that do not have the requested locale
+             */
+            if (!\array_key_exists($locale, $item->pages())) {
+                continue;
+            }
+
+            /**
+             * exclude pages that are not of the requested page type
+             */
+            if ($pageType !== null && $item->pageType()::serviceName() !== $pageType) {
+                continue;
+            }
+
+            $result[] = [
+                'id' => $item->pages()[$locale]['page']->id(),
+                'name' => $this->receiveFullName($item, $locale),
+                'pageType' => $item->pageType()::serviceName(),
+                'terminal' => $item->pageType() instanceof TerminalPageTypeInterface,
+            ];
         }
 
         return new ApiSuccessResponse($result);

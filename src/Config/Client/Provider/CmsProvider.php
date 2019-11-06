@@ -12,6 +12,9 @@ namespace Ixocreate\Cms\Config\Client\Provider;
 use Ixocreate\Admin\ClientConfigProviderInterface;
 use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Admin\UserInterface;
+use Ixocreate\Schema\Link\LinkInterface;
+use Ixocreate\Schema\Link\LinkListInterface;
+use Ixocreate\Schema\Link\LinkManager;
 
 final class CmsProvider implements ClientConfigProviderInterface
 {
@@ -20,9 +23,17 @@ final class CmsProvider implements ClientConfigProviderInterface
      */
     private $adminConfig;
 
-    public function __construct(AdminConfig $adminConfig)
-    {
+    /**
+     * @var LinkManager
+     */
+    private $linkManager;
+
+    public function __construct(
+        AdminConfig $adminConfig,
+        LinkManager $linkManager
+    ) {
         $this->adminConfig = $adminConfig;
+        $this->linkManager = $linkManager;
     }
 
     public static function serviceName(): string
@@ -39,8 +50,29 @@ final class CmsProvider implements ClientConfigProviderInterface
         if (empty($user)) {
             return [];
         }
+
+        $linkTypes = [];
+        foreach ($this->linkManager->getServices() as $serviceName) {
+            /** @var LinkInterface $linkType */
+            $linkTypeService = $this->linkManager->get($serviceName);
+            $linkType = [
+                'type' => $linkTypeService->serviceName(),
+                'label' => $linkTypeService->label(),
+                'hasLocales' => null,
+                'listUrl' => null,
+            ];
+            if ($linkTypeService instanceof LinkListInterface) {
+                $linkType = \array_merge($linkType, [
+                    'hasLocales' => $linkTypeService->hasLocales(),
+                    'listUrl' => $linkTypeService->listUrl(),
+                ]);
+            }
+            $linkTypes[] = $linkType;
+        }
+
         return [
-            'preview' => (string) $this->adminConfig->uri() . '/preview',
+            'linkTypes' => $linkTypes,
+            'preview' => (string)$this->adminConfig->uri() . '/preview',
         ];
     }
 }

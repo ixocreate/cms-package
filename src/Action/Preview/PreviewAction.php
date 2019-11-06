@@ -17,7 +17,9 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\PageType\MiddlewarePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Request\CmsRequest;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminItem;
@@ -48,15 +50,31 @@ final class PreviewAction implements MiddlewareInterface
      * @var MiddlewareSubManager
      */
     private $middlewareSubManager;
+    /**
+     * @var SitemapRepository
+     */
+    private $sitemapRepository;
+    /**
+     * @var PageRepository
+     */
+    private $pageRepository;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
 
     public function __construct(
-        AdminContainer $adminContainer,
         PageVersionRepository $pageVersionRepository,
-        MiddlewareSubManager $middlewareSubManager
+        MiddlewareSubManager $middlewareSubManager,
+        SitemapRepository $sitemapRepository,
+        PageRepository $pageRepository,
+        PageTypeSubManager $pageTypeSubManager
     ) {
-        $this->adminContainer = $adminContainer;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->middlewareSubManager = $middlewareSubManager;
+        $this->sitemapRepository = $sitemapRepository;
+        $this->pageRepository = $pageRepository;
+        $this->pageTypeSubManager = $pageTypeSubManager;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -66,48 +84,39 @@ final class PreviewAction implements MiddlewareInterface
         }
         $pageId = $request->getQueryParams()['pageId'];
 
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($pageId) {
-            $pages = $item->pages();
-            foreach ($pages as $pageItem) {
-                if ((string) $pageItem['page']->id() === $pageId) {
-                    return true;
-                }
-            }
+        $page = $this->pageRepository->find($pageId);
 
-            return false;
-        });
 
-        if (empty($item)) {
+        if (empty($page)) {
             return new TextResponse("Invalid preview");
-        }
-
-        $page = null;
-        foreach ($item->pages() as $locale =>  $pageItem) {
-            if ((string) $pageItem['page']->id() === $pageId) {
-                $page = $pageItem['page'];
-                break;
-            }
         }
 
         if (empty($page)) {
             return new TextResponse("Invalid preview");
         }
 
-        $pageVersion = $this->loadPageVersion($request, $page, $item->pageType());
+        $sitemap = $this->sitemapRepository->find($page->sitemapId());
+        if (empty($sitemap)) {
+            return new TextResponse("Invalid preview");
+        }
+
+        $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
+
+        $pageVersion = $this->loadPageVersion($request, $page, $pageType);
 
         if (empty($pageVersion)) {
             return new TextResponse("Invalid preview");
         }
 
         $cmsRequest = (new CmsRequest($request))
-            ->withSitemap($item->sitemap())
+            ->withSitemap($sitemap)
             ->withPage($page)
-            ->withPageType($item->pageType())
+            ->withPageType($pageType)
             ->withPageVersion($pageVersion);
 
         $middleware = [];
-        if ($item->pageType() instanceof MiddlewarePageTypeInterface) {
-            $middleware = $item->pageType()->middleware();
+        if ($pageType instanceof MiddlewarePageTypeInterface) {
+            $middleware = $pageType->middleware();
             if (empty($middleware)) {
                 $middleware = [];
             }

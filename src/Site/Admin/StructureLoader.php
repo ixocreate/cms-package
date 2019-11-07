@@ -1,59 +1,135 @@
 <?php
-/**
- * @link https://github.com/ixocreate
- * @copyright IXOLIT GmbH
- * @license MIT License
- */
-
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Command\Structure;
+namespace Ixocreate\Cms\Site\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Ixocreate\Cache\CacheSubManager;
-use Ixocreate\Cms\Cacheable\SitemapCacheable;
+use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\StructureItemCacheable;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\CommandBus\Command\AbstractCommand;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Site\Structure\StructureLoaderInterface;
 
-final class GenerateCacheCommand extends AbstractCommand
+final class StructureLoader implements StructureLoaderInterface
 {
     /**
-     * @var SitemapCacheable
+     * @var SitemapRepository
      */
-    private $sitemapCacheable;
+    private $sitemapRepository;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
+    /**
+     * @var bool
+     */
+    private $initialize = false;
+
+    private $store = [];
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
     /**
      * @var StructureItemCacheable
      */
     private $structureItemCacheable;
 
-    /**
-     * @var CacheSubManager
-     */
-    private $cacheSubManager;
-
     public function __construct(
+        SitemapRepository $sitemapRepository,
         EntityManagerInterface $master,
-        SitemapCacheable $sitemapCacheable,
-        StructureItemCacheable $structureItemCacheable,
-        CacheSubManager $cacheSubManager
+        PageTypeSubManager $pageTypeSubManager,
+        StructureItemCacheable $structureItemCacheable
     ) {
+        $this->sitemapRepository = $sitemapRepository;
         $this->entityManager = $master;
-        $this->sitemapCacheable = $sitemapCacheable;
+        $this->pageTypeSubManager = $pageTypeSubManager;
         $this->structureItemCacheable = $structureItemCacheable;
-        $this->cacheSubManager = $cacheSubManager;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function execute(): bool
+    public function get(string $id)
     {
+        if ($id === "root") {
+            return $this->loadRoot();
+        }
+
+        $this->initialize();
+
+        if (isset($this->store[$id])) {
+            return $this->store[$id];
+        }
+
+        $this->store[$id] = $this->structureItemCacheable->withId($id)->uncachedResult();
+        return $this->store[$id];
+    }
+
+    public function loadRoot()
+    {
+        $dql = 'SELECT node.id
+FROM ' . Sitemap::class . ' AS node
+WHERE node.parentId IS NULL
+ORDER BY node.nestedLeft';
+        $query = $this->sitemapRepository->createQuery($dql);
+        $result = $query->getArrayResult();
+
+        $root = [];
+        foreach ($result as $item) {
+            $root[] = (string) $item['id'];
+        }
+
+        return [
+            'sitemapId' => '',
+            'handle' =>'',
+            'pageType' => '',
+            'pages' => [],
+            'navigation' => [],
+            'children' => $root,
+            'level' => -1,
+        ];
+    }
+
+    private function initialize()
+    {
+        if ($this->initialize === true) {
+            return;
+        }
+        $this->initialize = true;
+        $terminalPageTypeNames = [];
+        foreach ($this->pageTypeSubManager->getServices() as $pageTypeClass) {
+            if (\is_subclass_of($pageTypeClass, TerminalPageTypeInterface::class)) {
+                $pageType = $this->pageTypeSubManager->get($pageTypeClass);
+                $terminalPageTypeNames[] = $pageType->serviceName();
+            }
+        }
+
+        $where = '';
+        if (!empty($terminalPageTypeNames)) {
+            $sql = 'SELECT id, nestedLeft, nestedRight FROM cms_sitemap WHERE pageType IN (\'' . \implode('\',\'', $terminalPageTypeNames) . '\')';
+            $rm = new ResultSetMapping();
+            $rm->addScalarResult('id', 'id', 'string');
+            $rm->addScalarResult('nestedLeft', 'nestedLeft', 'integer');
+            $rm->addScalarResult('nestedRight', 'nestedRight', 'integer');
+            $query = $this->entityManager->createNativeQuery($sql, $rm);
+            $result = $query->getResult();
+
+            $nestedWhere = [];
+            foreach ($result as $row) {
+                $tmpLeft = $row['nestedLeft'] + 1;
+                $nestedWhere[] = "(node.nestedLeft NOT BETWEEN {$tmpLeft} AND {$row['nestedRight']})";
+            }
+
+            if (!empty($nestedWhere)) {
+                $where = 'WHERE ' . \implode(' AND ', $nestedWhere);
+            }
+        }
+
         $sql = "SELECT node.id, node.level, node.parentId, node.handle, node.pageType
-FROM  cms_sitemap AS node
+FROM  cms_sitemap AS node {$where}
 ORDER BY node.nestedLeft";
 
         $rm = new ResultSetMapping();
@@ -147,23 +223,6 @@ ORDER BY node.nestedLeft";
             unset($result);
         }
 
-        foreach ($flat as $key => $item) {
-            $cachable = $this->structureItemCacheable->withId($key);
-
-            $this->cacheSubManager->get('cms_store')->put(
-                $cachable->cacheKey(),
-                $item,
-                $cachable->cacheTtl()
-            );
-
-            unset($flat[$key]);
-        }
-
-        return true;
-    }
-
-    public static function serviceName(): string
-    {
-        return 'cms-cache-generate';
+        $this->store = $flat;
     }
 }

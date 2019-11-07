@@ -17,8 +17,8 @@ use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
+use Ixocreate\Cms\Site\Admin\StructureLoader;
 use Ixocreate\Cms\Site\Structure\StructureItem;
-use Ixocreate\Cms\Site\Structure\StructureLoader;
 use Ixocreate\Schema\Builder\BuilderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -90,7 +90,7 @@ final class DetailAction implements MiddlewareInterface
             return new ApiErrorResponse('invalid_page_id');
         }
 
-        $structureItem = new StructureItem((string) $page->sitemapId(), $this->structureLoader, true);
+        $structureItem = new StructureItem((string) $page->sitemapId(), $this->structureLoader);
 
         $item = $this->adminContainer->itemFactory()->create($structureItem);
 

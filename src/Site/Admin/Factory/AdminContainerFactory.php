@@ -12,11 +12,14 @@ namespace Ixocreate\Cms\Site\Admin\Factory;
 use Ixocreate\Cms\Loader\DatabasePageLoader;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Cms\Site\Admin\AdminItemFactory;
 use Ixocreate\Cms\Site\Admin\AdminSearchSubManager;
+use Ixocreate\Cms\Site\Admin\StructureLoader;
 use Ixocreate\Cms\Site\Structure\StructureBuilder;
+use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
 
@@ -32,7 +35,10 @@ final class AdminContainerFactory implements FactoryInterface
     {
         $pageLoader = $container->get(DatabasePageLoader::class);
         $sitemapLoader = $container->get(DatabaseSitemapLoader::class);
-        $structureBuilder = $container->get(StructureBuilder::class);
+        $sitemapRepository = $container->get(RepositorySubManager::class)->get(SitemapRepository::class);
+        $structureLoader = $container->get(StructureLoader::class);
+        $structureBuilder = new StructureBuilder($sitemapRepository, $structureLoader);
+
         $pageTypeSubManager = $container->get(PageTypeSubManager::class);
         $searchSubManager = $container->get(AdminSearchSubManager::class);
         $pageRoute = $container->get(PageRoute::class);

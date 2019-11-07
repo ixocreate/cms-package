@@ -17,11 +17,11 @@ final class Structure
     private $ids = [];
 
     /**
-     * @var StructureLoader
+     * @var StructureLoaderInterface
      */
     private $structureLoader;
 
-    public function __construct(array $ids, StructureLoader $structureLoader)
+    public function __construct(array $ids, StructureLoaderInterface $structureLoader)
     {
         $this->ids = $ids;
         $this->structureLoader = $structureLoader;
@@ -40,7 +40,7 @@ final class Structure
         return $structureItems;
     }
 
-    public function structureLoader(): StructureLoader
+    public function structureLoader(): StructureLoaderInterface
     {
         return $this->structureLoader;
     }

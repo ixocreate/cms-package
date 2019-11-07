@@ -35,6 +35,8 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
 
     private $handle;
 
+    private $level;
+
     public function id(): UuidType
     {
         return $this->id;
@@ -65,6 +67,11 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
         return $this->handle;
     }
 
+    public function level(): ?int
+    {
+        return $this->level;
+    }
+
     protected static function createDefinitions(): DefinitionCollection
     {
         return new DefinitionCollection([
@@ -74,6 +81,7 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
             new Definition('nestedRight', TypeInterface::TYPE_INT, true, true),
             new Definition('pageType', TypeInterface::TYPE_STRING, false, true),
             new Definition('handle', TypeInterface::TYPE_STRING, true, true),
+            new Definition('level', TypeInterface::TYPE_INT, true, true),
         ]);
     }
 
@@ -102,6 +110,11 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
         return 'parentId';
     }
 
+    public function levelParameterName(): string
+    {
+        return 'level';
+    }
+
     public function idName(): string
     {
         return 'id';
@@ -117,5 +130,6 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
         $builder->createField('parentId', UuidType::class)->nullable(true)->build();
         $builder->createField('pageType', Type::STRING)->nullable(false)->build();
         $builder->createField('handle', Type::STRING)->nullable(true)->build();
+        $builder->createField('level', Type::INTEGER)->nullable(true)->build();
     }
 }

@@ -21,11 +21,6 @@ final class DatabasePageLoader implements PageLoaderInterface
     private $pageRepository;
 
     /**
-     * @var EntityCollection
-     */
-    private $collection;
-
-    /**
      * @param PageRepository $pageRepository
      */
     public function __construct(PageRepository $pageRepository)
@@ -39,23 +34,6 @@ final class DatabasePageLoader implements PageLoaderInterface
      */
     public function receivePage(string $pageId): ?Page
     {
-        $this->init();
-
-        return $this->collection->get($pageId);
-
-//        return $this->pageRepository->find($pageId);
-    }
-
-    /**
-     *
-     */
-    private function init(): void
-    {
-        if ($this->collection instanceof EntityCollection) {
-            return;
-        }
-
-        $result = $this->pageRepository->findAll();
-        $this->collection = new EntityCollection($result, 'id');
+        return $this->pageRepository->find($pageId);
     }
 }

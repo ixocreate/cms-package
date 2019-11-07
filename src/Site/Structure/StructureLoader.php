@@ -14,7 +14,7 @@ use Ixocreate\Cms\Cacheable\StructureItemCacheable;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\SitemapRepository;
 
-final class StructureLoader
+final class StructureLoader implements StructureLoaderInterface
 {
     /**
      * @var CacheManager
@@ -38,15 +38,14 @@ final class StructureLoader
         $this->sitemapRepository = $sitemapRepository;
     }
 
-    public function get(string $id, bool $force = false)
+    public function get(string $id)
     {
         if ($id === "root") {
             return $this->loadRoot();
         }
 
         return $this->cacheManager->fetch(
-            $this->structureItemCacheable->withId($id),
-            $force
+            $this->structureItemCacheable->withId($id)
         );
     }
 

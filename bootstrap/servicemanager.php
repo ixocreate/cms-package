@@ -53,3 +53,4 @@ $serviceManager->addService(DatabasePageLoader::class, DatabasePageLoaderFactory
 $serviceManager->addService(DatabaseSitemapLoader::class, DatabaseSitemapLoaderFactory::class);
 $serviceManager->addService(StructureBuilder::class, StructureBuilderFactory::class);
 $serviceManager->addService(StructureLoader::class);
+$serviceManager->addService(\Ixocreate\Cms\Site\Admin\StructureLoader::class);

@@ -47,7 +47,7 @@ final class StructureItem
     private $level;
 
     /**
-     * @var StructureLoader
+     * @var StructureLoaderInterface
      */
     private $structureLoader;
 
@@ -63,10 +63,9 @@ final class StructureItem
 
     public function __construct(
         string $id,
-        StructureLoader $structureLoader,
-        bool $force = false
+        StructureLoaderInterface $structureLoader
     ) {
-        $item = $structureLoader->get($id, $force);
+        $item = $structureLoader->get($id);
         $this->sitemapId = $id;
         $this->handle = $item['handle'];
         $this->pages = $item['pages'];
@@ -75,7 +74,6 @@ final class StructureItem
         $this->level = $item['level'];
         $this->pageType = $item['pageType'];
         $this->structureLoader = $structureLoader;
-        $this->forceLoading = $force;
     }
 
     public function sitemapId(): string
@@ -122,8 +120,7 @@ final class StructureItem
 
                 $this->children[] = new StructureItem(
                     $item,
-                    $this->structureLoader,
-                    $this->forceLoading
+                    $this->structureLoader
                 );
             }
         }

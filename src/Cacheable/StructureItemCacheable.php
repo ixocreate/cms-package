@@ -104,7 +104,7 @@ final class StructureItemCacheable implements CacheableInterface
             'pages' => $pages,
             'navigation' => $navigation,
             'children' => $children,
-            'level' => $this->sitemapRepository->level($sitemap->id()),
+            'level' => $sitemap->level(),
         ];
     }
 

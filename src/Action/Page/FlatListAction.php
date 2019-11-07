@@ -69,12 +69,14 @@ class FlatListAction implements MiddlewareInterface
             $dql .= ' AND (p.name LIKE :search OR p.releasedAt LIKE :search)';
         }
         $dql .= ' ORDER BY p.releasedAt DESC';
+
         $count = $this->sitemapRepository->createQuery('SELECT COUNT(s) ' . $dql)
             ->execute($parameters, Query::HYDRATE_SINGLE_SCALAR);
-        $query = $this->sitemapRepository->createQuery('SELECT s ' . $dql);
-        $query->setMaxResults(\min(25, (int)($request->getQueryParams()['limit'] ?? 25)));
-        $query->setFirstResult(\min((int)($request->getQueryParams()['offset'] ?? 0), $count));
-        $result = $query->execute($parameters);
+
+        $result = $this->sitemapRepository->createQuery('SELECT s ' . $dql)
+            ->setMaxResults(\min(25, (int)($request->getQueryParams()['limit'] ?? 25)))
+            ->setFirstResult(\min((int)($request->getQueryParams()['offset'] ?? 0), $count))
+            ->execute($parameters);
 
         /**
          * map results to select options

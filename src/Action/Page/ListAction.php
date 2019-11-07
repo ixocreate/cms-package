@@ -26,21 +26,11 @@ class ListAction implements MiddlewareInterface
      */
     private $adminContainer;
 
-    /**
-     * ListAction constructor.
-     *
-     * @param AdminContainer $adminContainer
-     */
     public function __construct(AdminContainer $adminContainer)
     {
         $this->adminContainer = $adminContainer;
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $locale = $request->getQueryParams()['locale'] ?? '';

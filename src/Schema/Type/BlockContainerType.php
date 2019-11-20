@@ -96,7 +96,7 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
      */
     public function blocks(): array
     {
-        return $this->options()['blocks'];
+        return (!empty($this->options()['blocks'])) ? $this->options()['blocks'] : [];
     }
 
     /**

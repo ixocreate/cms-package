@@ -1,6 +1,9 @@
 # Release Notes
 
 ## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.19...develop)
+### Fixed
+- fix routing with query params
+- add check to BlockContainerType
 
 ## [v0.3.19 (2019-11-06)](https://github.com/ixocreate/cms-package/compare/0.3.18...0.3.19)
 ### Added

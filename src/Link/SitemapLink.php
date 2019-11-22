@@ -115,7 +115,7 @@ final class SitemapLink implements LinkInterface, LinkListInterface
      */
     public function assemble(): string
     {
-        if (empty($this->page)) {
+        if (empty($this->page) || !($this->page instanceof Page)) {
             return "";
         }
 
@@ -155,7 +155,7 @@ final class SitemapLink implements LinkInterface, LinkListInterface
      */
     public function serialize()
     {
-        return \serialize($this->page);
+        return \serialize(clone $this->page);
     }
 
     /**

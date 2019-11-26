@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Schema\Type\UuidType;
 
@@ -47,7 +48,12 @@ final class PageCacheable implements CacheableInterface
      */
     public function uncachedResult()
     {
-        return $this->pageRepository->find($this->pageId);
+        $page =  $this->pageRepository->find($this->pageId);
+        if ($page instanceof Page) {
+            $page = clone $page;
+        }
+
+        return $page;
     }
 
     /**

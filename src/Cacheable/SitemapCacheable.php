@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Cacheable;
 
 use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Schema\Type\UuidType;
 
@@ -47,7 +48,11 @@ final class SitemapCacheable implements CacheableInterface
      */
     public function uncachedResult()
     {
-        return $this->sitemapRepository->find($this->sitemapId);
+        $sitemap = $this->sitemapRepository->find($this->sitemapId);
+        if ($sitemap instanceof Sitemap) {
+            $sitemap = clone $sitemap;
+        }
+        return $sitemap;
     }
 
     /**

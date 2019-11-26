@@ -11,6 +11,7 @@ namespace Ixocreate\Cms\Cacheable;
 
 use Doctrine\Common\Collections\Criteria;
 use Ixocreate\Cache\CacheableInterface;
+use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Schema\Type\UuidType;
 
@@ -56,7 +57,11 @@ final class PageVersionCacheable implements CacheableInterface
         $pageVersion = $this->pageVersionRepository->matching($criteria);
 
         if ($pageVersion->count() > 0) {
-            return $pageVersion->current();
+            $pageVersion = $pageVersion->current();
+            if ($pageVersion instanceof PageVersion) {
+                $pageVersion = clone $pageVersion;
+                return $pageVersion;
+            }
         }
 
         return null;

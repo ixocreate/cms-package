@@ -121,7 +121,7 @@ final class SitemapLink implements LinkInterface, LinkListInterface
 
         try {
             return $this->pageRoute->fromPage($this->page);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             return "";
         }
     }
@@ -163,6 +163,15 @@ final class SitemapLink implements LinkInterface, LinkListInterface
      */
     public function unserialize($serialized)
     {
-        $this->page = \unserialize($serialized);
+        try {
+            $page = \unserialize($serialized);
+            if ($page instanceof Page) {
+                $page->id();
+                $this->page = $page;
+            }
+
+        } catch (\Throwable $throwable) {
+
+        }
     }
 }

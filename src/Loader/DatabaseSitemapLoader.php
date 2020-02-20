@@ -11,7 +11,6 @@ namespace Ixocreate\Cms\Loader;
 
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\SitemapRepository;
-use Ixocreate\Entity\EntityCollection;
 
 final class DatabaseSitemapLoader implements SitemapLoaderInterface
 {

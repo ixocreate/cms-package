@@ -1,4 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Migration;
 
@@ -17,6 +24,5 @@ final class Version20191107051315 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-
     }
 }

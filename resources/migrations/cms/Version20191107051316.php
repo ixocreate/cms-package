@@ -1,9 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
+declare(strict_types=1);
 
 namespace Ixocreate\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\Migrations\AbstractMigration;
 
 final class Version20191107051316 extends AbstractMigration
@@ -27,6 +33,5 @@ SET s.level=sub.level";
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-
     }
 }

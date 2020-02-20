@@ -15,7 +15,6 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Ixocreate\Cache\CacheSubManager;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Cacheable\StructureItemCacheable;
-use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 
 final class GenerateCacheCommand extends AbstractCommand

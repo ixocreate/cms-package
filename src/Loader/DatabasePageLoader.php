@@ -11,7 +11,6 @@ namespace Ixocreate\Cms\Loader;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Entity\EntityCollection;
 
 final class DatabasePageLoader implements PageLoaderInterface
 {

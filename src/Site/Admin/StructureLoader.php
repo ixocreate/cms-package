@@ -1,4 +1,10 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
+
 declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Admin;
@@ -6,7 +12,6 @@ namespace Ixocreate\Cms\Site\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\StructureItemCacheable;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
@@ -20,6 +25,7 @@ final class StructureLoader implements StructureLoaderInterface
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var EntityManagerInterface
      */
@@ -31,10 +37,12 @@ final class StructureLoader implements StructureLoaderInterface
     private $initialize = false;
 
     private $store = [];
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var StructureItemCacheable
      */

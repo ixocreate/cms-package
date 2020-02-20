@@ -116,13 +116,13 @@ final class SitemapLink implements LinkInterface, LinkListInterface
     public function assemble(): string
     {
         if (empty($this->page) || !($this->page instanceof Page)) {
-            return "";
+            return '';
         }
 
         try {
             return $this->pageRoute->fromPage($this->page);
         } catch (\Throwable $exception) {
-            return "";
+            return '';
         }
     }
 
@@ -147,7 +147,7 @@ final class SitemapLink implements LinkInterface, LinkListInterface
             return null;
         }
 
-        return (string) $this->page->id();
+        return (string)$this->page->id();
     }
 
     /**
@@ -155,7 +155,10 @@ final class SitemapLink implements LinkInterface, LinkListInterface
      */
     public function serialize()
     {
-        return \serialize(clone $this->page);
+        if ($this->page instanceof Page) {
+            return \serialize(clone $this->page);
+        }
+        return \serialize(null);
     }
 
     /**
@@ -169,9 +172,7 @@ final class SitemapLink implements LinkInterface, LinkListInterface
                 $page->id();
                 $this->page = $page;
             }
-
         } catch (\Throwable $throwable) {
-
         }
     }
 }

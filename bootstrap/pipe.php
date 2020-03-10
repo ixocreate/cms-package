@@ -30,6 +30,7 @@ use Ixocreate\Cms\Action\Page\IndexSubSitemapAction;
 use Ixocreate\Cms\Action\Page\ListAction;
 use Ixocreate\Cms\Action\Page\ShowAliasPageAction;
 use Ixocreate\Cms\Action\Page\UpdateAction;
+use Ixocreate\Cms\Action\Page\WidgetsAction;
 use Ixocreate\Cms\Action\Preview\PreviewAction;
 use Ixocreate\Cms\Action\Seo\RobotsAction;
 use Ixocreate\Cms\Action\Seo\SitemapAction;
@@ -55,6 +56,7 @@ $pipe->segmentPipe(AdminConfig::class)(function (PipeConfigurator $pipe) {
             $group->get('/page/flat/index/{handle}', FlatIndexAction::class, 'admin.api.page.indexFlat');
             $group->get('/page/flat/list/{handle}', FlatListAction::class, 'admin.api.page.listFlat');
             $group->get('/page/alias/{id}', ShowAliasPageAction::class, 'admin.api.page.alias.showAll');
+            $group->get('/page/widget/{position}/{id}', WidgetsAction::class, 'admin.api.page.widgets');
             $group->delete('/page/alias/delete', DeleteAliasPageAction::class, 'admin.api.page.alias.delete');
             $group->post('/page/alias/create', CreateAliasPageAction::class, 'admin.api.page.alias.create');
 

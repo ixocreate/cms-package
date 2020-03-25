@@ -92,7 +92,7 @@ ORDER BY node.nestedLeft';
 
         return [
             'sitemapId' => '',
-            'handle' =>'',
+            'handle' => '',
             'pageType' => '',
             'pages' => [],
             'navigation' => [],
@@ -225,7 +225,10 @@ ORDER BY node.nestedLeft";
                 }
                 $item = \current($item);
 
-                $flat[$item['id']]['navigation'][$item['pageId']][] = $item['navigation'];
+                // prevent terminal pages to create an entry
+                if (\array_key_exists($item['id'], $flat)) {
+                    $flat[$item['id']]['navigation'][$item['pageId']][] = $item['navigation'];
+                }
             }
 
             unset($result);

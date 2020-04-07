@@ -51,7 +51,7 @@ class OldUrlRedirectMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $oldUri = $request->getUri();
+        $oldUri = $request->getUri()->withQuery('');
         $oldPage = $this->oldRedirectRepository->findOneBy(['oldUrl' => $oldUri]);
         if (empty($oldPage)) {
             return $handler->handle($request);

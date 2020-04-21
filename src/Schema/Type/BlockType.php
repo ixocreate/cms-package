@@ -168,6 +168,7 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
             }
             return $this->renderer->render($template, $this->value());
         } catch (\Throwable $e) {
+            \error_log('Error in Block ' . $this->getBlock()->label() . ':' . $e->getMessage());
             if (!$this->applicationConfig->isDevelopment()) {
                 return '';
             }
@@ -220,7 +221,7 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
     }
 
     /**
-     * @return string|void
+     * @return string
      */
     public function serialize()
     {
@@ -228,14 +229,6 @@ final class BlockType extends AbstractType implements DatabaseTypeInterface
             'value' => $this->value,
             'blockType' => $this->blockType,
         ]);
-    }
-
-    public function withTemplate(string $template): BlockType
-    {
-        $block = clone $this;
-        $block->template = $template;
-
-        return $block;
     }
 
     public function unserialize($serialized)

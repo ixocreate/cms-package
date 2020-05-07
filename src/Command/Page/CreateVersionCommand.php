@@ -99,19 +99,19 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     public function execute(): bool
     {
         /** @var Page $page */
-        $page = $this->pageRepository->find($this->dataValue("pageId"));
-        /** @var PageTypeInterface $pageType */
-        $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
+        $page = $this->pageRepository->find($this->dataValue('pageId'));
         /** @var Sitemap $sitemap */
         $sitemap = $this->sitemapRepository->find($page->sitemapId());
+        /** @var PageTypeInterface $pageType */
+        $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-        if ($this->dataValue("approve") === true) {
+        if ($this->dataValue('approve') === true) {
             $queryBuilder = $this->pageVersionRepository->createQueryBuilder();
-            $queryBuilder->update(PageVersion::class, "version")
-                ->set("version.approvedAt", ":approvedAt")
-                ->setParameter("approvedAt", null)
-                ->where("version.pageId = :pageId")
-                ->setParameter("pageId", (string)$page->id());
+            $queryBuilder->update(PageVersion::class, 'version')
+                ->set('version.approvedAt', ':approvedAt')
+                ->setParameter('approvedAt', null)
+                ->where('version.pageId = :pageId')
+                ->setParameter('pageId', (string)$page->id());
             $queryBuilder->getQuery()->execute();
         }
 
@@ -163,7 +163,6 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
     public function filter(): FilterableInterface
     {
         $newData = [];
-        $newData['pageType'] = (string)$this->dataValue('pageType');
         $newData['pageId'] = (string)$this->dataValue('pageId');
         $newData['createdBy'] = (string)$this->dataValue('createdBy');
         $newData['content'] = $this->dataValue('content', []);
@@ -174,13 +173,9 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-        if (!$this->pageTypeSubManager->has($this->dataValue('pageType'))) {
-            $violationCollector->add("pageType", "invalid_pageType");
-        }
-
-        $page = $this->pageRepository->find($this->dataValue("pageId"));
+        $page = $this->pageRepository->find($this->dataValue('pageId'));
         if (empty($page)) {
-            $violationCollector->add("page", "invalid_page");
+            $violationCollector->add('page', 'invalid_page');
         }
     }
 }

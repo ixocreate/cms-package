@@ -13,8 +13,6 @@ use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
@@ -27,11 +25,6 @@ use Ixocreate\Validation\Violation\ViolationCollectorInterface;
 
 final class CopyPageCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
-    /**
-     * @var PageTypeSubManager
-     */
-    private $pageTypeSubManager;
-
     /**
      * @var SitemapRepository
      */
@@ -75,7 +68,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
     /**
      * CreateCommand constructor.
      *
-     * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
      * @param LocaleManager $localeManager
@@ -84,7 +76,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
      * @param PageVersionRepository $pageVersionRepository
      */
     public function __construct(
-        PageTypeSubManager $pageTypeSubManager,
         SitemapRepository $sitemapRepository,
         PageRepository $pageRepository,
         LocaleManager $localeManager,
@@ -92,7 +83,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
         Connection $master,
         PageVersionRepository $pageVersionRepository
     ) {
-        $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->localeManager = $localeManager;
         $this->pageRepository = $pageRepository;
@@ -120,15 +110,7 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
             } elseif (!empty($this->dataValue('fromPageId'))) {
                 /** @var Page $fromPage */
                 $fromPage = $this->pageRepository->find($this->dataValue('fromPageId'));
-
-                /** @var Sitemap $fromSitemap */
-                $fromSitemap = $this->sitemapRepository->find($fromPage->sitemapId());
             }
-
-            /** @var PageTypeInterface $pageTypeName */
-            $pageTypeName = $fromSitemap->pageType();
-
-            $pageType = $this->pageTypeSubManager->get($pageTypeName);
 
             /** @var Page $toPage */
             $toPage = null;
@@ -168,7 +150,6 @@ final class CopyPageCommand extends AbstractCommand implements ValidatableInterf
 
             if (\count($result) > 0) {
                 $this->commandBus->command(CreateVersionCommand::class, [
-                    'pageType' => $pageType::serviceName(),
                     'pageId' => (string)$this->toPage->id(),
                     'content' => $result[0]->content(),
                     'approve' => true,

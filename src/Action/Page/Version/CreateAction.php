@@ -14,9 +14,7 @@ use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Command\Page\CreateVersionCommand;
 use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,21 +34,14 @@ final class CreateAction implements MiddlewareInterface
     private $pageRepository;
 
     /**
-     * @var SitemapRepository
-     */
-    private $sitemapRepository;
-
-    /**
      * CreateAction constructor.
      * @param CommandBus $commandBus
      * @param PageRepository $pageRepository
-     * @param SitemapRepository $sitemapRepository
      */
-    public function __construct(CommandBus $commandBus, PageRepository $pageRepository, SitemapRepository $sitemapRepository)
+    public function __construct(CommandBus $commandBus, PageRepository $pageRepository)
     {
         $this->commandBus = $commandBus;
         $this->pageRepository = $pageRepository;
-        $this->sitemapRepository = $sitemapRepository;
     }
 
     /**
@@ -68,11 +59,6 @@ final class CreateAction implements MiddlewareInterface
         if ($page === null) {
             return new ApiErrorResponse('invalid_page_id');
         }
-        /** @var Sitemap $sitemap */
-        $sitemap = $this->sitemapRepository->find($page->sitemapId());
-        if ($sitemap === null) {
-            return new ApiErrorResponse('invalid_page_id');
-        }
 
         $content = [];
         if (!empty($request->getParsedBody()['content']) && \is_array($request->getParsedBody()['content'])) {
@@ -80,7 +66,6 @@ final class CreateAction implements MiddlewareInterface
         }
 
         $result = $this->commandBus->command(CreateVersionCommand::class, [
-            'pageType' => $sitemap->pageType(),
             'pageId' => (string) $page->id(),
             'createdBy' => $request->getAttribute(User::class, null)->id(),
             'content' => $content,

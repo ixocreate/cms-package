@@ -14,7 +14,6 @@ use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
-use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
@@ -28,11 +27,6 @@ use Ramsey\Uuid\Uuid;
 
 final class CopySitemapCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {
-    /**
-     * @var PageTypeSubManager
-     */
-    private $pageTypeSubManager;
-
     /**
      * @var SitemapRepository
      */
@@ -66,7 +60,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
     /**
      * CreateCommand constructor.
      *
-     * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
      * @param LocaleManager $localeManager
@@ -75,7 +68,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
      * @param PageVersionRepository $pageVersionRepository
      */
     public function __construct(
-        PageTypeSubManager $pageTypeSubManager,
         SitemapRepository $sitemapRepository,
         PageRepository $pageRepository,
         LocaleManager $localeManager,
@@ -83,7 +75,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
         Connection $master,
         PageVersionRepository $pageVersionRepository
     ) {
-        $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
         $this->localeManager = $localeManager;
         $this->pageRepository = $pageRepository;
@@ -106,7 +97,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
             /** @var PageTypeInterface $pageTypeName */
             $pageTypeName = $fromSitemap->pageType();
 
-            $pageType = $this->pageTypeSubManager->get($pageTypeName);
             $sitemap = new Sitemap([
                 'id' => $this->uuid(),
                 'pageType' => $pageTypeName,
@@ -160,7 +150,6 @@ final class CopySitemapCommand extends AbstractCommand implements ValidatableInt
                     ]);
 
                     $this->commandBus->command(CreateVersionCommand::class, [
-                        'pageType' => $pageType::serviceName(),
                         'pageId' => (string)$page->id(),
                         'content' => $pageVersion->content(),
                         'approve' => true,

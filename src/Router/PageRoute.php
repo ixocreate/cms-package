@@ -39,9 +39,14 @@ final class PageRoute
 
     public function fromPage(Page $page, array $params = [], string $routePrefix = ''): string
     {
+        return $this->fromPageId((string)$page->id(), $params, $routePrefix);
+    }
+
+    public function fromPageId(string $pageId, array $params = [], string $routePrefix = ''): string
+    {
         if ($routePrefix !== '') {
             $routePrefix .= '.';
         }
-        return $this->cmsRouter->generateUri('page.' . $routePrefix . (string)$page->id(), $params);
+        return $this->cmsRouter->generateUri('page.' . $routePrefix . $pageId, $params);
     }
 }

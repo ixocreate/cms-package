@@ -17,10 +17,10 @@ use Ixocreate\Event\Event;
 
 final class PageEvent extends Event
 {
-    /**
-     * @var Sitemap
-     */
-    private $sitemap;
+    const PAGE_CREATE = 'page.create';
+    const PAGE_UPDATE = 'page.update';
+    const PAGE_VERSION_CREATE = 'page-version.create';
+    const PAGE_VERSION_PUBLISH = 'page-version.publish';
 
     /**
      * @var Page
@@ -28,27 +28,32 @@ final class PageEvent extends Event
     private $page;
 
     /**
-     * @var PageVersion
+     * @var Sitemap
+     */
+    private $sitemap;
+
+    /**
+     * @var PageVersion|null
      */
     private $pageVersion;
 
     /**
-     * @var PageTypeInterface
+     * @var PageTypeInterface|null
      */
     private $pageType;
 
-    public function __construct(Sitemap $sitemap, Page $page, PageVersion $pageVersion, PageTypeInterface $pageType)
+    public function __construct(Page $page, ?Sitemap $sitemap = null, ?PageVersion $pageVersion = null, ?PageTypeInterface $pageType = null)
     {
-        $this->sitemap = $sitemap;
         $this->page = $page;
+        $this->sitemap = $sitemap;
         $this->pageVersion = $pageVersion;
         $this->pageType = $pageType;
     }
 
     /**
-     * @return Sitemap
+     * @return Sitemap|null
      */
-    public function sitemap(): Sitemap
+    public function sitemap(): ?Sitemap
     {
         return $this->sitemap;
     }
@@ -62,17 +67,17 @@ final class PageEvent extends Event
     }
 
     /**
-     * @return PageVersion
+     * @return PageVersion|null
      */
-    public function pageVersion(): PageVersion
+    public function pageVersion(): ?PageVersion
     {
         return $this->pageVersion;
     }
 
     /**
-     * @return PageTypeInterface
+     * @return PageTypeInterface|null
      */
-    public function pageType(): PageTypeInterface
+    public function pageType(): ?PageTypeInterface
     {
         return $this->pageType;
     }

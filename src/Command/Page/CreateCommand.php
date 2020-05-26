@@ -12,6 +12,7 @@ namespace Ixocreate\Cms\Command\Page;
 use Doctrine\DBAL\Driver\Connection;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Event\PageEvent;
 use Ixocreate\Cms\PageType\HandlePageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
@@ -19,6 +20,7 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
+use Ixocreate\Event\EventDispatcher;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Intl\LocaleManager;
 use Ixocreate\Validation\ValidatableInterface;
@@ -57,14 +59,19 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
     private $master;
 
     /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
      * CreateCommand constructor.
-     *
      * @param PageTypeSubManager $pageTypeSubManager
      * @param SitemapRepository $sitemapRepository
      * @param PageRepository $pageRepository
      * @param LocaleManager $localeManager
      * @param CommandBus $commandBus
      * @param Connection $master
+     * @param EventDispatcher $eventDispatcher
      */
     public function __construct(
         PageTypeSubManager $pageTypeSubManager,
@@ -72,7 +79,8 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         PageRepository $pageRepository,
         LocaleManager $localeManager,
         CommandBus $commandBus,
-        Connection $master
+        Connection $master,
+        EventDispatcher $eventDispatcher
     ) {
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->sitemapRepository = $sitemapRepository;
@@ -80,6 +88,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
         $this->master = $master;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -90,7 +99,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
     {
         $this->master->transactional(function () {
             /** @var PageTypeInterface $pageType */
-            $pageType = $this->pageTypeSubManager->get($this->dataValue("pageType"));
+            $pageType = $this->pageTypeSubManager->get($this->dataValue('pageType'));
 
             $sitemap = new Sitemap([
                 'id' => $this->uuid(),
@@ -98,7 +107,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
             ]);
 
             if (\is_subclass_of($pageType, HandlePageTypeInterface::class)) {
-                $sitemap = $sitemap->with("handle", $pageType::serviceName());
+                $sitemap = $sitemap->with('handle', $pageType::serviceName());
             }
 
             if (empty($this->dataValue('parentSitemapId'))) {
@@ -127,6 +136,8 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
                 'name' => (string)$page->name(),
                 'pageId' => (string)$page->id(),
             ]);
+
+            $this->eventDispatcher->dispatch(PageEvent::PAGE_CREATE, new PageEvent($page, $sitemap, null, $pageType));
         });
 
         return true;
@@ -159,7 +170,7 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
         }
 
         if (!$this->localeManager->has((string)$this->dataValue("locale"))) {
-            $violationCollector->add("locale", "invalid_locale");
+            $violationCollector->add('locale', 'invalid_locale');
         }
     }
 

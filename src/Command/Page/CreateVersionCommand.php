@@ -144,13 +144,13 @@ final class CreateVersionCommand extends AbstractCommand implements FilterableIn
         $this->cacheManager->fetch($this->pageVersionCacheable->withPageId((string)$page->id()), true);
 
         $pageEvent = new PageEvent(
-            $sitemap,
             $page,
+            $sitemap,
             $pageVersion,
             $pageType
         );
 
-        $this->eventDispatcher->dispatch('page-version.publish', $pageEvent);
+        $this->eventDispatcher->dispatch(PageEvent::PAGE_VERSION_PUBLISH, $pageEvent);
 
         return true;
     }

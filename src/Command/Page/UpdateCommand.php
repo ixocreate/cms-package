@@ -16,10 +16,12 @@ use Ixocreate\Cms\Cacheable\StructureCacheable;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Cms\Event\PageEvent;
 use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\CommandBus\CommandBus;
+use Ixocreate\Event\EventDispatcher;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\Violation\ViolationCollectorInterface;
@@ -68,8 +70,12 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
     private $cache;
 
     /**
-     * CreateCommand constructor.
-     *
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * UpdateCommand constructor.
      * @param PageRepository $pageRepository
      * @param CommandBus $commandBus
      * @param Config $config
@@ -78,6 +84,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
      * @param CacheManager $cacheManager
      * @param PageCacheable $pageCacheable
      * @param StructureCacheable $structureCacheable
+     * @param EventDispatcher $eventDispatcher
      */
     public function __construct(
         PageRepository $pageRepository,
@@ -87,7 +94,8 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         CacheInterface $cms,
         CacheManager $cacheManager,
         PageCacheable $pageCacheable,
-        StructureCacheable $structureCacheable
+        StructureCacheable $structureCacheable,
+        EventDispatcher $eventDispatcher
     ) {
         $this->pageRepository = $pageRepository;
         $this->commandBus = $commandBus;
@@ -97,6 +105,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
         $this->cacheManager = $cacheManager;
         $this->pageCacheable = $pageCacheable;
         $this->structureCacheable = $structureCacheable;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -176,6 +185,8 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
 //            } else {
             $this->cacheManager->fetch($this->pageCacheable->withPageId((string)$page->id()), true);
 //            }
+
+            $this->eventDispatcher->dispatch(PageEvent::PAGE_UPDATE, new PageEvent($page));
         }
 
         return true;

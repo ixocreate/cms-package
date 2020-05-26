@@ -73,16 +73,16 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
     public function execute(): bool
     {
         /** @var Page $page */
-        $page = $this->pageRepository->find($this->dataValue("pageId"));
+        $page = $this->pageRepository->find($this->dataValue('pageId'));
 
         /** @var Sitemap $sitemap */
         $sitemap = $this->sitemapRepository->find($page->sitemapId());
 
         $i = 0;
-        $iterationName = $this->dataValue("name");
+        $iterationName = $this->dataValue('name');
         do {
             if ($i > 0) {
-                $iterationName .= "-" . $i;
+                $iterationName .= '-' . $i;
             }
             if ($iterationName === $page->slug()) {
                 return true;
@@ -90,7 +90,7 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
             $sParentId = (!empty($sitemap->parentId())) ? (string)$sitemap->parentId() : null;
             $found = $this->pageRepository->slugExists(
                 $sParentId,
-                (string)$this->dataValue("pageId"),
+                (string)$this->dataValue('pageId'),
                 $iterationName,
                 $page->locale()
             );
@@ -100,7 +100,9 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
         if ($this->dataValue('isChange') === true) {
             $this->saveRedirectInfo($page);
         }
-        $this->pageRepository->save($page->with("slug", $iterationName));
+
+        $this->pageRepository->save($page->with('slug', $iterationName));
+
         return true;
     }
 
@@ -144,13 +146,13 @@ final class SlugCommand extends AbstractCommand implements ValidatableInterface,
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-        $page = $this->pageRepository->find($this->dataValue("pageId"));
+        $page = $this->pageRepository->find($this->dataValue('pageId'));
         if (empty($page)) {
-            $violationCollector->add("page", "invalid_pageId");
+            $violationCollector->add('page', 'invalid_pageId');
         }
 
-        if (empty($this->dataValue("name"))) {
-            $violationCollector->add("page", "invalid_name");
+        if (empty($this->dataValue('name'))) {
+            $violationCollector->add('page', 'invalid_name');
         }
     }
 

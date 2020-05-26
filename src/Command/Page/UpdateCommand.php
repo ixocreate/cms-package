@@ -115,34 +115,34 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
     public function execute(): bool
     {
         /** @var Page $page */
-        $page = $this->pageRepository->find($this->dataValue("pageId"));
+        $page = $this->pageRepository->find($this->dataValue('pageId'));
 
         $updated = false;
         $clearCache = false;
         if ($this->dataValue('name') !== false) {
             $updated = true;
-            $page = $page->with("name", $this->dataValue('name'));
+            $page = $page->with('name', $this->dataValue('name'));
         }
 
         if ($this->dataValue('publishedFrom') !== false) {
             $updated = true;
-            $page = $page->with("publishedFrom", $this->dataValue('publishedFrom'));
+            $page = $page->with('publishedFrom', $this->dataValue('publishedFrom'));
 
             if (empty($this->dataValue('publishedFrom'))) {
-                $page = $page->with("releasedAt", $page->createdAt());
+                $page = $page->with('releasedAt', $page->createdAt());
             } else {
-                $page = $page->with("releasedAt", $this->dataValue('publishedFrom'));
+                $page = $page->with('releasedAt', $this->dataValue('publishedFrom'));
             }
         }
 
         if ($this->dataValue('publishedUntil') !== false) {
             $updated = true;
-            $page = $page->with("publishedUntil", $this->dataValue('publishedUntil'));
+            $page = $page->with('publishedUntil', $this->dataValue('publishedUntil'));
         }
 
         if ($this->dataValue('status') !== false) {
             $updated = true;
-            $page = $page->with("status", $this->dataValue('status'));
+            $page = $page->with('status', $this->dataValue('status'));
         }
 
         if ($this->dataValue('slug') !== false) {
@@ -199,18 +199,18 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
 
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
-        if (empty($this->dataValue("pageId"))) {
-            $violationCollector->add("page", "invalid_pageId");
+        if (empty($this->dataValue('pageId'))) {
+            $violationCollector->add('page', 'invalid_pageId');
         } else {
-            $page = $this->pageRepository->find($this->dataValue("pageId"));
+            $page = $this->pageRepository->find($this->dataValue('pageId'));
             if (empty($page)) {
-                $violationCollector->add("page", "invalid_pageId");
+                $violationCollector->add('page', 'invalid_pageId');
             }
         }
 
-        if (!empty($this->dataValue("status"))) {
-            if (!\in_array($this->dataValue("status"), ['online', 'offline'])) {
-                $violationCollector->add("status", "invalid_status");
+        if (!empty($this->dataValue('status'))) {
+            if (!\in_array($this->dataValue('status'), ['online', 'offline'])) {
+                $violationCollector->add('status', 'invalid_status');
             }
         }
     }
@@ -232,7 +232,7 @@ final class UpdateCommand extends AbstractCommand implements ValidatableInterfac
                 return $nav['name'];
             }, $this->config->navigation());
 
-            foreach ($this->dataValue("navigation") as $nav) {
+            foreach ($this->dataValue('navigation') as $nav) {
                 if (\in_array($nav, $navItems)) {
                     $newData['navigation'][] = $nav;
                 }

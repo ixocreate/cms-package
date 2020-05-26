@@ -151,25 +151,25 @@ final class CreateCommand extends AbstractCommand implements ValidatableInterfac
     public function validate(ViolationCollectorInterface $violationCollector): void
     {
         if (!$this->pageTypeSubManager->has($this->dataValue('pageType'))) {
-            $violationCollector->add("pageType", "invalid_pageType");
+            $violationCollector->add('pageType', 'invalid_pageType');
         }
 
         if (empty($this->dataValue('name')) || !\is_string($this->dataValue('name'))) {
-            $violationCollector->add("name", "invalid_name");
+            $violationCollector->add('name', 'invalid_name');
         }
 
-        if (!empty($this->dataValue("parentSitemapId"))) {
-            if (!\is_string($this->dataValue("parentSitemapId"))) {
-                $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
+        if (!empty($this->dataValue('parentSitemapId'))) {
+            if (!\is_string($this->dataValue('parentSitemapId'))) {
+                $violationCollector->add('parentSitemapId', 'invalid_parentSitemapId');
             } else {
-                $sitemap = $this->sitemapRepository->find($this->dataValue("parentSitemapId"));
+                $sitemap = $this->sitemapRepository->find($this->dataValue('parentSitemapId'));
                 if (empty($sitemap)) {
-                    $violationCollector->add("parentSitemapId", "invalid_parentSitemapId");
+                    $violationCollector->add('parentSitemapId', 'invalid_parentSitemapId');
                 }
             }
         }
 
-        if (!$this->localeManager->has((string)$this->dataValue("locale"))) {
+        if (!$this->localeManager->has((string)$this->dataValue('locale'))) {
             $violationCollector->add('locale', 'invalid_locale');
         }
     }

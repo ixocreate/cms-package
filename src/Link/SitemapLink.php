@@ -126,6 +126,11 @@ final class SitemapLink implements LinkInterface, LinkListInterface
         }
     }
 
+    public function page(): ?Page
+    {
+        return $this->page;
+    }
+
     /**
      * @return mixed
      */

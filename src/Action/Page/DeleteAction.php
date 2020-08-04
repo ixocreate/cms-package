@@ -11,11 +11,8 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Entity\Page;
-use Ixocreate\Cms\Repository\OldRedirectRepository;
-use Ixocreate\Cms\Repository\PageRepository;
-use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Command\Page\DeletePageCommand;
+use Ixocreate\CommandBus\CommandBus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -24,62 +21,22 @@ use Psr\Http\Server\RequestHandlerInterface;
 class DeleteAction implements MiddlewareInterface
 {
     /**
-     * @var PageRepository
+     * @var CommandBus
      */
-    private $pageRepository;
+    private $commandBus;
 
-    /**
-     * @var PageVersionRepository
-     */
-    private $pageVersionRepository;
-
-    /**
-     * @var SitemapRepository
-     */
-    private $sitemapRepository;
-
-    /**
-     * @var OldRedirectRepository
-     */
-    private $oldRedirectRepository;
-
-    public function __construct(PageRepository $pageRepository, PageVersionRepository $pageVersionRepository, SitemapRepository $sitemapRepository, OldRedirectRepository $oldRedirectRepository)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->pageRepository = $pageRepository;
-        $this->pageVersionRepository = $pageVersionRepository;
-        $this->sitemapRepository = $sitemapRepository;
-        $this->oldRedirectRepository = $oldRedirectRepository;
+        $this->commandBus = $commandBus;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $id = $request->getAttribute("id");
-
-        /** @var Page $page */
-        $page = $this->pageRepository->find($id);
-        if (empty($page)) {
-            return new ApiErrorResponse("invalid_request");
+        $result = $this->commandBus->command(DeletePageCommand::class, ['id' => $request->getAttribute('id')]);
+        if ($result->isSuccessful()) {
+            return new ApiSuccessResponse();
         }
 
-        $pageVersions = $this->pageVersionRepository->findBy(['pageId' => $page->id()]);
-
-        foreach ($pageVersions as $pageVersion) {
-            $this->pageVersionRepository->remove($pageVersion);
-        }
-
-        $pageRedirects = $this->oldRedirectRepository->findBy(['pageId' => $page->id()]);
-
-        foreach ($pageRedirects as $pageRedirect) {
-            $this->oldRedirectRepository->remove(($pageRedirect));
-        }
-
-        $this->pageRepository->remove($page);
-
-        if ($this->pageRepository->count(['sitemapId' => $page->sitemapId()]) === 0) {
-            $sitemap = $this->sitemapRepository->find($page->sitemapId());
-            $this->sitemapRepository->remove($sitemap);
-        }
-
-        return new ApiSuccessResponse();
+        return new ApiErrorResponse('execution_error', $result->messages());
     }
 }

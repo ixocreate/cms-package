@@ -1,9 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.19...develop)
-### Fixed
-- fix routing with query params
-- add check to BlockContainerType
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.29...develop)
+
+## [v0.3.29 (2020-08-04)](https://github.com/ixocreate/cms-package/compare/0.3.28...0.3.29)
+### Changed
+- add page delete event
 
 ## [v0.3.19 (2019-11-06)](https://github.com/ixocreate/cms-package/compare/0.3.18...0.3.19)
 ### Added

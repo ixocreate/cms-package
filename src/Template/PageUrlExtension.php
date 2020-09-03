@@ -76,7 +76,22 @@ final class PageUrlExtension implements ExtensionInterface
     }
 
     /**
-     * @param string $handle
+     * @param string $pageId
+     * @param array $params
+     * @param string $routePrefix
+     * @return string
+     */
+    public function fromPageId(string $pageId, array $params = [], string $routePrefix = ''): string
+    {
+        try {
+            return $this->pageRoute->fromPageId($pageId, $params, $routePrefix);
+        } catch (\Throwable $e) {
+        }
+        return '';
+    }
+
+    /**
+     * @param str ing $handle
      * @param array $params
      * @param null|string $locale
      * @throws \Psr\Cache\InvalidArgumentException

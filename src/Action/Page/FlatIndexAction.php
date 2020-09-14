@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
 
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
@@ -42,11 +44,17 @@ class FlatIndexAction implements MiddlewareInterface
      */
     private $pageRepository;
 
-    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, PageRepository $pageRepository)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(SitemapRepository $sitemapRepository, PageTypeSubManager $pageTypeSubManager, PageRepository $pageRepository, EntityManagerInterface $master)
     {
         $this->sitemapRepository = $sitemapRepository;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->pageRepository = $pageRepository;
+        $this->entityManager = $master;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -63,20 +71,27 @@ class FlatIndexAction implements MiddlewareInterface
          * searchable page name
          */
         $parameters = ['parentId' => (string)$parentSitemap->id()];
-        $dql = 'FROM ' . Sitemap::class . ' s LEFT JOIN ' . Page::class . ' p WITH (s.id = p.sitemapId) WHERE s.parentId = :parentId';
+        $sql = ' FROM cms_sitemap s LEFT JOIN cms_page p ON (s.id = p.sitemapId) WHERE s.parentId = :parentId';
         if ($search = $request->getQueryParams()['search'] ?? null) {
             $parameters += ['search' => '%' . $search . '%'];
-            $dql .= ' AND p.name LIKE :search';
+            $sql .= ' AND p.name LIKE :search';
         }
-        $dql .= ' ORDER BY p.releasedAt DESC';
+        $sql .= ' GROUP BY s.id';
 
-        $count = $this->sitemapRepository->createQuery('SELECT COUNT(s) ' . $dql)
-            ->execute($parameters, Query::HYDRATE_SINGLE_SCALAR);
+        $resultMap = new Query\ResultSetMapping();
+        $resultMap->addScalarResult('c', 'c', Types::INTEGER);
 
-        $result = $this->sitemapRepository->createQuery('SELECT s ' . $dql)
-            ->setMaxResults(\min(25, (int)($request->getQueryParams()['limit'] ?? 25)))
-            ->setFirstResult(\min((int)($request->getQueryParams()['offset'] ?? 0), $count))
-            ->execute($parameters);
+        $query = $this->entityManager->createNativeQuery('SELECT COUNT(x.id) as c FROM (SELECT s.* ' . $sql . ') x', $resultMap);
+        $count = $query->execute($parameters, Query::HYDRATE_SINGLE_SCALAR);
+
+        $resultMapBuilder = new Query\ResultSetMappingBuilder($this->entityManager);
+        $resultMapBuilder->addRootEntityFromClassMetadata(Sitemap::class, 's');
+
+        $parameters['limit'] = \min(25, (int)($request->getQueryParams()['limit'] ?? 25));
+        $parameters['offset'] = \min((int)($request->getQueryParams()['offset'] ?? 0), $count);
+
+        $query = $this->entityManager->createNativeQuery('SELECT ' . $resultMapBuilder->generateSelectClause('s') . $sql . ' ORDER BY MIN(p.releasedAt) DESC LIMIT :limit OFFSET :offset', $resultMapBuilder);
+        $result = $query->execute($parameters);
 
         $items = [];
         foreach ($result as $item) {

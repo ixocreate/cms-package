@@ -22,7 +22,7 @@ use Ixocreate\CommandBus\Command\AbstractCommand;
 use Ixocreate\Filter\FilterableInterface;
 use Ixocreate\Validation\ValidatableInterface;
 use Ixocreate\Validation\Violation\ViolationCollectorInterface;
-use Zend\Expressive\Router\Exception\RuntimeException;
+use Mezzio\Router\Exception\RuntimeException;
 
 final class SlugCommand extends AbstractCommand implements ValidatableInterface, FilterableInterface
 {

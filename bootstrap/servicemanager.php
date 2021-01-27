@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms;
 
-use Ixocreate\Application\Service\ServiceManagerConfigurator;
+use Ixocreate\Application\ServiceManager\ServiceManagerConfigurator;
 use Ixocreate\Cms\Block\BlockSubManager;
 use Ixocreate\Cms\Loader\DatabasePageLoader;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;

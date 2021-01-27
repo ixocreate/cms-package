@@ -12,9 +12,9 @@ namespace Ixocreate\Cms\PageType;
 use Ixocreate\Schema\Builder\BuilderInterface;
 use Ixocreate\Schema\SchemaInterface;
 use Ixocreate\Schema\SchemaProviderInterface;
-use Ixocreate\ServiceManager\SubManager\SubManager;
+use Ixocreate\ServiceManager\SubManager\AbstractSubManager;
 
-final class PageTypeSubManager extends SubManager implements SchemaProviderInterface
+final class PageTypeSubManager extends AbstractSubManager implements SchemaProviderInterface
 {
     /**
      * @param $name

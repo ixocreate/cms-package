@@ -20,8 +20,8 @@ use Ixocreate\Cms\Router\CmsRouter;
 use Ixocreate\Database\Repository\Factory\RepositorySubManager;
 use Ixocreate\ServiceManager\FactoryInterface;
 use Ixocreate\ServiceManager\ServiceManagerInterface;
-use Zend\Expressive\MiddlewareContainer;
-use Zend\Expressive\MiddlewareFactory;
+use Mezzio\MiddlewareContainer;
+use Mezzio\MiddlewareFactory;
 
 final class CmsRouterFactory implements FactoryInterface
 {

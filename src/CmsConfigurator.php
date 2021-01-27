@@ -11,7 +11,7 @@ namespace Ixocreate\Cms;
 
 use Ixocreate\Application\Configurator\ConfiguratorInterface;
 use Ixocreate\Application\Service\ServiceRegistryInterface;
-use Ixocreate\Application\Service\SubManagerConfigurator;
+use Ixocreate\Application\ServiceManager\SubManagerConfigurator;
 use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Router\Replacement\ReplacementInterface;
 use Ixocreate\Cms\Router\Replacement\ReplacementManager;

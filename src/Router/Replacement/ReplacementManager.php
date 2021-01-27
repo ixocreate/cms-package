@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Router\Replacement;
 
-use Ixocreate\ServiceManager\SubManager\SubManager;
+use Ixocreate\ServiceManager\SubManager\AbstractSubManager;
 
-final class ReplacementManager extends SubManager
+final class ReplacementManager extends AbstractSubManager
 {
     private $replacements = null;
 
@@ -22,7 +22,7 @@ final class ReplacementManager extends SubManager
     {
         if ($this->replacements === null) {
             $this->replacements = [];
-            foreach ($this->getServices() as $service) {
+            foreach ($this->services() as $service) {
                 $this->replacements[] = $this->get($service);
             }
         }

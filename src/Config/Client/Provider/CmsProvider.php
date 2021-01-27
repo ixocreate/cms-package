@@ -52,7 +52,7 @@ final class CmsProvider implements ClientConfigProviderInterface
         }
 
         $linkTypes = [];
-        foreach ($this->linkManager->getServices() as $serviceName) {
+        foreach ($this->linkManager->services() as $serviceName) {
             /** @var LinkInterface $linkType */
             $linkTypeService = $this->linkManager->get($serviceName);
             $linkType = [

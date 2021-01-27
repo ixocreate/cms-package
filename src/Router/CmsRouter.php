@@ -15,6 +15,10 @@ use Ixocreate\Cms\Cacheable\CompiledGeneratorRoutesCacheable;
 use Ixocreate\Cms\Cacheable\CompiledMatcherRoutesCacheable;
 use Ixocreate\Cms\Entity\RouteMatch;
 use Ixocreate\Cms\Repository\RouteMatchRepository;
+use Mezzio\MiddlewareFactory;
+use Mezzio\Router\Route;
+use Mezzio\Router\RouteResult;
+use Mezzio\Router\RouterInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\CompiledUrlGenerator;
@@ -23,10 +27,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
-use Zend\Expressive\MiddlewareFactory;
-use Zend\Expressive\Router\Route;
-use Zend\Expressive\Router\RouteResult;
-use Zend\Expressive\Router\RouterInterface;
 
 final class CmsRouter implements RouterInterface
 {

@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Site\Admin;
 
-use Ixocreate\ServiceManager\SubManager\SubManager;
+use Ixocreate\ServiceManager\SubManager\AbstractSubManager;
 
-class AdminSearchSubManager extends SubManager
+final class AdminSearchSubManager extends AbstractSubManager
 {
 }

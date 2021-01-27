@@ -14,8 +14,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Stratigility\Exception\EmptyPipelineException;
-use Zend\Stratigility\MiddlewarePipe;
+use Laminas\Stratigility\Exception\EmptyPipelineException;
+use Laminas\Stratigility\MiddlewarePipe;
 
 final class CmsMiddleware implements MiddlewareInterface
 {

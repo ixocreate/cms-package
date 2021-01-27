@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.3.29...develop)
+## [Unreleased](https://github.com/ixocreate/cms-package/compare/0.4.0...develop)
+
+## [v0.4.0 (2021-01-21)](https://github.com/ixocreate/event-package/compare/0.3.29...0.4.0)
+### Update
+- Update to Application 0.3
 
 ## [v0.3.29 (2020-08-04)](https://github.com/ixocreate/cms-package/compare/0.3.28...0.3.29)
 ### Changed

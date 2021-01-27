@@ -45,7 +45,7 @@ class GenerateSitemapCommand extends AbstractCommand
 
         $sitemaps = [];
 
-        foreach ($this->subManager->getServices() as $serviceName) {
+        foreach ($this->subManager->services() as $serviceName) {
             /** @var XmlSitemapProviderInterface $provider */
             $provider = $this->subManager->get($serviceName);
 

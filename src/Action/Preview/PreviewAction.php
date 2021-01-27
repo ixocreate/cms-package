@@ -29,9 +29,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
-use Zend\Diactoros\Response\TextResponse;
-use Zend\Expressive\MiddlewareContainer;
-use Zend\Expressive\MiddlewareFactory;
+use Laminas\Diactoros\Response\TextResponse;
+use Mezzio\MiddlewareContainer;
+use Mezzio\MiddlewareFactory;
 
 final class PreviewAction implements MiddlewareInterface
 {

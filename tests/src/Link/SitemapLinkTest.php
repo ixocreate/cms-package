@@ -30,7 +30,7 @@ class SitemapLinkTest extends TestCase
 
     private $pageRoute;
 
-    public function setUp()
+    public function setUp(): void
     {
         (new TypeMockHelper($this, [
             UuidType::class => new UuidType(),

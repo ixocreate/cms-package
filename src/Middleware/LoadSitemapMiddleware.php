@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
-use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\SitemapCacheable;
 use Ixocreate\Cms\Entity\Page;
@@ -17,6 +16,7 @@ use Ixocreate\Cms\Site\Tree\Container;
 use Ixocreate\Cms\Site\Tree\Item;
 use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
 use Ixocreate\Cms\Site\Tree\Search\OnlineSearch;
+use Ixocreate\Framework\Http\ErrorHandling\Response\NotFoundHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Middleware;
 
-use Ixocreate\Application\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Cache\CacheManager;
 use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Entity\Page;
+use Ixocreate\Framework\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Intl\LocaleManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

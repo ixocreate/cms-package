@@ -39,7 +39,7 @@ final class PageTypeSubManager extends AbstractSubManager implements SchemaProvi
     {
         $allowedChildren = [];
 
-        $namedServices = $this->getServiceManagerConfig()->getNamedServices();
+        $namedServices = $this->serviceManagerConfig()->getNamedServices();
 
         if (!empty($pageType)) {
             /** @var PageTypeInterface $pageType */
@@ -61,7 +61,6 @@ final class PageTypeSubManager extends AbstractSubManager implements SchemaProvi
 
         $allowedPageTypes = [];
 
-
         foreach ($allowedChildren as $childPageType) {
             $className = $namedServices[$childPageType];
 
@@ -74,5 +73,19 @@ final class PageTypeSubManager extends AbstractSubManager implements SchemaProvi
         }
 
         return $allowedPageTypes;
+    }
+
+    public function getTerminalPageTypes(): array
+    {
+        $terminalPageTypes = [];
+        foreach ($this->serviceManagerConfig()->getNamedServices() as $serviceName => $className) {
+            if (!\is_subclass_of($className, TerminalPageTypeInterface::class)) {
+                continue;
+            }
+
+            $terminalPageTypes[] = $className::serviceName();
+        }
+
+        return $terminalPageTypes;
     }
 }

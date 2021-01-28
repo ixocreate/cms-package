@@ -21,7 +21,6 @@ use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
 use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Request\CmsRequest;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
 use Ixocreate\Schema\Type\SchemaType;
 use Ixocreate\Schema\Type\Type;
 use Psr\Http\Message\ResponseInterface;
@@ -35,11 +34,6 @@ use Mezzio\MiddlewareFactory;
 
 final class PreviewAction implements MiddlewareInterface
 {
-    /**
-     * @var AdminContainer
-     */
-    private $adminContainer;
-
     /**
      * @var PageVersionRepository
      */

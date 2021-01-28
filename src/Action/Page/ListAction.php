@@ -9,11 +9,12 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Action\Page;
 
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -22,13 +23,18 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ListAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var EntityManagerInterface
      */
-    private $adminContainer;
+    private $entityManager;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
 
-    public function __construct(AdminContainer $adminContainer)
+    public function __construct(EntityManagerInterface $master, PageTypeSubManager $pageTypeSubManager)
     {
-        $this->adminContainer = $adminContainer;
+        $this->entityManager = $master;
+        $this->pageTypeSubManager = $pageTypeSubManager;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -40,84 +46,78 @@ class ListAction implements MiddlewareInterface
 
         $pageType = $request->getQueryParams()['pageType'] ?? null;
 
-        /**
-         * TODO: make this an actual query instead of iterating the whole tree/container/structure/...
-         */
+        $terminalPageTypes = $this->pageTypeSubManager->getTerminalPageTypes();
+
+        // TODO: filter offline pages
+        $sql = 'SELECT p.`id`, `name`, `level`, `pageType` FROM cms_page p LEFT JOIN cms_sitemap s ON (p.sitemapId = s.id) WHERE p.locale = :locale';
+        $parameters = [
+            'locale' => $locale,
+        ];
+
+        if ($pageType !== null) {
+            $sql .= ' AND s.pageType = :pageType';
+            $parameters['pageType'] = $pageType;
+        }
+        if (!empty($terminalPageTypes)) {
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('nested_left', 'nested_left', Types::INTEGER);
+            $rsm->addScalarResult('nested_right', 'nested_right', Types::INTEGER);
+            $query = $this->entityManager->createNativeQuery('SELECT `nestedLeft`, `nestedRight` FROM cms_sitemap s WHERE p.pageType IN (:terminalPageTypes)', $rsm);
+            $result = $query->execute(['terminalPageTypes' => $terminalPageTypes]);
+
+            foreach ($result as $row) {
+                $sql .= ' AND s.nestedLeft NOT BETWEEN ' . $row['nested_left'] . ' AND ' . $row['nested_right'];
+            }
+        }
+        $term = $request->getQueryParams()['term'] ?? null;
+        if (!empty($term)) {
+            $sql .= ' AND p.name LIKE :term';
+            $parameters['term'] = '%' . $term . '%';
+        }
+
+        $sql .= ' ORDER BY nestedLeft';
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('id', 'id');
+        $rsm->addScalarResult('name', 'name');
+        $rsm->addScalarResult('level', 'level', Types::INTEGER);
+        $query = $this->entityManager->createNativeQuery($sql, $rsm);
+        $result = $query->execute($parameters);
+
         $items = [];
-        $iterator = new \RecursiveIteratorIterator($this->adminContainer, \RecursiveIteratorIterator::SELF_FIRST);
-        $terminalIgnoreDepth = 0;
-        $ignoringChildren = false;
-        /** @var AdminItem $item */
-        foreach ($iterator as $item) {
+        $parent = null;
+        $parentPath = '';
+        $parentPathList = [];
+        $lastLevel = 0;
+        foreach ($result as $item) {
+            if ($lastLevel < $item['level']) {
+                $parentPathList[$item['level']] = $parent['name'];
+                $lastLevel = $item['level'];
 
-            /**
-             * lift ignoring children flag as soon as we're out the children's depth again
-             */
-            if ($ignoringChildren && $terminalIgnoreDepth === $iterator->getDepth()) {
-                $ignoringChildren = false;
+                $parentPath = $path = \implode(' / ', $parentPathList) . ' / ';
             }
+            if ($lastLevel > $item['level']) {
+                $parentPathList[$item['level']] = $item['name'];
+                for ($i = $lastLevel; $i > $item['level']; $i--) {
+                    unset($parentPathList[$i]);
+                }
+                $lastLevel = $item['level'];
 
-            if ($ignoringChildren) {
-                continue;
-            }
-
-            /**
-             * set flags to exclude children of terminal page types (flat lists)
-             */
-            if ($item->pageType() instanceof TerminalPageTypeInterface) {
-                $terminalIgnoreDepth = $iterator->getDepth();
-                $ignoringChildren = true;
-            }
-
-            /**
-             * exclude pages that are not of the requested page type
-             */
-            if ($pageType !== null && $item->pageType()::serviceName() !== $pageType) {
-                continue;
-            }
-
-            /**
-             * exclude pages that do not have the requested locale
-             */
-            if (!\array_key_exists($locale, $item->pages())) {
-                continue;
-            }
-
-            /**
-             * cheap "like" search
-             */
-            if ($term = $request->getQueryParams()['term'] ?? null) {
-                $pageName = $item->pages()[$locale]['page']->name();
-                if (\mb_strpos(\mb_strtolower($pageName), \mb_strtolower($term)) === false) {
-                    continue;
+                if (!empty($parentPathList)) {
+                    $parentPath = $path = \implode(' / ', $parentPathList) . ' / ';
+                } else {
+                    $parentPath = '';
                 }
             }
 
             $items[] = [
-                'id' => $item->pages()[$locale]['page']->id(),
-                'name' => $this->receiveFullName($item, $locale),
+                'id' => $item['id'],
+                'name' => $parentPath . $item['name'],
             ];
+
+            $parent = $item;
         }
 
         return new ApiSuccessResponse($items);
-    }
-
-    /**
-     * @param AdminItem $item
-     * @param string $locale
-     * @return string
-     */
-    private function receiveFullName(AdminItem $item, string $locale): string
-    {
-        $name = '';
-        if (!empty($item->parent())) {
-            $name .= $this->receiveFullName($item->parent(), $locale) . ' / ';
-        }
-
-        if (!\array_key_exists($locale, $item->pages())) {
-            return ' --- ';
-        }
-
-        return $name . $item->pages()[$locale]['page']->name();
     }
 }

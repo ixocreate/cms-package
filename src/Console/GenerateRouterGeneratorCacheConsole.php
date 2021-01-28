@@ -67,5 +67,7 @@ class GenerateRouterGeneratorCacheConsole extends Command implements CommandInte
             $this->compiledGeneratorRoutesCacheable->withRouteCollection($routeCollection),
             true
         );
+
+        return 0;
     }
 }

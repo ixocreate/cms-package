@@ -44,5 +44,7 @@ class GenerateStructureCacheConsole extends Command implements CommandInterface
         \set_time_limit(0);
 
         $this->commandBus->command(GenerateCacheCommand::class, []);
+
+        return 0;
     }
 }

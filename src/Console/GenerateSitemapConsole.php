@@ -42,5 +42,7 @@ class GenerateSitemapConsole extends Command implements CommandInterface
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->commandBus->command(GenerateSitemapCommand::class, []);
+
+        return 0;
     }
 }

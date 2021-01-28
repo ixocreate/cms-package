@@ -67,5 +67,7 @@ class GenerateRouterMatcherCacheConsole extends Command implements CommandInterf
             $this->compiledMatcherRoutesCacheable->withRouteCollection($routeCollection),
             true
         );
+
+        return 0;
     }
 }

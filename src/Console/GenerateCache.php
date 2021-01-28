@@ -65,5 +65,7 @@ SET s.level=sub.level";
         $process = new Process($baseCommand . ' cms:generate-router-generator-cache');
         $process->setTimeout(null);
         $process->run();
+
+        return 0;
     }
 }

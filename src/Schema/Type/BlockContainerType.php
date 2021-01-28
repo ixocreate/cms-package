@@ -132,7 +132,7 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
             if (\mb_strpos($blockName, '*') === false) {
                 if (\array_key_exists(
                     $blockName,
-                    $this->blockSubManager->getServiceManagerConfig()->getNamedServices()
+                    $this->blockSubManager->serviceManagerConfig()->getNamedServices()
                 )) {
                     $parsedBlocks[] = $blockName;
                 }
@@ -141,7 +141,7 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
 
             $beginningPart = \mb_substr($blockName, 0, \mb_strpos($blockName, '*'));
 
-            foreach (\array_keys($this->blockSubManager->getServiceManagerConfig()->getNamedServices()) as $mappingBlock) {
+            foreach (\array_keys($this->blockSubManager->serviceManagerConfig()->getNamedServices()) as $mappingBlock) {
                 if (\mb_substr($mappingBlock, 0, \mb_strlen($beginningPart)) === $beginningPart) {
                     $parsedBlocks[] = $mappingBlock;
                 }

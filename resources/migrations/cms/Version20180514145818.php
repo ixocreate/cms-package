@@ -27,13 +27,13 @@ final class Version20180514145818 extends AbstractMigration
         $table->addColumn('approvedAt', DateTimeType::serviceName())->setNotnull(false);
         $table->addColumn('createdAt', DateTimeType::serviceName());
 
-        $table->setPrimaryKey(["id"]);
+        $table->setPrimaryKey(['id']);
         $table->addIndex(['pageId', 'approvedAt']);
         $table->addIndex(['pageId', 'createdAt']);
     }
 
     public function down(Schema $schema): void
     {
-        $schema->dropTable("cms_page_version");
+        $schema->dropTable('cms_page_version');
     }
 }

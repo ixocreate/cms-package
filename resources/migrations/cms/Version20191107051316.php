@@ -14,7 +14,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20191107051316 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $sql = "UPDATE cms_sitemap as s INNER JOIN
 (SELECT n.id,
@@ -30,8 +30,7 @@ SET s.level=sub.level";
         $this->addSql($sql);
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
     }
 }

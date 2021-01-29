@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Migration;
 
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Migrations\AbstractMigration;
 use Ixocreate\Schema\Type\UuidType;
 
@@ -21,14 +21,14 @@ final class Version20180601120527 extends AbstractMigration
         $table = $schema->createTable('cms_navigation');
         $table->addColumn('id', UuidType::serviceName());
         $table->addColumn('pageId', UuidType::serviceName());
-        $table->addColumn('navigation', Type::STRING)->setLength(255);
+        $table->addColumn('navigation', Types::STRING)->setLength(255);
 
-        $table->setPrimaryKey(["id"]);
+        $table->setPrimaryKey(['id']);
         $table->addIndex(['pageId']);
     }
 
     public function down(Schema $schema): void
     {
-        $schema->dropTable("cms_navigation");
+        $schema->dropTable('cms_navigation');
     }
 }

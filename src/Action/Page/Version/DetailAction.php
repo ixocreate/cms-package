@@ -16,7 +16,6 @@ use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Entity\EntityCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -70,9 +69,6 @@ final class DetailAction implements MiddlewareInterface
             return new ApiErrorResponse('invalid_page_id');
         }
 
-        $userResult = $this->userRepository->findAll();
-        $userCollection = new EntityCollection($userResult, 'id');
-
         /** @var PageVersion $pageVersion */
         $pageVersion = $this->pageVersionRepository->find($versionId);
         if (empty($pageVersion)) {
@@ -89,9 +85,9 @@ final class DetailAction implements MiddlewareInterface
             'avatar' => null,
         ];
 
-        if ($userCollection->has((string) $pageVersion->createdBy())) {
-            /** @var User $adminUser */
-            $adminUser = $userCollection->get((string) $pageVersion->createdBy());
+        /** @var User $adminUser */
+        $adminUser = $this->userRepository->find((string)$pageVersion->createdBy()));
+        if ($adminUser !== null) {
             $user['id'] = (string) $adminUser->id();
             $user['email'] = (string) $adminUser->email();
             $user['avatar'] = (string) $adminUser->avatar();

@@ -86,7 +86,7 @@ final class DetailAction implements MiddlewareInterface
         ];
 
         /** @var User $adminUser */
-        $adminUser = $this->userRepository->find((string)$pageVersion->createdBy()));
+        $adminUser = $this->userRepository->find((string)$pageVersion->createdBy());
         if ($adminUser !== null) {
             $user['id'] = (string) $adminUser->id();
             $user['email'] = (string) $adminUser->email();

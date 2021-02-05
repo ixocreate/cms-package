@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Action\Seo;
 
 use Ixocreate\Application\Uri\ApplicationUri;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -17,8 +19,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Thepixeldeveloper\Sitemap\Drivers\XmlWriterDriver;
 use Thepixeldeveloper\Sitemap\Sitemap;
 use Thepixeldeveloper\Sitemap\SitemapIndex;
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Stream;
 
 class SitemapAction implements MiddlewareInterface
 {
@@ -65,6 +65,7 @@ class SitemapAction implements MiddlewareInterface
             }
             $response = (new Response())
                 ->withHeader('Content-Type', 'text/xml; charset=utf-8')
+                ->withHeader('X-Robots-Tag', 'noindex')
                 ->withHeader('Content-Length', (string)\filesize($filePath))
                 ->withBody(new Stream($filePath));
         }

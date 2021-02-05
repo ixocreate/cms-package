@@ -31,10 +31,12 @@ class WidgetsAction implements MiddlewareInterface
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var PageRepository
      */
     private $pageRepository;
+
     /**
      * @var SitemapRepository
      */
@@ -51,7 +53,6 @@ class WidgetsAction implements MiddlewareInterface
         PageRepository $pageRepository,
         SitemapRepository $sitemapRepository
     ) {
-
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->pageRepository = $pageRepository;
         $this->sitemapRepository = $sitemapRepository;

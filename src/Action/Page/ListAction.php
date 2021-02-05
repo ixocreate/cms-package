@@ -26,6 +26,7 @@ class ListAction implements MiddlewareInterface
      * @var EntityManagerInterface
      */
     private $entityManager;
+
     /**
      * @var PageTypeSubManager
      */

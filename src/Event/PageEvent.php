@@ -18,9 +18,13 @@ use Ixocreate\Event\Event;
 final class PageEvent extends Event
 {
     const PAGE_CREATE = 'page.create';
+
     const PAGE_UPDATE = 'page.update';
+
     const PAGE_DELETE = 'page.delete';
+
     const PAGE_VERSION_CREATE = 'page-version.create';
+
     const PAGE_VERSION_PUBLISH = 'page-version.publish';
 
     /**

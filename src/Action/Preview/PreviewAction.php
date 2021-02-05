@@ -23,14 +23,14 @@ use Ixocreate\Cms\Repository\SitemapRepository;
 use Ixocreate\Cms\Request\CmsRequest;
 use Ixocreate\Schema\Type\SchemaType;
 use Ixocreate\Schema\Type\Type;
+use Laminas\Diactoros\Response\TextResponse;
+use Mezzio\MiddlewareContainer;
+use Mezzio\MiddlewareFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Ramsey\Uuid\Uuid;
-use Laminas\Diactoros\Response\TextResponse;
-use Mezzio\MiddlewareContainer;
-use Mezzio\MiddlewareFactory;
 
 final class PreviewAction implements MiddlewareInterface
 {

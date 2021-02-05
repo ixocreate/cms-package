@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Middleware;
 
 use Ixocreate\Cms\Request\CmsRequest;
+use Laminas\Stratigility\Exception\EmptyPipelineException;
+use Laminas\Stratigility\MiddlewarePipe;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Stratigility\Exception\EmptyPipelineException;
-use Laminas\Stratigility\MiddlewarePipe;
 
 final class CmsMiddleware implements MiddlewareInterface
 {

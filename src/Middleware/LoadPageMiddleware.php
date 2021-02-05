@@ -14,11 +14,11 @@ use Ixocreate\Cms\Cacheable\PageCacheable;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Framework\Http\ErrorHandling\Response\NotFoundHandler;
 use Ixocreate\Intl\LocaleManager;
+use Mezzio\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Mezzio\Router\RouteResult;
 
 final class LoadPageMiddleware implements MiddlewareInterface
 {

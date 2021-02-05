@@ -91,7 +91,7 @@ final class PageUrlExtension implements ExtensionInterface
     }
 
     /**
-     * @param str ing $handle
+     * @param string ing $handle
      * @param array $params
      * @param null|string $locale
      * @throws \Psr\Cache\InvalidArgumentException

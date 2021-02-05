@@ -26,15 +26,9 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Matcher\CompiledUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 
 final class CmsRouter implements RouterInterface
 {
-    /**
-     * @var RouteCollection
-     */
-    private $routes;
-
     /**
      * @var UrlGeneratorInterface
      */

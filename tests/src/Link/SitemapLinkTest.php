@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Test\Schema\Link;
 
+use Ixocreate\Admin\Config\AdminConfig;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Link\SitemapLink;
 use Ixocreate\Cms\Repository\PageRepository;
@@ -24,6 +25,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  */
 class SitemapLinkTest extends TestCase
 {
+    private $adminConfig;
+
     private $page;
 
     private $pageRepository;
@@ -32,6 +35,8 @@ class SitemapLinkTest extends TestCase
 
     public function setUp(): void
     {
+        $this->adminConfig =  $this->createMock(AdminConfig::class);
+
         (new TypeMockHelper($this, [
             UuidType::class => new UuidType(),
             UuidType::serviceName() => new UuidType(),
@@ -95,12 +100,12 @@ class SitemapLinkTest extends TestCase
 
     public function testLabel()
     {
-        $this->assertSame('Sitemap', (new SitemapLink($this->pageRepository, $this->pageRoute))->label());
+        $this->assertSame('Sitemap', (new SitemapLink($this->adminConfig, $this->pageRepository, $this->pageRoute))->label());
     }
 
     public function testCreate()
     {
-        $pageLink = new SitemapLink($this->pageRepository, $this->pageRoute);
+        $pageLink = new SitemapLink($this->adminConfig, $this->pageRepository, $this->pageRoute);
 
         $newPageLink = $pageLink->create((string) $this->page->id());
         $this->assertNotSame($newPageLink, $pageLink);
@@ -133,7 +138,7 @@ class SitemapLinkTest extends TestCase
 
     public function testToJson()
     {
-        $pageLink = new SitemapLink($this->pageRepository, $this->pageRoute);
+        $pageLink = new SitemapLink($this->adminConfig, $this->pageRepository, $this->pageRoute);
 
         $newPageLink = $pageLink->create((string) $this->page->id());
         $this->assertSame($this->page->toPublicArray(), $newPageLink->toJson());
@@ -144,7 +149,7 @@ class SitemapLinkTest extends TestCase
 
     public function testToDatabase()
     {
-        $pageLink = new SitemapLink($this->pageRepository, $this->pageRoute);
+        $pageLink = new SitemapLink($this->adminConfig, $this->pageRepository, $this->pageRoute);
 
         $newPageLink = $pageLink->create((string) $this->page->id());
         $this->assertSame((string) $this->page->id(), $newPageLink->toDatabase());
@@ -155,7 +160,7 @@ class SitemapLinkTest extends TestCase
 
     public function testAssemble()
     {
-        $pageLink = new SitemapLink($this->pageRepository, $this->pageRoute);
+        $pageLink = new SitemapLink($this->adminConfig, $this->pageRepository, $this->pageRoute);
 
         $newPageLink = $pageLink->create((string) $this->page->id());
         $this->assertSame('https://www.ixocreate.com/test', $newPageLink->assemble());
@@ -169,7 +174,7 @@ class SitemapLinkTest extends TestCase
 
     public function testSerialize()
     {
-        $pageLink = new SitemapLink($this->pageRepository, $this->pageRoute);
+        $pageLink = new SitemapLink($this->adminConfig, $this->pageRepository, $this->pageRoute);
         $pageLink = $pageLink->create((string) $this->page->id());
         $pageLink = \unserialize(\serialize($pageLink));
 

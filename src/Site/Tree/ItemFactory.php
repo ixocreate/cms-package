@@ -61,7 +61,7 @@ final class ItemFactory
      * @param CacheableInterface $sitemapCacheable
      * @param CacheableInterface $pageVersionCacheable
      * @param CacheManager $cacheManager
-     * @param SubManagerInterface $pageTypeSubManager
+     * @param PageTypeSubManager $pageTypeSubManager
      * @param SubManagerInterface $searchSubManager
      * @param PageRoute $pageRoute
      */
@@ -70,7 +70,7 @@ final class ItemFactory
         CacheableInterface $sitemapCacheable,
         CacheableInterface $pageVersionCacheable,
         CacheManager $cacheManager,
-        SubManagerInterface $pageTypeSubManager,
+        PageTypeSubManager $pageTypeSubManager,
         SubManagerInterface $searchSubManager,
         PageRoute $pageRoute
     ) {

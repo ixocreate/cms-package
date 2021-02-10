@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\Database\DatabaseEntityInterface;
 use Ixocreate\Database\Tree\NodeInterface;
@@ -125,11 +125,11 @@ final class Sitemap implements NodeInterface, DatabaseEntityInterface
         $builder->setTable('cms_sitemap');
 
         $builder->createField('id', UuidType::serviceName())->makePrimaryKey()->build();
-        $builder->createField('nestedLeft', Type::INTEGER)->nullable(true)->build();
-        $builder->createField('nestedRight', Type::INTEGER)->nullable(true)->build();
+        $builder->createField('nestedLeft', Types::INTEGER)->nullable(true)->build();
+        $builder->createField('nestedRight', Types::INTEGER)->nullable(true)->build();
         $builder->createField('parentId', UuidType::class)->nullable(true)->build();
-        $builder->createField('pageType', Type::STRING)->nullable(false)->build();
-        $builder->createField('handle', Type::STRING)->nullable(true)->build();
-        $builder->createField('level', Type::INTEGER)->nullable(true)->build();
+        $builder->createField('pageType', Types::STRING)->nullable(false)->build();
+        $builder->createField('handle', Types::STRING)->nullable(true)->build();
+        $builder->createField('level', Types::INTEGER)->nullable(true)->build();
     }
 }

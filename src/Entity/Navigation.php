@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\Database\DatabaseEntityInterface;
 use Ixocreate\Entity\Definition;
@@ -59,6 +59,6 @@ final class Navigation implements EntityInterface, DatabaseEntityInterface
 
         $builder->createField('id', UuidType::serviceName())->makePrimaryKey()->build();
         $builder->createField('pageId', UuidType::serviceName())->nullable(false)->build();
-        $builder->createField('navigation', Type::STRING)->nullable(false)->build();
+        $builder->createField('navigation', Types::STRING)->nullable(false)->build();
     }
 }

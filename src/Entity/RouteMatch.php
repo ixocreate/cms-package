@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Entity;
 
-use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Ixocreate\Database\DatabaseEntityInterface;
 use Ixocreate\Entity\Definition;
@@ -68,6 +68,6 @@ final class RouteMatch implements EntityInterface, DatabaseEntityInterface
         $builder->createField('url', 'string')->makePrimaryKey()->build();
         $builder->createField('type', 'string')->nullable(false)->build();
         $builder->createField('pageId', UuidType::serviceName())->nullable(false)->build();
-        $builder->createField('middleware', Type::JSON)->build();
+        $builder->createField('middleware', Types::JSON)->build();
     }
 }

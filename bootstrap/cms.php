@@ -15,11 +15,6 @@ use Ixocreate\Cms\Router\Replacement\RegionReplacement;
 use Ixocreate\Cms\Router\Replacement\ReleaseReplacement;
 use Ixocreate\Cms\Router\Replacement\SlugReplacement;
 use Ixocreate\Cms\Router\Replacement\UriReplacement;
-use Ixocreate\Cms\Site\Admin\Search\AdminCallableSearch;
-use Ixocreate\Cms\Site\Admin\Search\AdminHandleSearch;
-use Ixocreate\Cms\Site\Admin\Search\AdminMaxLevelSearch;
-use Ixocreate\Cms\Site\Admin\Search\AdminMinLevelSearch;
-use Ixocreate\Cms\Site\Admin\Search\AdminNavigationSearch;
 use Ixocreate\Cms\Site\Tree\Search\ActiveSearch;
 use Ixocreate\Cms\Site\Tree\Search\CallableSearch;
 use Ixocreate\Cms\Site\Tree\Search\HandleSearch;
@@ -36,12 +31,6 @@ $cms->addTreeSearchable(MaxLevelSearch::class);
 $cms->addTreeSearchable(MinLevelSearch::class);
 $cms->addTreeSearchable(NavigationSearch::class);
 $cms->addTreeSearchable(OnlineSearch::class);
-
-$cms->addAdminSearchable(AdminCallableSearch::class);
-$cms->addAdminSearchable(AdminHandleSearch::class);
-$cms->addAdminSearchable(AdminMaxLevelSearch::class);
-$cms->addAdminSearchable(AdminMinLevelSearch::class);
-$cms->addAdminSearchable(AdminNavigationSearch::class);
 
 $cms->addRoutingReplacement(LangReplacement::class);
 $cms->addRoutingReplacement(RegionReplacement::class);

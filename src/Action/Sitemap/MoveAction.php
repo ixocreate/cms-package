@@ -75,7 +75,7 @@ class MoveAction implements MiddlewareInterface
                 /** @var PageTypeInterface $parentPageType */
                 $parentPageType = $this->pageTypeSubManager->get($parent->pageType());
                 if ($parentPageType->allowedChildren() === null || !\in_array($sitemap->pageType(), $parentPageType->allowedChildren())) {
-                    return new ApiErrorResponse('invalid_parentId', [], 400);
+                    return new ApiErrorResponse('invalid_prevSiblingId', [], 400);
                 }
             }
 
@@ -100,16 +100,7 @@ class MoveAction implements MiddlewareInterface
                 return new ApiErrorResponse('invalid_target', [], 400);
             }
 
-            //TODO should us a "moveToFirstRoot"
-            //$this->sitemapRepository->moveAsFirstRoot($sitemap);
-
-            $sibling = $this->sitemapRepository->findBy(['nestedLeft' => 1]);
-            if (empty($sibling)) {
-                return new ApiErrorResponse('root_not_found', [], 400);
-            }
-
-            $sibling = $sibling[0];
-            $this->sitemapRepository->moveAsPreviousSibling($sitemap, $sibling);
+            $this->sitemapRepository->moveAsFirstRoot($sitemap);
         }
 
         return new ApiSuccessResponse();

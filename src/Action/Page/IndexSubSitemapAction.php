@@ -11,8 +11,7 @@ namespace Ixocreate\Cms\Action\Page;
 
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Site\Admin\StructureLoader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,22 +20,22 @@ use Psr\Http\Server\RequestHandlerInterface;
 class IndexSubSitemapAction implements MiddlewareInterface
 {
     /**
-     * @var AdminContainer
+     * @var StructureLoader
      */
-    private $adminContainer;
+    private $structureLoader;
 
-    public function __construct(
-        AdminContainer $adminContainer
-    ) {
-        $this->adminContainer = $adminContainer;
+    public function __construct(StructureLoader $structureLoader) {
+        $this->structureLoader = $structureLoader;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $handle = $request->getAttribute("handle");
-        $item = $this->adminContainer->findOneBy(function (AdminItem $item) use ($handle) {
-            return $item->sitemap()->handle() === $handle;
-        });
+        $handle = $request->getAttribute('handle');
+        if (empty($handle)) {
+            return new ApiErrorResponse('invalid_handle');
+        }
+
+        $item = $this->structureLoader->getTree($handle);
 
         if (empty($item)) {
             return new ApiErrorResponse('invalid_handle');

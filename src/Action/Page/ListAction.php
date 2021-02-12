@@ -55,19 +55,15 @@ class ListAction implements MiddlewareInterface
             'locale' => $locale,
         ];
 
-        if ($pageType !== null) {
-            $sql .= ' AND s.pageType = :pageType';
-            $parameters['pageType'] = $pageType;
-        }
         if (!empty($terminalPageTypes)) {
             $rsm = new ResultSetMapping();
-            $rsm->addScalarResult('nested_left', 'nested_left', Types::INTEGER);
-            $rsm->addScalarResult('nested_right', 'nested_right', Types::INTEGER);
-            $query = $this->entityManager->createNativeQuery('SELECT `nestedLeft`, `nestedRight` FROM cms_sitemap s WHERE p.pageType IN (:terminalPageTypes)', $rsm);
+            $rsm->addScalarResult('nestedLeft', 'nestedLeft', Types::INTEGER);
+            $rsm->addScalarResult('nestedRight', 'nestedRight', Types::INTEGER);
+            $query = $this->entityManager->createNativeQuery('SELECT `nestedLeft`, `nestedRight` FROM cms_sitemap s WHERE s.pageType IN (:terminalPageTypes)', $rsm);
             $result = $query->execute(['terminalPageTypes' => $terminalPageTypes]);
 
             foreach ($result as $row) {
-                $sql .= ' AND s.nestedLeft NOT BETWEEN ' . $row['nested_left'] . ' AND ' . $row['nested_right'];
+                $sql .= ' AND s.nestedLeft NOT BETWEEN ' . $row['nestedLeft'] . ' AND ' . $row['nestedRight'];
             }
         }
         $term = $request->getQueryParams()['term'] ?? null;
@@ -81,42 +77,46 @@ class ListAction implements MiddlewareInterface
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id', 'id');
         $rsm->addScalarResult('name', 'name');
+        $rsm->addScalarResult('pageType', 'pageType');
         $rsm->addScalarResult('level', 'level', Types::INTEGER);
         $query = $this->entityManager->createNativeQuery($sql, $rsm);
         $result = $query->execute($parameters);
 
         $items = [];
-        $parent = null;
+        $prev = null;
         $parentPath = '';
         $parentPathList = [];
         $lastLevel = 0;
         foreach ($result as $item) {
             if ($lastLevel < $item['level']) {
-                $parentPathList[$item['level']] = $parent['name'];
+                $parentPathList[$item['level']] = $prev['name'];
                 $lastLevel = $item['level'];
 
-                $parentPath = $path = \implode(' / ', $parentPathList) . ' / ';
+                $parentPath = \implode(' / ', $parentPathList) . ' / ';
             }
             if ($lastLevel > $item['level']) {
-                $parentPathList[$item['level']] = $item['name'];
                 for ($i = $lastLevel; $i > $item['level']; $i--) {
                     unset($parentPathList[$i]);
                 }
                 $lastLevel = $item['level'];
 
                 if (!empty($parentPathList)) {
-                    $parentPath = $path = \implode(' / ', $parentPathList) . ' / ';
+                    $parentPath = \implode(' / ', $parentPathList) . ' / ';
                 } else {
                     $parentPath = '';
                 }
+            }
+
+            $prev = $item;
+
+            if ($pageType !== null && $pageType !== $item['pageType']) {
+                continue;
             }
 
             $items[] = [
                 'id' => $item['id'],
                 'name' => $parentPath . $item['name'],
             ];
-
-            $parent = $item;
         }
 
         return new ApiSuccessResponse($items);

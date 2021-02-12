@@ -12,7 +12,6 @@ namespace Ixocreate\Cms\Action\Page;
 use Doctrine\Common\Collections\Criteria;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
-use Ixocreate\Cms\Config\Config;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
 use Ixocreate\Cms\Entity\Sitemap;
@@ -52,14 +51,17 @@ final class DetailAction implements MiddlewareInterface
      * @var SitemapRepository
      */
     private $sitemapRepository;
+
     /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
+
     /**
      * @var PageRoute
      */
     private $pageRoute;
+
     /**
      * @var NavigationRepository
      */

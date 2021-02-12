@@ -24,7 +24,8 @@ class IndexSubSitemapAction implements MiddlewareInterface
      */
     private $structureLoader;
 
-    public function __construct(StructureLoader $structureLoader) {
+    public function __construct(StructureLoader $structureLoader)
+    {
         $this->structureLoader = $structureLoader;
     }
 

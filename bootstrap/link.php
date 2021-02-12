@@ -12,4 +12,4 @@ namespace Ixocreate\Cms\Link;
 use Ixocreate\Schema\Link\LinkConfigurator;
 
 /** @var LinkConfigurator $link */
-$link->addLinkDirectory(__DIR__ . '/../src/Link');
+$link->addLink(SitemapLink::class);

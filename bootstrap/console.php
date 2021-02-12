@@ -12,4 +12,8 @@ namespace Ixocreate\Cms\Console;
 use Ixocreate\Application\Console\ConsoleConfigurator;
 
 /** @var ConsoleConfigurator $console */
-$console->addDirectory(__DIR__ . '/../src/Console', true);
+$console->addCommand(GenerateCache::class);
+$console->addCommand(GenerateRouterGeneratorCacheConsole::class);
+$console->addCommand(GenerateRouterMatcherCacheConsole::class);
+$console->addCommand(GenerateSitemapConsole::class);
+$console->addCommand(GenerateStructureCacheConsole::class);

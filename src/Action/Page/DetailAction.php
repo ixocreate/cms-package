@@ -13,12 +13,18 @@ use Doctrine\Common\Collections\Criteria;
 use Ixocreate\Admin\Response\ApiErrorResponse;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Config\Config;
+use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\PageVersion;
+use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\PageType\PageTypeInterface;
+use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
+use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
+use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Cms\Repository\PageVersionRepository;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\StructureLoader;
-use Ixocreate\Cms\Site\Structure\StructureItem;
+use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Schema\Builder\BuilderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,16 +33,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final class DetailAction implements MiddlewareInterface
 {
-    /**
-     * @var AdminContainer
-     */
-    private $adminContainer;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
     /**
      * @var BuilderInterface
      */
@@ -53,73 +49,102 @@ final class DetailAction implements MiddlewareInterface
     private $pageRepository;
 
     /**
-     * @var StructureLoader
+     * @var SitemapRepository
      */
-    private $structureLoader;
+    private $sitemapRepository;
+    /**
+     * @var PageTypeSubManager
+     */
+    private $pageTypeSubManager;
+    /**
+     * @var PageRoute
+     */
+    private $pageRoute;
+    /**
+     * @var NavigationRepository
+     */
+    private $navigationRepository;
 
     /**
      * DetailAction constructor.
-     * @param AdminContainer $adminContainer
-     * @param Config $config
      * @param BuilderInterface $schemaBuilder
+     * @param PageTypeSubManager $pageTypeSubManager
+     * @param PageRoute $pageRoute
      * @param PageVersionRepository $pageVersionRepository
      * @param PageRepository $pageRepository
-     * @param StructureLoader $structureLoader
+     * @param SitemapRepository $sitemapRepository
+     * @param NavigationRepository $navigationRepository
      */
     public function __construct(
-        AdminContainer $adminContainer,
-        Config $config,
         BuilderInterface $schemaBuilder,
+        PageTypeSubManager $pageTypeSubManager,
+        PageRoute $pageRoute,
         PageVersionRepository $pageVersionRepository,
         PageRepository $pageRepository,
-        StructureLoader $structureLoader
+        SitemapRepository $sitemapRepository,
+        NavigationRepository $navigationRepository
     ) {
-        $this->adminContainer = $adminContainer;
-        $this->config = $config;
         $this->schemaBuilder = $schemaBuilder;
+        $this->pageTypeSubManager = $pageTypeSubManager;
+        $this->pageRoute = $pageRoute;
         $this->pageVersionRepository = $pageVersionRepository;
         $this->pageRepository = $pageRepository;
-        $this->structureLoader = $structureLoader;
+        $this->sitemapRepository = $sitemapRepository;
+        $this->navigationRepository = $navigationRepository;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $pageId = $request->getAttribute('id');
+        /** @var Page $page */
         $page = $this->pageRepository->find($pageId);
         if (empty($page)) {
             return new ApiErrorResponse('invalid_page_id');
         }
 
-        $structureItem = new StructureItem((string) $page->sitemapId(), $this->structureLoader);
+        /** @var Sitemap $sitemap */
+        $sitemap = $this->sitemapRepository->find($page->sitemapId());
 
-        $item = $this->adminContainer->itemFactory()->create($structureItem);
+        /** @var PageTypeInterface $pageType */
+        $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-        if (empty($item)) {
-            return new ApiErrorResponse('invalid_page_id');
-        }
-
-        $result = $item->jsonSerialize();
-
-        $page = null;
-        $localizedPages = [];
-        foreach ($item->pages() as $locale =>  $pageItem) {
-            if ((string) $pageItem['page']->id() === $pageId) {
-                $page = $pageItem;
-                continue;
-            }
-            $localizedPages[$locale] = $pageItem;
-        }
-        unset($result['pages']);
-        if (empty($page)) {
-            return new ApiErrorResponse('invalid_page_id');
-        }
-
-        $page['version'] = [
-            'head' => null,
-            'approved' => null,
+        $result = [
+            'sitemap' => [
+                'id' => (string)$sitemap->id(),
+                'parentId' => $sitemap->parentId(),
+                'nestedLeft' => $sitemap->nestedLeft(),
+                'nestedRight' => $sitemap->nestedRight(),
+                'pageType' => $sitemap->pageType(),
+                'handle' => $sitemap->handle(),
+                'level' => $sitemap->level(),
+            ],
+            'handle' => $sitemap->handle(),
+            'pageType' => [
+                'label' => $pageType->label(),
+                'allowedChildren' => $pageType->allowedChildren(),
+                'isRoot' => $pageType instanceof RootPageTypeInterface,
+                'name' => $pageType::serviceName(),
+                'terminal' => $pageType instanceof TerminalPageTypeInterface,
+            ],
         ];
+
+        $pageData = [
+            'page' => $page->toArray(),
+            'url' => '',
+            'isOnline' => $page->isOnline(),
+            'version' => [
+                'head' => null,
+                'approved' => null,
+            ],
+        ];
+
+        try {
+            $pageData['url'] = $this->pageRoute->fromPageId((string)$page->id());
+        } catch (\Exception $exception) {
+        }
+
         $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('pageId', $page['page']->id()));
+        $criteria->where(Criteria::expr()->eq('pageId', $page->id()));
         $criteria->andWhere(Criteria::expr()->neq('approvedAt', null));
         $criteria->orderBy(['approvedAt' => 'DESC']);
         $criteria->setMaxResults(1);
@@ -127,34 +152,41 @@ final class DetailAction implements MiddlewareInterface
         if ($pageVersion->count() > 0) {
             /** @var PageVersion $pageVersion */
             $pageVersion = $pageVersion->current();
-            $page['version']['approved'] = (string) $pageVersion->id();
-        }
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('pageId', $page['page']->id()));
-        $criteria->orderBy(['createdAt' => 'DESC']);
-        $criteria->setMaxResults(1);
-        $pageVersion = $this->pageVersionRepository->matching($criteria);
-        if ($pageVersion->count() > 0) {
-            /** @var PageVersion $pageVersion */
-            $pageVersion = $pageVersion->current();
-            $page['version']['head'] = (string) $pageVersion->id();
+            $pageData['version']['approved'] = (string) $pageVersion->id();
         }
 
-        $result['page'] = $page;
+        /** @var PageVersion $pageVersion */
+        $pageVersion = $this->pageVersionRepository->findOneBy(['pageId' => $page->id()], ['createdAt' => 'DESC']);
+        if ($pageVersion !== null) {
+            $pageData['version']['head'] = (string)$pageVersion->id();
+        }
+
+        $result['page'] = $pageData;
+
+        $localizedPages = [];
+        $pageResult = $this->pageRepository->findBy(['sitemapId' => $sitemap->id()]);
+        foreach ($pageResult as $pageItem) {
+            if ((string)$pageItem->id() === $pageId) {
+                continue;
+            }
+            $localizedPages[$pageItem->locale()] = [
+                'page' => $pageItem->toArray(),
+                'url' => '',
+                'isOnline' => $pageItem->isOnline(),
+            ];
+
+            try {
+                $localizedPages[$pageItem->locale()]['url'] = $this->pageRoute->fromPageId((string)$pageItem->id());
+            } catch (\Exception $exception) {
+            }
+        }
         $result['localizedPages'] = $localizedPages;
 
-        $result['hasChildren'] = (\count($result['children']) > 0);
-        unset($result['children'], $result['childrenAllowed']);
+        $result['hasChildren'] = ($sitemap->nestedRight() - $sitemap->nestedLeft() > 1);
 
+        $result['navigation'] = $this->navigationRepository->getNavigationForPage((string)$page->id());
 
-        $navigationDef = $this->config->navigation();
-        $navigation = $item->navigation();
-        $result['navigation'] = \array_map(function ($value) use ($item, $navigation, $pageId) {
-            $value['active'] = (!empty($navigation[$pageId]) && \in_array($value['name'], $navigation[$pageId]));
-            return $value;
-        }, $navigationDef);
-
-        $result['schema'] = $item->pageType()->provideSchema('', $this->schemaBuilder);
+        $result['schema'] = $pageType->provideSchema('', $this->schemaBuilder);
 
         return new ApiSuccessResponse($result);
     }

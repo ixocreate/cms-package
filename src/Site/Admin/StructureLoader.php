@@ -13,10 +13,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Ixocreate\Cms\Cacheable\StructureItemCacheable;
+use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
+use Ixocreate\Cms\PageType\RootPageTypeInterface;
 use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
 use Ixocreate\Cms\Repository\SitemapRepository;
+use Ixocreate\Cms\Router\PageRoute;
 use Ixocreate\Cms\Site\Structure\StructureLoaderInterface;
 
 final class StructureLoader implements StructureLoaderInterface
@@ -37,6 +40,7 @@ final class StructureLoader implements StructureLoaderInterface
     private $initialize = false;
 
     private $store = [];
+    private $store2= [];
 
     /**
      * @var PageTypeSubManager
@@ -47,33 +51,32 @@ final class StructureLoader implements StructureLoaderInterface
      * @var StructureItemCacheable
      */
     private $structureItemCacheable;
+    /**
+     * @var PageRoute
+     */
+    private $pageRoute;
 
     public function __construct(
         SitemapRepository $sitemapRepository,
         EntityManagerInterface $master,
         PageTypeSubManager $pageTypeSubManager,
-        StructureItemCacheable $structureItemCacheable
+        StructureItemCacheable $structureItemCacheable,
+        PageRoute $pageRoute
     ) {
         $this->sitemapRepository = $sitemapRepository;
         $this->entityManager = $master;
         $this->pageTypeSubManager = $pageTypeSubManager;
         $this->structureItemCacheable = $structureItemCacheable;
+        $this->pageRoute = $pageRoute;
+    }
+
+    public function getTree(?string $handle = null) {
+        $this->initialize($handle);
+        return $this->store2;
     }
 
     public function get(string $id)
     {
-        if ($id === "root") {
-            return $this->loadRoot();
-        }
-
-        $this->initialize();
-
-        if (isset($this->store[$id])) {
-            return $this->store[$id];
-        }
-
-        $this->store[$id] = $this->structureItemCacheable->withId($id)->uncachedResult();
-        return $this->store[$id];
     }
 
     public function loadRoot()
@@ -101,16 +104,25 @@ ORDER BY node.nestedLeft';
         ];
     }
 
-    private function initialize()
+    private function initialize(?string $handle = null)
     {
         if ($this->initialize === true) {
             return;
         }
         $this->initialize = true;
+
+        $pageTypes = [];
         $terminalPageTypeNames = [];
-        foreach ($this->pageTypeSubManager->getServices() as $pageTypeClass) {
+        foreach ($this->pageTypeSubManager->services() as $pageTypeClass) {
+            $pageType = $this->pageTypeSubManager->get($pageTypeClass);
+            $pageTypes[$pageType::serviceName()] = [
+                'label' => $pageType->label(),
+                'allowedChildren' => $pageType->allowedChildren(),
+                'isRoot' => $pageType instanceof RootPageTypeInterface,
+                'name' => $pageType::serviceName(),
+                'terminal' => $pageType instanceof TerminalPageTypeInterface,
+            ];
             if (\is_subclass_of($pageTypeClass, TerminalPageTypeInterface::class)) {
-                $pageType = $this->pageTypeSubManager->get($pageTypeClass);
                 $terminalPageTypeNames[] = $pageType->serviceName();
             }
         }
@@ -136,8 +148,8 @@ ORDER BY node.nestedLeft';
             }
         }
 
-        $sql = "SELECT node.id, node.level, node.parentId, node.handle, node.pageType
-FROM  cms_sitemap AS node {$where}
+        $sql = "SELECT node.id, node.parentId, node.handle, node.pageType, node.nestedLeft, node.nestedRight, node.level
+FROM cms_sitemap AS node {$where}
 ORDER BY node.nestedLeft";
 
         $rm = new ResultSetMapping();
@@ -146,10 +158,12 @@ ORDER BY node.nestedLeft";
         $rm->addScalarResult('pageType', 'pageType', 'string');
         $rm->addScalarResult('handle', 'handle', 'string');
         $rm->addScalarResult('level', 'level', 'integer');
+        $rm->addScalarResult('nestedLeft', 'nestedLeft', 'integer');
+        $rm->addScalarResult('nestedRight', 'nestedRight', 'integer');
+        $rm->addScalarResult('level', 'level', 'integer');
 
         $query = $this->entityManager->createNativeQuery($sql, $rm);
-
-        $result = $query->iterate(null, Query::HYDRATE_OBJECT);
+        $result = $query->toIterable([], Query::HYDRATE_OBJECT);
 
         $flat = [];
         $root = [];
@@ -157,12 +171,19 @@ ORDER BY node.nestedLeft";
             if (empty($item)) {
                 continue;
             }
-            $item = \current($item);
 
             $flat[$item['id']] = [
-                'sitemapId' => $item['id'],
+                'sitemap' => [
+                    'id' => $item['id'],
+                    'parentId' => $item['parentId'],
+                    'nestedLeft' => $item['nestedLeft'],
+                    'nestedRight' => $item['nestedRight'],
+                    'pageType' => $item['pageType'],
+                    'handle' => $item['handle'],
+                    'level' => $item['level'],
+                ],
                 'handle' => $item['handle'],
-                'pageType' => $item['pageType'],
+                'pageType' => $pageTypes[$item['pageType']],
                 'level' => $item['level'],
                 'pages' => [],
                 'navigation' => [],
@@ -178,31 +199,43 @@ ORDER BY node.nestedLeft";
         unset($result);
 
         if (!empty($flat)) {
-            $sql = "SELECT p.id,
-                        p.sitemapId,
-                        p.locale
+            $sql = "SELECT p.*
                     FROM cms_page p
-                    WHERE p.sitemapId IN (SELECT s.id FROM cms_sitemap s)";
+                    WHERE p.sitemapId IN (SELECT node.id FROM cms_sitemap node {$where})";
 
             $rm = new ResultSetMapping();
-            $rm->addScalarResult('id', 'id', 'string');
-            $rm->addScalarResult('sitemapId', 'sitemapId', 'string');
-            $rm->addScalarResult('locale', 'locale', 'string');
+            $rm->addEntityResult(Page::class, 'p');
+            $rm->addFieldResult('p', 'id', 'id');
+            $rm->addFieldResult('p', 'sitemapId', 'sitemapId');
+            $rm->addFieldResult('p', 'locale', 'locale');
+            $rm->addFieldResult('p', 'name', 'name');
+            $rm->addFieldResult('p', 'slug', 'slug');
+            $rm->addFieldResult('p', 'publishedFrom', 'publishedFrom');
+            $rm->addFieldResult('p', 'publishedUntil', 'publishedUntil');
+            $rm->addFieldResult('p', 'status', 'status');
+            $rm->addFieldResult('p', 'inheritPublishedFrom', 'inheritPublishedFrom');
+            $rm->addFieldResult('p', 'inheritPublishedUntil', 'inheritPublishedUntil');
+            $rm->addFieldResult('p', 'inheritStatus', 'inheritStatus');
+            $rm->addFieldResult('p', 'createdAt', 'createdAt');
+            $rm->addFieldResult('p', 'updatedAt', 'updatedAt');
+            $rm->addFieldResult('p', 'releasedAt', 'releasedAt');
 
             $query = $this->entityManager->createNativeQuery($sql, $rm);
-            $result = $query->iterate(null, Query::HYDRATE_OBJECT);
+            $result = $query->toIterable([]);
 
-            foreach ($result as $item) {
-                if (empty($item)) {
-                    continue;
-                }
-                $item = \current($item);
-
-                if (!\array_key_exists($item['sitemapId'], $flat)) {
-                    continue;
+            foreach ($result as $page) {
+                $url = '';
+                try {
+                    $url = $this->pageRoute->fromPageId((string)$page->id());
+                } catch (\Exception $exception) {
                 }
 
-                $flat[$item['sitemapId']]['pages'][$item['locale']] = $item['id'];
+                //$flat[(string)$page->sitemapId()]['pages'][$page->locale()] = (string)$page->id();
+                $flat[(string)$page->sitemapId()]['pages'][$page->locale()] = [
+                    'page' => $page->toArray(),
+                    'url' => $url,
+                    'isOnline' => $page->isOnline(),
+                ];
             }
 
             unset($result);
@@ -217,13 +250,12 @@ ORDER BY node.nestedLeft";
             $rm->addScalarResult('navigation', 'navigation', 'string');
 
             $query = $this->entityManager->createNativeQuery($sql, $rm);
-            $result = $query->iterate(null, Query::HYDRATE_OBJECT);
+            $result = $query->toIterable([], Query::HYDRATE_OBJECT);
 
             foreach ($result as $item) {
                 if (empty($item)) {
                     continue;
                 }
-                $item = \current($item);
 
                 // prevent terminal pages to create an entry
                 if (\array_key_exists($item['id'], $flat)) {
@@ -235,5 +267,25 @@ ORDER BY node.nestedLeft";
         }
 
         $this->store = $flat;
+
+        $tree = [];
+        foreach ($root as $item) {
+            $tree[] = $this->buildTree($tree, $item);
+        }
+        $this->store2 = $tree;
+    }
+
+    private function buildTree(&$tree, $id): array
+    {
+        $child = $this->store[$id];
+        if (!empty($child['children'])) {
+            $children = [];
+            foreach ($child['children'] as $childId) {
+                $children[] = $this->buildTree($tree, $childId);
+            }
+            $child['children'] = $children;
+        }
+
+        return $child;
     }
 }

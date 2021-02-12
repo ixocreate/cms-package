@@ -12,9 +12,7 @@ namespace Ixocreate\Cms\Action\Sitemap;
 use Ixocreate\Admin\Response\ApiSuccessResponse;
 use Ixocreate\Cms\Loader\DatabaseSitemapLoader;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
-use Ixocreate\Cms\PageType\TerminalPageTypeInterface;
-use Ixocreate\Cms\Site\Admin\AdminContainer;
-use Ixocreate\Cms\Site\Admin\AdminItem;
+use Ixocreate\Cms\Site\Admin\StructureLoader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -23,48 +21,37 @@ use Psr\Http\Server\RequestHandlerInterface;
 class IndexAction implements MiddlewareInterface
 {
     /**
+     * @var StructureLoader
+     */
+    private $structureLoader;
+
+    /**
      * @var PageTypeSubManager
      */
     private $pageTypeSubManager;
-
-    /**
-     * @var AdminContainer
-     */
-    private $adminContainer;
 
     /**
      * @var DatabaseSitemapLoader
      */
     private $databaseSitemapLoader;
 
-    /**
-     * IndexAction constructor.
-     * @param AdminContainer $adminContainer
-     * @param PageTypeSubManager $pageTypeSubManager
-     * @param DatabaseSitemapLoader $databaseSitemapLoader
-     */
     public function __construct(
-        AdminContainer $adminContainer,
+        StructureLoader $structureLoader,
         PageTypeSubManager $pageTypeSubManager,
         DatabaseSitemapLoader $databaseSitemapLoader
     ) {
+        $this->structureLoader = $structureLoader;
         $this->pageTypeSubManager = $pageTypeSubManager;
-        $this->adminContainer = $adminContainer;
         $this->databaseSitemapLoader = $databaseSitemapLoader;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new ApiSuccessResponse([
-            'items' => \iterator_to_array($this->adminContainer->map(function (AdminItem $item) {
-                if (\is_subclass_of($item->pageType(), TerminalPageTypeInterface::class)) {
-                    $item = $item->withClearedChildren();
-                }
-
-                return $item;
-            }))
-            ,
+        $r = [
+            'items' => $this->structureLoader->getTree(),
             'allowedAddingRoot' => (\count($this->pageTypeSubManager->allowedPageTypes($this->databaseSitemapLoader->receiveHandles())) > 0),
-        ]);
+        ];
+
+        return new ApiSuccessResponse($r);
     }
 }

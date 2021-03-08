@@ -144,10 +144,17 @@ final class RouteCollection
                         $routePrefix .= $name . '.';
                     }
 
-                    $uriParts = \parse_url($uri);
+                    // parse_url does not work here. Symfony Router syntax conflicts.
+                    // In /foo/{bar?} the question mark is parsed as query param start
+                    $uriParts['path'] = $uri;
+                    if (\preg_match('#^([a-z][a-z0-9+\-.]*)://([a-z0-9\-._~%]+|\[[a-z0-9\-._~%!$&\'()*+,;=:]+\])#i', $uri, $matches)) {
+                        $uriParts['host'] = $matches[2];
+                        $uriParts['scheme'] = $matches[1];
+                        $uriParts['path'] = \str_replace($matches[0], '', $uri);
+                    }
 
                     $routeObj = new Route(($uriParts['path']) ?? '/');
-                    if (!empty($uriParts['host'])) {
+                    if (!empty($matches)) {
                         $routeObj->setHost($uriParts['host']);
                         $routeObj->setSchemes($uriParts['scheme']);
                     }

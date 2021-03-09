@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Command\Structure;
+namespace Ixocreate\Cms\Command\Cache;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -19,6 +19,11 @@ use Ixocreate\CommandBus\Command\AbstractCommand;
 
 final class GenerateCacheCommand extends AbstractCommand
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
     /**
      * @var SitemapCacheable
      */
@@ -64,7 +69,7 @@ ORDER BY node.nestedLeft";
 
         $query = $this->entityManager->createNativeQuery($sql, $rm);
 
-        $result = $query->iterate(null, Query::HYDRATE_OBJECT);
+        $result = $query->toIterable(null, Query::HYDRATE_OBJECT);
 
         $flat = [];
         $root = [];
@@ -72,7 +77,6 @@ ORDER BY node.nestedLeft";
             if (empty($item)) {
                 continue;
             }
-            $item = \current($item);
 
             $flat[$item['id']] = [
                 'sitemapId' => $item['id'],
@@ -105,13 +109,12 @@ ORDER BY node.nestedLeft";
             $rm->addScalarResult('locale', 'locale', 'string');
 
             $query = $this->entityManager->createNativeQuery($sql, $rm);
-            $result = $query->iterate(null, Query::HYDRATE_OBJECT);
+            $result = $query->toIterable(null, Query::HYDRATE_OBJECT);
 
             foreach ($result as $item) {
                 if (empty($item)) {
                     continue;
                 }
-                $item = \current($item);
 
                 if (!\array_key_exists($item['sitemapId'], $flat)) {
                     continue;
@@ -132,13 +135,12 @@ ORDER BY node.nestedLeft";
             $rm->addScalarResult('navigation', 'navigation', 'string');
 
             $query = $this->entityManager->createNativeQuery($sql, $rm);
-            $result = $query->iterate(null, Query::HYDRATE_OBJECT);
+            $result = $query->toIterable(null, Query::HYDRATE_OBJECT);
 
             foreach ($result as $item) {
                 if (empty($item)) {
                     continue;
                 }
-                $item = \current($item);
 
                 $flat[$item['id']]['navigation'][$item['pageId']][] = $item['navigation'];
             }

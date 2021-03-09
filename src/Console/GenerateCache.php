@@ -56,15 +56,27 @@ SET s.level=sub.level";
 
         $process = new Process($baseCommand . ' cms:generate-structure-cache');
         $process->setTimeout(null);
-        $process->run();
+        $exitCode = $process->run();
+        if ($exitCode !== 0) {
+            $output->writeln("<error>Error will executing cms:generate-structure-cache</error>");
+            $output->writeln($process->getErrorOutput());
+        }
 
         $process = new Process($baseCommand . ' cms:generate-router-matcher-cache');
         $process->setTimeout(null);
-        $process->run();
+        $exitCode = $process->run();
+        if ($exitCode !== 0) {
+            $output->writeln("<error>Error will executing cms:generate-router-matcher-cache</error>");
+            $output->writeln($process->getErrorOutput());
+        }
 
         $process = new Process($baseCommand . ' cms:generate-router-generator-cache');
         $process->setTimeout(null);
-        $process->run();
+        $exitCode = $process->run();
+        if ($exitCode !== 0) {
+            $output->writeln("<error>Error will executing cms:generate-router-generator-cache</error>");
+            $output->writeln($process->getErrorOutput());
+        }
 
         return 0;
     }

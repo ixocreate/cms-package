@@ -69,7 +69,7 @@ ORDER BY node.nestedLeft";
 
         $query = $this->entityManager->createNativeQuery($sql, $rm);
 
-        $result = $query->toIterable(null, Query::HYDRATE_OBJECT);
+        $result = $query->toIterable([], Query::HYDRATE_OBJECT);
 
         $flat = [];
         $root = [];
@@ -109,7 +109,7 @@ ORDER BY node.nestedLeft";
             $rm->addScalarResult('locale', 'locale', 'string');
 
             $query = $this->entityManager->createNativeQuery($sql, $rm);
-            $result = $query->toIterable(null, Query::HYDRATE_OBJECT);
+            $result = $query->toIterable([], Query::HYDRATE_OBJECT);
 
             foreach ($result as $item) {
                 if (empty($item)) {
@@ -135,7 +135,7 @@ ORDER BY node.nestedLeft";
             $rm->addScalarResult('navigation', 'navigation', 'string');
 
             $query = $this->entityManager->createNativeQuery($sql, $rm);
-            $result = $query->toIterable(null, Query::HYDRATE_OBJECT);
+            $result = $query->toIterable([], Query::HYDRATE_OBJECT);
 
             foreach ($result as $item) {
                 if (empty($item)) {

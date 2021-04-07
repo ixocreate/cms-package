@@ -50,11 +50,11 @@ class GenerateCache extends Command implements CommandInterface
 GROUP BY n.id, n.nestedLeft
 ORDER BY n.nestedLeft) as sub ON (s.id = sub.id)
 SET s.level=sub.level";
-        $this->entityManager->getConnection()->exec($sql);
+        $this->entityManager->getConnection()->executeStatement($sql);
 
-        $baseCommand = PHP_BINARY . ' ' . \getcwd() . '/' . \basename($_SERVER['SCRIPT_FILENAME']);
+        $baseCommand = \getcwd() . '/' . \basename($_SERVER['SCRIPT_FILENAME']);
 
-        $process = new Process([$baseCommand, 'cms:generate-structure-cache']);
+        $process = new Process([PHP_BINARY, $baseCommand, 'cms:generate-structure-cache']);
         $process->setTimeout(null);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
@@ -63,7 +63,7 @@ SET s.level=sub.level";
             $output->writeln($process->getErrorOutput());
         }
 
-        $process = new Process([$baseCommand, 'cms:generate-router-matcher-cache']);
+        $process = new Process([PHP_BINARY, $baseCommand, 'cms:generate-router-matcher-cache']);
         $process->setTimeout(null);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
@@ -72,7 +72,7 @@ SET s.level=sub.level";
             $output->writeln($process->getErrorOutput());
         }
 
-        $process = new Process([$baseCommand, 'cms:generate-router-generator-cache']);
+        $process = new Process([PHP_BINARY, $baseCommand, 'cms:generate-router-generator-cache']);
         $process->setTimeout(null);
         $exitCode = $process->run();
         if ($exitCode !== 0) {

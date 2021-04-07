@@ -40,6 +40,7 @@ final class StructureLoader implements StructureLoaderInterface
     private $initialize = false;
 
     private $store = [];
+
     private $store2= [];
 
     /**
@@ -51,6 +52,7 @@ final class StructureLoader implements StructureLoaderInterface
      * @var StructureItemCacheable
      */
     private $structureItemCacheable;
+
     /**
      * @var PageRoute
      */
@@ -70,7 +72,8 @@ final class StructureLoader implements StructureLoaderInterface
         $this->pageRoute = $pageRoute;
     }
 
-    public function getTree(?string $handle = null) {
+    public function getTree(?string $handle = null)
+    {
         $this->initialize($handle);
         return $this->store2;
     }
@@ -184,8 +187,8 @@ ORDER BY node.nestedLeft";
                 ],
                 'handle' => $item['handle'],
                 'pageType' => $pageTypes[$item['pageType']],
-                'level' => $item['level'],
                 'pages' => [],
+                'childrenAllowed' => !$pageTypes[$item['pageType']]['terminal'],
                 'navigation' => [],
                 'children' => [],
             ];

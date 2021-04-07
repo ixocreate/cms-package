@@ -20,6 +20,7 @@
         "ixocreate/cache-package": "dev-develop",
         "symfony/options-resolver": "^5.2",
         "symfony/routing": "^5.2",
+        "symfony/process": "^5.2",
         "thepixeldeveloper/sitemap": "^5.1"
     },
     "require-dev": {

@@ -23,6 +23,8 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
      */
     private $blockSubManager;
 
+    private $lazyLoadValue = false;
+
     /**
      * BlockType constructor.
      *
@@ -53,7 +55,7 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
         $type = clone $this;
         $type->options = $options;
 
-        $type->value = $type->transform($value);
+        $type->lazyLoadValue = $value;
 
         return $type;
     }
@@ -89,6 +91,16 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
         }
 
         return $result;
+    }
+
+    public function value()
+    {
+        if ($this->lazyLoadValue !== false) {
+            $this->value = $this->transform($this->lazyLoadValue);
+            $this->lazyLoadValue = false;
+        }
+
+        return $this->value;
     }
 
     /**
@@ -188,16 +200,6 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
         return JsonType::class;
     }
 
-    /**
-     * Count elements of an object
-     *
-     * @see https://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
-     * @since 5.1.0
-     */
     public function count()
     {
         return \count($this->value());

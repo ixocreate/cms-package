@@ -11,13 +11,10 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "php": "^7.2 || ^8.0",
-        "ixocreate/admin-package": "dev-develop",
-        "ixocreate/application": "dev-develop",
-        "ixocreate/cache-package": "dev-develop",
+        "ixocreate/admin-package": "^0.4.0",
+        "ixocreate/cache-package": "^0.2.0",
         "symfony/options-resolver": "^5.2",
         "symfony/routing": "^5.2",
         "symfony/process": "^5.2",

@@ -119,6 +119,16 @@ final class BlockContainerType extends AbstractType implements DatabaseTypeInter
         return $this->value();
     }
 
+    /**
+     * @return string|void
+     */
+    public function serialize()
+    {
+        return \serialize([
+            'value' => $this->value(),
+        ]);
+    }
+
     public function __toString()
     {
         $return = [];

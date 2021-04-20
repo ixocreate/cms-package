@@ -18,7 +18,6 @@ use Ixocreate\Template\Extension\ExtensionInterface;
 
 final class PageContentExtension implements ExtensionInterface
 {
-
     /**
      * @var CacheManager
      */

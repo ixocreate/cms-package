@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Template;
 
-use Ixocreate\Cms\Navigation\Container;
 use Ixocreate\Cms\Navigation\Item;
-use Ixocreate\Cms\Repository\NavigationRepository;
 use Ixocreate\Cms\Repository\PageRepository;
 use Ixocreate\Template\Extension\ExtensionInterface;
 

@@ -18,7 +18,6 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
-use Ixocreate\Cms\Navigation\Item;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\RootPageTypeInterface;

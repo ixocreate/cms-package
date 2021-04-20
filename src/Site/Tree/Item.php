@@ -20,13 +20,14 @@ use Ixocreate\Cms\Entity\Sitemap;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\Router\PageRoute;
+use Ixocreate\Cms\Site\ItemInterface;
 use Ixocreate\Cms\Site\Structure\StructureItem;
 use Ixocreate\Schema\Type\SchemaType;
 use Ixocreate\Schema\Type\Type;
 use Ixocreate\ServiceManager\SubManager\SubManagerInterface;
 use RecursiveIterator;
 
-class Item implements ContainerInterface
+class Item implements ContainerInterface, ItemInterface
 {
     /**
      * @var StructureItem
@@ -152,7 +153,7 @@ class Item implements ContainerInterface
      * @throws \Psr\Cache\InvalidArgumentException
      * @return Page
      */
-    public function page(string $locale): Page
+    public function page(?string $locale): Page
     {
         if (!\array_key_exists($locale, $this->structureItem()->pages())) {
             throw new \Exception(\sprintf("Page with locale '%s' does not exists", $locale));
@@ -396,7 +397,7 @@ class Item implements ContainerInterface
     /**
      * @return bool
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
         return $this->container()->hasChildren();
     }
@@ -407,5 +408,10 @@ class Item implements ContainerInterface
     public function getChildren()
     {
         return $this->container()->getChildren();
+    }
+
+    public function children()
+    {
+        return $this->below();
     }
 }

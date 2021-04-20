@@ -58,7 +58,7 @@ SET s.level=sub.level";
         $process->setTimeout(null);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
-            $output->writeln("<error>Error will executing cms:generate-structure-cache</error>");
+            $output->writeln("<error>Error while executing cms:generate-structure-cache</error>");
             $output->writeln($process->getOutput());
             $output->writeln($process->getErrorOutput());
         }
@@ -67,7 +67,7 @@ SET s.level=sub.level";
         $process->setTimeout(null);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
-            $output->writeln("<error>Error will executing cms:generate-router-matcher-cache</error>");
+            $output->writeln("<error>Error while executing cms:generate-router-matcher-cache</error>");
             $output->writeln($process->getOutput());
             $output->writeln($process->getErrorOutput());
         }
@@ -76,7 +76,7 @@ SET s.level=sub.level";
         $process->setTimeout(null);
         $exitCode = $process->run();
         if ($exitCode !== 0) {
-            $output->writeln("<error>Error will executing cms:generate-router-generator-cache</error>");
+            $output->writeln("<error>Error while executing cms:generate-router-generator-cache</error>");
             $output->writeln($process->getOutput());
             $output->writeln($process->getErrorOutput());
         }

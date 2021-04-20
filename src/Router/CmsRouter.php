@@ -188,6 +188,6 @@ final class CmsRouter implements RouterInterface
             $path = $routeMatch->url();
         }
 
-        return (string) $path;
+        return $path;
     }
 }

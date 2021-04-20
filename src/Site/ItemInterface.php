@@ -1,4 +1,9 @@
 <?php
+/**
+ * @link https://github.com/ixocreate
+ * @copyright IXOLIT GmbH
+ * @license MIT License
+ */
 
 declare(strict_types=1);
 
@@ -10,8 +15,12 @@ use Ixocreate\Cms\Entity\Sitemap;
 interface ItemInterface
 {
     public function page(?string $locale): Page;
+
     public function sitemap(): Sitemap;
+
     public function children();
+
     public function hasChildren(): bool;
+
     public function handle(): ?string;
 }

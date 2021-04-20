@@ -11,8 +11,9 @@ namespace Ixocreate\Cms\Navigation;
 
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Site\ItemInterface;
 
-final class Item
+final class Item implements ItemInterface
 {
     /**
      * @var Page
@@ -30,11 +31,6 @@ final class Item
     private $level;
 
     /**
-     * @var bool
-     */
-    private $active;
-
-    /**
      * @var Item[]
      */
     private $children;
@@ -47,13 +43,12 @@ final class Item
      * @param array $children
      * @param bool $active
      */
-    public function __construct(Page $page, Sitemap $sitemap, int $level, array $children, $active = false)
+    public function __construct(Page $page, Sitemap $sitemap, int $level, array $children = [])
     {
         $this->page = $page;
         $this->sitemap = $sitemap;
         $this->level = $level;
         $this->children = $children;
-        $this->active = $active;
     }
 
     /**
@@ -67,7 +62,7 @@ final class Item
     /**
      * @return Page
      */
-    public function page(): Page
+    public function page(?string $page): Page
     {
         return $this->page;
     }
@@ -80,9 +75,26 @@ final class Item
         return $this->sitemap;
     }
 
-    public function isActive(): bool
+    public function handle(): ?string
     {
-        return $this->active;
+        return $this->sitemap->handle();
+    }
+
+    public function isActive(?Sitemap $sitemap): bool
+    {
+        if ($sitemap === null) {
+            return false;
+        }
+
+        if ((string)$sitemap->id() === (string)$this->sitemap()->id()) {
+            return true;
+        }
+
+        if ($sitemap->nestedLeft() > $this->sitemap()->nestedLeft() && $sitemap->nestedRight() < $this->sitemap()->nestedRight()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

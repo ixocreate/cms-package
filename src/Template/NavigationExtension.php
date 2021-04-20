@@ -22,17 +22,9 @@ final class NavigationExtension implements ExtensionInterface
      */
     private $pageRepository;
 
-    /**
-     * @var NavigationRepository
-     */
-    private $navigationRepository;
-
-    private $container = null;
-
-    public function __construct(PageRepository $pageRepository, NavigationRepository $navigationRepository)
+    public function __construct(PageRepository $pageRepository)
     {
         $this->pageRepository = $pageRepository;
-        $this->navigationRepository = $navigationRepository;
     }
 
     /**
@@ -43,33 +35,23 @@ final class NavigationExtension implements ExtensionInterface
         return 'nav';
     }
 
-    public function __invoke(?string $locale = null)
+    public function __invoke(string $navigation, int $minLevel = 0, int $maxLevel = 2, ?string $handle = null, ?string $locale = null)
     {
-        if ($this->container === null) {
-            $this->container = new Container(
-                $this->navigationRepository,
-                $this->walkRecursive($this->pageRepository->fetchTree(), $locale ?? \Locale::getDefault(), 0)
-            );
-        }
-
-        return $this->container;
+        $tree = $this->pageRepository->fetchNavigationTree($navigation, $minLevel, $maxLevel, $handle, $locale);
+        return $this->walkRecursive($tree);
     }
 
-    private function walkRecursive(array $items, string $locale, int $level): array
+    private function walkRecursive(array $items): array
     {
         $collection = [];
         foreach ($items as $arrayItem) {
-            if (!isset($arrayItem['pages'][$locale])) {
-                continue;
-            }
-            $page = $arrayItem['pages'][$locale];
-            if ((string)$page->status !== "online") {
+            if ($arrayItem['page']->status() !== 'online') {
                 continue;
             }
 
-            $children = $this->walkRecursive($arrayItem['children'], $locale, $level + 1);
+            $children = $this->walkRecursive($arrayItem['children']);
 
-            $collection[] = new Item($page, $arrayItem['sitemap'], $level, $children, false);
+            $collection[] = new Item($arrayItem['page'], $arrayItem['sitemap'], $arrayItem['sitemap']->level(), $children);
         }
 
         return $collection;

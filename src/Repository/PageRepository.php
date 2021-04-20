@@ -9,10 +9,16 @@ declare(strict_types=1);
 
 namespace Ixocreate\Cms\Repository;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Ixocreate\Cms\Entity\Navigation;
 use Ixocreate\Cms\Entity\Page;
 use Ixocreate\Cms\Entity\Sitemap;
+use Ixocreate\Cms\Navigation\Item;
 use Ixocreate\Cms\PageType\PageTypeInterface;
 use Ixocreate\Cms\PageType\PageTypeSubManager;
 use Ixocreate\Cms\PageType\RootPageTypeInterface;
@@ -48,22 +54,56 @@ final class PageRepository extends AbstractRepository
     /**
      * @return array
      */
-    public function fetchTree(): array
+    public function fetchNavigationTree(string $navigation, int $minLevel, int $maxLevel, string $handle, string $locale): array
     {
-        $queryBuilder = $this->createSelectQueryBuilder('p');
-        $queryBuilder->join(Sitemap::class, 's', Join::WITH, 's.id = p.sitemapId');
-        $queryBuilder->addSelect("s");
-        $queryBuilder->orderBy('s.nestedLeft', 'ASC');
+        $params = ['navigation' => $navigation, 'minLevel' => $minLevel, 'maxLevel' => $maxLevel, 'locale' => $locale];
 
-        $flat = $this->getFlatResult($queryBuilder->getQuery()->getResult());
+        if ($handle !== null) {
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('nestedLeft', 'nestedLeft', Types::INTEGER);
+            $rsm->addScalarResult('nestedRight', 'nestedRight', Types::INTEGER);
+            $query = $this->getEntityManager()->createNativeQuery('SELECT nestedLeft, nestedRight FROM cms_sitemap s WHERE s.handle = :handle', $rsm);
+            $result = $query->execute(['handle' => $handle], Query::HYDRATE_ARRAY);
+            if (\count($result) === 0) {
+                return [];
+            }
+            $params['nestedLeft'] = $result[0]['nestedLeft'];
+            $params['nestedRight'] = $result[0]['nestedRight'];
+        }
+
+        $dql = 'SELECT p as page, s as sitemap FROM ' . Page::class . ' p
+            LEFT JOIN ' . Sitemap::class . ' s WITH (p.sitemapId = s.id)
+            LEFT JOIN ' . Navigation::class . ' n WITH (n.pageId = p.id)
+            WHERE n.navigation = :navigation AND s.level BETWEEN :minLevel AND :maxLevel AND p.locale = :locale';
+        $dql .= ' AND s.nestedLeft >= :nestedLeft AND s.nestedRight <= :nestedRight';
+        $dql .= ' ORDER BY s.nestedLeft ASC';
+        $result = $this->createQuery($dql)->execute($params);
+
+//        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+//        $rsm->addRootEntityFromClassMetadata(Page::class, 'p');
+//        $rsm->addEntityResult(Sitemap::class, 's', 's');
+//        $rsm->addFieldResult('s', 's.id', 'id');
+//        \var_dump($rsm->generateSelectClause());die();
+//
+//        $sql = 'SELECT ' . $rsm->generateSelectClause(['']) . ' FROM cms_page p
+//            LEFT JOIN cms_sitemap s ON (p.sitemapId = s.id)
+//            LEFT JOIN cms_natvigation n ON (n.pageId = p.id)
+//            WHERE n.navigation = :navigation AND s.level BETWEEN :minLevel AND :maxLevel AND p.locale = :locale AND
+//            s.nestedLeft >= (SELECT sx.nestedLeft FROM cms_sitemap sx WHERE sx.handle = :handle) AND s.nestedRight <= (SELECT sx.nestedRight FROM cms_sitemap sx WHERE sx.handle = :handle)
+//            ORDER BY s.nestedLeft ASC';
+//        $result = $this->getEntityManager()->createNativeQuery($sql, $rsm)->execute(['navigation' => $navigation, 'minLevel' => $minLevel, 'maxLevel' => $maxLevel, 'locale' => $locale, 'handle' => $handle]);
+
+        $flat = $this->getFlatResult($result);
 
         $tree = [];
 
         foreach ($flat as &$item) {
             if ($item['sitemap']->parentId() !== null) {
-                $parent =& $flat[(string) $item['sitemap']->parentId()];
-                $parent['children'][] =& $item;
-                continue;
+                if (\array_key_exists((string)$item['sitemap']->parentId(), $flat)) {
+                    $parent =& $flat[(string)$item['sitemap']->parentId()];
+                    $parent['children'][] =& $item;
+                    continue;
+                }
             }
 
             $tree[] =& $item;
@@ -98,8 +138,6 @@ final class PageRepository extends AbstractRepository
         $queryBuilder->where($or);
         $queryBuilder->orderBy('s.nestedLeft', 'ASC');
 
-
-
         return \array_values($this->getFlatResult($queryBuilder->getQuery()->getResult()));
     }
 
@@ -110,42 +148,24 @@ final class PageRepository extends AbstractRepository
     private function getFlatResult(array $queryResult): array
     {
         $flat = [];
-        $sitemaps = [];
 
-        foreach ($queryResult as $item) {
-            if (!($item instanceof Sitemap)) {
-                continue;
-            }
-
-            $sitemaps[(string) $item->id()] = $item;
-        }
-
-        foreach ($queryResult as $item) {
-            if ($item instanceof Sitemap) {
-                continue;
-            }
-
-            $page = $item;
-            $sitemap = $sitemaps[(string) $item->sitemapId()];
+        $resultCount = \count($queryResult);
+        for ($i = 0; $i < $resultCount;) {
+            $page = $queryResult[$i]['page'];
+            $sitemap = $queryResult[$i + 1]['sitemap'];
+            $i += 2;
 
             /** @var PageTypeInterface $pageType */
             $pageType = $this->pageTypeSubManager->get($sitemap->pageType());
 
-            if (!empty($flat[(string)$sitemap->id()])) {
-                $flat[(string)$sitemap->id()]['pages'][$page->locale()] = $page;
-                continue;
-            }
-
             $flat[(string)$sitemap->id()] = [
-                'pages' => [
-                    $page->locale() => $page,
-                ],
+                'page' => $page,
                 'sitemap' => $sitemap,
                 'pageType' => [
-                    "name" => $pageType::serviceName(),
-                    "label" => $pageType->label(),
-                    "allowedChildren" => $pageType->allowedChildren(),
-                    "isRoot" => \is_subclass_of($pageType, RootPageTypeInterface::class),
+                    'name' => $pageType::serviceName(),
+                    'label' => $pageType->label(),
+                    'allowedChildren' => $pageType->allowedChildren(),
+                    'isRoot' => \is_subclass_of($pageType, RootPageTypeInterface::class),
                 ],
                 'children' => [],
             ];
@@ -156,7 +176,7 @@ final class PageRepository extends AbstractRepository
 
     public function slugExists(?string $sParentId, string $pId, string $pSlug, string $pLocale): bool
     {
-        $query = $this->getEntityManager()->createQuery('SELECT COUNT (p.id) FROM ' . Page::class . ' p JOIN ' . Sitemap::class . ' s WITH p.sitemapId = s.id 
+        $query = $this->getEntityManager()->createQuery('SELECT COUNT (p.id) FROM ' . Page::class . ' p JOIN ' . Sitemap::class . ' s WITH p.sitemapId = s.id
         WHERE s.parentId = :parentId AND p.id != :id AND p.slug = :slug AND p.locale = :locale');
         $query->setParameters(array('parentId' => $sParentId, 'id' => $pId, 'slug'=> $pSlug, 'locale' => $pLocale));
         $result = $query->getResult();

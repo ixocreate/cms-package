@@ -7,13 +7,12 @@
 
 declare(strict_types=1);
 
-namespace Ixocreate\Cms\Template;
-
 use Ixocreate\Template\TemplateConfigurator;
 
 /** @var TemplateConfigurator $template */
-$template->addExtension(NavigationExtension::class);
-$template->addExtension(PageUrlExtension::class);
-$template->addExtension(TreeExtension::class);
+$template->addExtension(\Ixocreate\Cms\Template\NavigationExtension::class);
+$template->addExtension(\Ixocreate\Cms\Template\PageUrlExtension::class);
+$template->addExtension(\Ixocreate\Cms\Template\PageContentExtension::class);
+$template->addExtension(\Ixocreate\Cms\Template\TreeExtension::class);
 
 $template->addDirectory('seo', __DIR__ . '/../templates/seo');

@@ -52,11 +52,9 @@ final class UriReplacement implements ReplacementInterface
         foreach ($routeSpecification->uris() as $name => $uri) {
             if (!empty(\preg_match('/\${URI:([a-z0-9-_]*)}/i', $uri, $matches))) {
                 $projectUri = $this->projectUri->getPossibleUri($matches[1]);
-                $routeSpecification = $routeSpecification->withUri(\preg_replace('/\${URI:([a-z0-9-_]*)}/i', $projectUri, $uri), $name);
+                $routeSpecification = $routeSpecification->withUri(\preg_replace('/\${URI:([a-z0-9-_]*)}/i', (string)$projectUri, $uri), $name);
             }
         }
-
-
 
         return $routeSpecification;
     }

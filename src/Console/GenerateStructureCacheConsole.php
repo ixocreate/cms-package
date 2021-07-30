@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Ixocreate\Cms\Console;
 
 use Ixocreate\Application\Console\CommandInterface;
-use Ixocreate\Cms\Command\Structure\GenerateCacheCommand;
+use Ixocreate\Cms\Command\Cache\GenerateCacheCommand;
 use Ixocreate\CommandBus\CommandBus;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

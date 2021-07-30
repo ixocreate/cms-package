@@ -158,7 +158,7 @@ final class PageRepository extends AbstractRepository
     {
         $query = $this->getEntityManager()->createQuery('SELECT COUNT (p.id) FROM ' . Page::class . ' p JOIN ' . Sitemap::class . ' s WITH p.sitemapId = s.id 
         WHERE s.parentId = :parentId AND p.id != :id AND p.slug = :slug AND p.locale = :locale');
-        $query->setParameters(array('parentId' => $sParentId, 'id' => $pId, 'slug'=> $pSlug, 'locale' => $pLocale));
+        $query->setParameters(['parentId' => $sParentId, 'id' => $pId, 'slug'=> $pSlug, 'locale' => $pLocale]);
         $result = $query->getResult();
 
         return $result[0][1] > 0;

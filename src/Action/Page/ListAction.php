@@ -66,12 +66,14 @@ class ListAction implements MiddlewareInterface
                 $sql .= ' AND s.nestedLeft NOT BETWEEN ' . $row['nestedLeft'] . ' AND ' . $row['nestedRight'];
             }
         }
+        $sqlAll = $sql;
         $term = $request->getQueryParams()['term'] ?? null;
         if (!empty($term)) {
             $sql .= ' AND p.name LIKE :term';
             $parameters['term'] = '%' . $term . '%';
         }
 
+        $sqlAll .= ' ORDER BY nestedLeft';
         $sql .= ' ORDER BY nestedLeft';
 
         $rsm = new ResultSetMapping();
@@ -81,13 +83,14 @@ class ListAction implements MiddlewareInterface
         $rsm->addScalarResult('level', 'level', Types::INTEGER);
         $query = $this->entityManager->createNativeQuery($sql, $rsm);
         $result = $query->execute($parameters);
+        $resultAll = $this->entityManager->createNativeQuery($sqlAll, $rsm)->execute($parameters);
 
-        $items = [];
+        $allItems = [];
         $prev = null;
         $parentPath = '';
         $parentPathList = [];
         $lastLevel = 0;
-        foreach ($result as $item) {
+        foreach ($resultAll as $item) {
             if ($lastLevel < $item['level']) {
                 $parentPathList[$item['level']] = $prev['name'];
                 $lastLevel = $item['level'];
@@ -113,9 +116,19 @@ class ListAction implements MiddlewareInterface
                 continue;
             }
 
+            $allItems[$item['id']] = $parentPath . $item['name'];
+        }
+
+        $items = [];
+        $prev = null;
+        foreach ($result as $item) {
+            if ($pageType !== null && $pageType !== $item['pageType']) {
+                continue;
+            }
+
             $items[] = [
                 'id' => $item['id'],
-                'name' => $parentPath . $item['name'],
+                'name' => $allItems[$item['id']],
             ];
         }
 
